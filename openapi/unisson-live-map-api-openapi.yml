@@ -1,0 +1,239 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals live-map API
+  version: 1.0.0
+tags:
+- name: live-map
+paths:
+  /api/v1/live-map:
+    get:
+      tags:
+      - live-map
+      summary: Get Live Map
+      description: Get the live map for the organization (if one exists).
+      operationId: get_live_map_api_v1_live_map_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/LiveMapResponse'
+                - type: 'null'
+                title: Response Get Live Map Api V1 Live Map Get
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - live-map
+      summary: Delete Live Map
+      description: Delete the live map for the organization.
+      operationId: delete_live_map_api_v1_live_map_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/live-map/status:
+    get:
+      tags:
+      - live-map
+      summary: Get Analysis Status
+      description: Get the current analysis status.
+      operationId: get_analysis_status_api_v1_live_map_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiveMapStatusResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/live-map/analyze:
+    post:
+      tags:
+      - live-map
+      summary: Start Analysis
+      description: 'Start crawling a live website to build a navigation map.
+
+
+        The crawler will:
+
+        - Start from start_url and discover all linked pages
+
+        - Stay within organization''s allowed_domains (defaults to start_url''s domain if not configured)
+
+        - Add external links as nodes but not explore them
+
+        - Use Kernel browser session for authenticated access (if available)'
+      operationId: start_analysis_api_v1_live_map_analyze_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveMapRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LiveMapStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        progress:
+          type: integer
+          title: Progress
+        pages_discovered:
+          type: integer
+          title: Pages Discovered
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        start_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Start Url
+      type: object
+      required:
+      - status
+      - progress
+      - pages_discovered
+      title: LiveMapStatusResponse
+    LiveMapResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        start_url:
+          type: string
+          title: Start Url
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+        nodes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Nodes
+        edges:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Edges
+        analysis_status:
+          type: string
+          title: Analysis Status
+        analysis_progress:
+          type: integer
+          title: Analysis Progress
+        pages_discovered:
+          type: integer
+          title: Pages Discovered
+      type: object
+      required:
+      - id
+      - start_url
+      - allowed_domains
+      - nodes
+      - edges
+      - analysis_status
+      - analysis_progress
+      - pages_discovered
+      title: LiveMapResponse
+    LiveMapRequest:
+      properties:
+        start_url:
+          type: string
+          title: Start Url
+        product_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Id
+        allowed_domains:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Domains
+        max_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Pages
+        context_domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Domain
+      type: object
+      required:
+      - start_url
+      title: LiveMapRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

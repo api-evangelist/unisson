@@ -1,0 +1,265 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals products API
+  version: 1.0.0
+tags:
+- name: products
+paths:
+  /api/v1/products:
+    get:
+      tags:
+      - products
+      summary: List Products
+      description: List all products for the organization.
+      operationId: list_products_api_v1_products_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+                type: array
+                title: Response List Products Api V1 Products Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - products
+      summary: Create Product
+      description: Create a new product.
+      operationId: create_product_api_v1_products_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/products/{product_id}:
+    get:
+      tags:
+      - products
+      summary: Get Product
+      description: Get a single product.
+      operationId: get_product_api_v1_products__product_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - products
+      summary: Update Product
+      description: Update a product.
+      operationId: update_product_api_v1_products__product_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Product Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - products
+      summary: Delete Product
+      description: 'Soft-delete a product, cascade-soft-delete its KB entries (features,
+
+        company knowledge, agent insights), and unlink it from any agents. The
+
+        default product cannot be deleted.'
+      operationId: delete_product_api_v1_products__product_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Product Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ProductUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: ProductUpdate
+      description: Schema for updating a product.
+    ProductCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        url:
+          type: string
+          maxLength: 2048
+          title: Url
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - name
+      - url
+      title: ProductCreate
+      description: Schema for creating a product.
+    ProductResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        url:
+          type: string
+          title: Url
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_default:
+          type: boolean
+          title: Is Default
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - url
+      - is_default
+      - created_at
+      - updated_at
+      title: ProductResponse
+      description: Schema for product response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

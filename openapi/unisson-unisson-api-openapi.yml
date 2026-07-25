@@ -1,0 +1,24 @@
+openapi: 3.1.0
+info:
+  title: agent-evals Unisson API
+  version: 1.0.0
+tags:
+- name: Unisson
+paths:
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Unisson
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

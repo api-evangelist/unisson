@@ -1,0 +1,313 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals email-drafts API
+  version: 1.0.0
+tags:
+- name: email-drafts
+paths:
+  /api/v1/email-drafts:
+    get:
+      tags:
+      - email-drafts
+      summary: List Email Drafts
+      description: 'List drafts for a conversation. Used by the FE on cold-load to
+
+        rehydrate the inline cards after a refresh — without this, the card
+
+        would show the LLM''s original args instead of the user''s manual edits.'
+      operationId: list_email_drafts_api_v1_email_drafts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Conversation to scope drafts to.
+          title: Conversation Id
+        description: Conversation to scope drafts to.
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional filter — usually 'pending'.
+          title: Status
+        description: Optional filter — usually 'pending'.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailDraftListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/email-drafts/{draft_id}:
+    get:
+      tags:
+      - email-drafts
+      summary: Get Email Draft
+      operationId: get_email_draft_api_v1_email_drafts__draft_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Draft Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailDraftResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - email-drafts
+      summary: Patch Email Draft
+      description: 'Apply a human edit to a pending draft.
+
+
+        Only the fields present in the body are written. 409 once the draft
+
+        has been sent or discarded — at that point its content is frozen. The
+
+        next LLM turn picks up the new state via context injection in
+
+        ``chat_service``; no LLM call happens here.'
+      operationId: patch_email_draft_api_v1_email_drafts__draft_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Draft Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailDraftPatchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailDraftResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    EmailDraftResponse:
+      properties:
+        draft_id:
+          type: string
+          format: uuid4
+          title: Draft Id
+        tool_call_id:
+          type: string
+          title: Tool Call Id
+        conversation_id:
+          type: string
+          format: uuid4
+          title: Conversation Id
+        status:
+          type: string
+          title: Status
+        to:
+          items:
+            type: string
+          type: array
+          title: To
+        cc:
+          items:
+            type: string
+          type: array
+          title: Cc
+        bcc:
+          items:
+            type: string
+          type: array
+          title: Bcc
+        subject:
+          type: string
+          title: Subject
+        body:
+          type: string
+          title: Body
+        attachments:
+          items:
+            type: string
+          type: array
+          title: Attachments
+        thread_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thread Id
+        gmail_message_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gmail Message Id
+        last_edited_by:
+          type: string
+          title: Last Edited By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+      type: object
+      required:
+      - draft_id
+      - tool_call_id
+      - conversation_id
+      - status
+      - to
+      - cc
+      - bcc
+      - subject
+      - body
+      - last_edited_by
+      - created_at
+      - updated_at
+      title: EmailDraftResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EmailDraftListResponse:
+      properties:
+        drafts:
+          items:
+            $ref: '#/components/schemas/EmailDraftResponse'
+          type: array
+          title: Drafts
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - drafts
+      - total
+      title: EmailDraftListResponse
+    EmailDraftPatchRequest:
+      properties:
+        to:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: To
+        cc:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc
+        bcc:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Bcc
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+        attachments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      title: EmailDraftPatchRequest
+      description: 'Partial patch — every field is optional. Only the keys present in
+
+        the request body are written; missing keys are left as-is so the
+
+        user can change just the subject without re-sending the body.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

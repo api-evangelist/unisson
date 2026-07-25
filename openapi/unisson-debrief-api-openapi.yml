@@ -1,0 +1,307 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals debrief API
+  version: 1.0.0
+tags:
+- name: debrief
+paths:
+  /api/v1/debrief/{run_id}:
+    get:
+      tags:
+      - debrief
+      summary: Get Debrief
+      description: 'Fetch an existing debrief conversation for a run. 404 if none exists.
+
+
+        Read-only / idempotent counterpart to POST /{run_id}/init. Tolerates a
+
+        missing trajectory (GC''d runs) so old conversations remain viewable.
+
+        The POST handlers below are guest-blocked by the write guard; this GET is
+
+        reachable by guests, so it scopes the run to their granted customers
+
+        (``authorize_run_access`` 404s a run outside them).'
+      operationId: get_debrief_api_v1_debrief__run_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebriefInitResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/debrief/{run_id}/init:
+    post:
+      tags:
+      - debrief
+      summary: Init Debrief
+      description: Initialize a debrief session by loading the run's trajectory from S3.
+      operationId: init_debrief_api_v1_debrief__run_id__init_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebriefInitResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/debrief/{run_id}/message:
+    post:
+      tags:
+      - debrief
+      summary: Send Debrief Message
+      description: Send a message in a debrief session and stream the LLM response.
+      operationId: send_debrief_message_api_v1_debrief__run_id__message_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebriefMessageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/debrief/{run_id}/apply-proposal:
+    post:
+      tags:
+      - debrief
+      summary: Apply Debrief Proposal
+      description: Apply or decline a KB change proposal from a debrief session.
+      operationId: apply_debrief_proposal_api_v1_debrief__run_id__apply_proposal_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebriefApplyProposalRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebriefApplyProposalResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DebriefInitResponse:
+      properties:
+        step_count:
+          type: integer
+          title: Step Count
+        task_description:
+          type: string
+          title: Task Description
+        run_status:
+          type: string
+          title: Run Status
+        run_result:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Result
+        suggested_questions:
+          items:
+            type: string
+          type: array
+          title: Suggested Questions
+          default: []
+        existing_messages:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DebriefMessageData'
+            type: array
+          - type: 'null'
+          title: Existing Messages
+      type: object
+      required:
+      - step_count
+      - task_description
+      - run_status
+      - run_result
+      title: DebriefInitResponse
+    DebriefApplyProposalResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
+      type: object
+      required:
+      - success
+      - message
+      title: DebriefApplyProposalResponse
+    DebriefMessageRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+        messages:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Messages
+      type: object
+      required:
+      - content
+      - messages
+      title: DebriefMessageRequest
+    DebriefApplyProposalRequest:
+      properties:
+        proposal_id:
+          type: string
+          title: Proposal Id
+        proposal_type:
+          type: string
+          title: Proposal Type
+        proposal_data:
+          additionalProperties: true
+          type: object
+          title: Proposal Data
+        action:
+          type: string
+          title: Action
+      type: object
+      required:
+      - proposal_id
+      - proposal_type
+      - proposal_data
+      - action
+      title: DebriefApplyProposalRequest
+    DebriefMessageData:
+      properties:
+        id:
+          type: string
+          title: Id
+        role:
+          type: string
+          title: Role
+        content:
+          type: string
+          title: Content
+        proposals:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Proposals
+      type: object
+      required:
+      - id
+      - role
+      - content
+      title: DebriefMessageData
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

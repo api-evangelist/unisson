@@ -1,0 +1,830 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals agents API
+  version: 1.0.0
+tags:
+- name: agents
+paths:
+  /api/v1/agents:
+    get:
+      tags:
+      - agents
+      summary: List Agents
+      description: 'List all agents for the organization, enriched with per-agent run
+
+        stats (count + total runtime) used by the Home agent cards.
+
+
+        Supports optional case-insensitive ``search`` against name/description and
+
+        an optional ``limit`` cap (used by the global search palette).'
+      operationId: list_agents_api_v1_agents_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentResponse'
+                title: Response List Agents Api V1 Agents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - agents
+      summary: Create Agent
+      description: Create a new agent.
+      operationId: create_agent_api_v1_agents_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/templates:
+    get:
+      tags:
+      - agents
+      summary: List Templates
+      description: List available pre-built agent templates.
+      operationId: list_templates_api_v1_agents_templates_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/agents/generate-from-description:
+    post:
+      tags:
+      - agents
+      summary: Generate Agent From Description
+      description: 'Generate a draft agent (name, description, instructions) from a free-text
+
+        prompt. Used by the "+ Create Agent" entry point to seed the builder modal.'
+      operationId: generate_agent_from_description_api_v1_agents_generate_from_description_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateAgentFromDescriptionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateAgentFromDescriptionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/agents/improve-instructions:
+    post:
+      tags:
+      - agents
+      summary: Improve Agent Instructions
+      description: 'Rewrite an agent''s instructions to incorporate user-provided refinements.
+
+        Stateless: operates on the instructions text passed in (which may include
+
+        unsaved edits), not on any persisted agent.'
+      operationId: improve_agent_instructions_api_v1_agents_improve_instructions_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImproveAgentInstructionsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImproveAgentInstructionsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/agents/from-template/{template_id}:
+    post:
+      tags:
+      - agents
+      summary: Create From Template
+      description: Create an agent from a pre-built template.
+      operationId: create_from_template_api_v1_agents_from_template__template_id__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Template Id
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}:
+    get:
+      tags:
+      - agents
+      summary: Get Agent
+      description: Get a single agent with all relationships.
+      operationId: get_agent_api_v1_agents__agent_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - agents
+      summary: Update Agent
+      description: Update an agent.
+      operationId: update_agent_api_v1_agents__agent_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - agents
+      summary: Delete Agent
+      description: Soft-delete an agent.
+      operationId: delete_agent_api_v1_agents__agent_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/instruction-versions:
+    get:
+      tags:
+      - agents
+      summary: List Instruction Versions
+      description: An agent's instruction version history, newest first.
+      operationId: list_instruction_versions_api_v1_agents__agent_id__instruction_versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InstructionVersionResponse'
+                title: Response List Instruction Versions Api V1 Agents  Agent Id  Instruction Versions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/instruction-versions/{version_id}:
+    get:
+      tags:
+      - agents
+      summary: Get Instruction Version
+      description: A single instruction version (full text).
+      operationId: get_instruction_version_api_v1_agents__agent_id__instruction_versions__version_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructionVersionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/instruction-versions/{version_id}/revert:
+    post:
+      tags:
+      - agents
+      summary: Revert Instruction Version
+      description: 'Restore the agent''s instructions to a prior version (members only).
+
+
+        Appends a new ``revert`` version — history is never rewritten.'
+      operationId: revert_instruction_version_api_v1_agents__agent_id__instruction_versions__version_id__revert_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/files:
+    get:
+      tags:
+      - agents
+      summary: List Agent Files
+      description: List files in the agent's filesystem.
+      operationId: list_agent_files_api_v1_agents__agent_id__files_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentFileListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - agents
+      summary: Upload Agent File
+      description: Upload a file to the agent's filesystem.
+      operationId: upload_agent_file_api_v1_agents__agent_id__files_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_upload_agent_file_api_v1_agents__agent_id__files_post'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/files/{filename}:
+    delete:
+      tags:
+      - agents
+      summary: Delete Agent File
+      description: Delete a file from the agent's filesystem.
+      operationId: delete_agent_file_api_v1_agents__agent_id__files__filename__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      - name: filename
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Filename
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AgentFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/AgentFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: AgentFileListResponse
+    ImproveAgentInstructionsRequest:
+      properties:
+        instructions:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Instructions
+        refinement:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Refinement
+      type: object
+      required:
+      - instructions
+      - refinement
+      title: ImproveAgentInstructionsRequest
+    AgentResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        is_template:
+          type: boolean
+          title: Is Template
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        active_trigger_count:
+          type: integer
+          title: Active Trigger Count
+          default: 0
+        runs_count:
+          type: integer
+          title: Runs Count
+          default: 0
+        total_runtime_seconds:
+          type: integer
+          title: Total Runtime Seconds
+          default: 0
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - is_template
+      - created_at
+      - updated_at
+      title: AgentResponse
+    ImproveAgentInstructionsResponse:
+      properties:
+        instructions:
+          type: string
+          title: Instructions
+      type: object
+      required:
+      - instructions
+      title: ImproveAgentInstructionsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InstructionVersionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        version_number:
+          type: integer
+          title: Version Number
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - agent_id
+      - version_number
+      - source
+      - created_at
+      title: InstructionVersionResponse
+      description: One immutable snapshot in an agent's instruction history.
+    AgentCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Gradient
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+      type: object
+      required:
+      - name
+      title: AgentCreate
+    AgentUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Gradient
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+      type: object
+      title: AgentUpdate
+    AgentFileResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        filename:
+          type: string
+          title: Filename
+        size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+        last_modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Modified
+      type: object
+      required:
+      - key
+      - filename
+      title: AgentFileResponse
+    GenerateAgentFromDescriptionRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Prompt
+      type: object
+      required:
+      - prompt
+      title: GenerateAgentFromDescriptionRequest
+    Body_upload_agent_file_api_v1_agents__agent_id__files_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_upload_agent_file_api_v1_agents__agent_id__files_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GenerateAgentFromDescriptionResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        instructions:
+          type: string
+          title: Instructions
+      type: object
+      required:
+      - name
+      - description
+      - instructions
+      title: GenerateAgentFromDescriptionResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

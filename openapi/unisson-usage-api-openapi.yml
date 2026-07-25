@@ -1,0 +1,184 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals usage API
+  version: 1.0.0
+tags:
+- name: usage
+paths:
+  /api/v1/usage/stats:
+    get:
+      tags:
+      - usage
+      summary: Get Usage Stats
+      description: 'Get usage statistics for the current organization.
+
+
+        Returns:
+
+        - Run duration in seconds (sum of all non-sub runs) for the filtered period
+
+        - Per-user breakdown of runs and duration for the filtered period
+
+        - Daily usage breakdown for the filtered period (or hourly if day is specified)'
+      operationId: get_usage_stats_api_v1_usage_stats_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Filter by year
+          title: Year
+        description: Filter by year
+      - name: month
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 12
+            minimum: 1
+          - type: 'null'
+          description: Filter by month (1-12)
+          title: Month
+        description: Filter by month (1-12)
+      - name: day
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 31
+            minimum: 1
+          - type: 'null'
+          description: Filter by day (1-31) - returns hourly breakdown
+          title: Day
+        description: Filter by day (1-31) - returns hourly breakdown
+      - name: timezone
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Timezone for hourly breakdown (e.g., 'America/Los_Angeles')
+          default: UTC
+          title: Timezone
+        description: Timezone for hourly breakdown (e.g., 'America/Los_Angeles')
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStatsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DailyUsage:
+      properties:
+        date:
+          type: string
+          title: Date
+        duration_seconds:
+          type: integer
+          title: Duration Seconds
+      type: object
+      required:
+      - date
+      - duration_seconds
+      title: DailyUsage
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UserUsageStats:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        email:
+          type: string
+          title: Email
+        run_count:
+          type: integer
+          title: Run Count
+        duration_seconds:
+          type: integer
+          title: Duration Seconds
+      type: object
+      required:
+      - user_id
+      - user_name
+      - email
+      - run_count
+      - duration_seconds
+      title: UserUsageStats
+    UsageStatsResponse:
+      properties:
+        total_duration_seconds:
+          type: integer
+          title: Total Duration Seconds
+        user_usage:
+          items:
+            $ref: '#/components/schemas/UserUsageStats'
+          type: array
+          title: User Usage
+        daily_usage:
+          items:
+            $ref: '#/components/schemas/DailyUsage'
+          type: array
+          title: Daily Usage
+      type: object
+      required:
+      - total_duration_seconds
+      - user_usage
+      - daily_usage
+      title: UsageStatsResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

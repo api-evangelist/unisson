@@ -1,0 +1,3514 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals integrations API
+  version: 1.0.0
+tags:
+- name: integrations
+paths:
+  /api/v1/integrations/slack/debug-users:
+    get:
+      tags:
+      - integrations
+      summary: Debug Slack Users
+      description: Debug endpoint to check Slack user mappings (admin only)
+      operationId: debug_slack_users_api_v1_integrations_slack_debug_users_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/status:
+    get:
+      tags:
+      - integrations
+      summary: Get Integration Status
+      description: Get status of all integrations for current organization
+      operationId: get_integration_status_api_v1_integrations_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/IntegrationStatus'
+                type: array
+                title: Response Get Integration Status Api V1 Integrations Status Get
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/granola/credential:
+    get:
+      tags:
+      - integrations
+      summary: Get Granola Credential
+      operationId: get_granola_credential_api_v1_integrations_granola_credential_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Import Granola Credential
+      description: Validate and store the org's Granola workspace API key.
+      operationId: import_granola_credential_api_v1_integrations_granola_credential_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GranolaCredentialRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Granola Credential
+      operationId: disconnect_granola_credential_api_v1_integrations_granola_credential_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/granola/folders:
+    get:
+      tags:
+      - integrations
+      summary: List Granola Folders
+      operationId: list_granola_folders_api_v1_integrations_granola_folders_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/{provider}/connected-members:
+    get:
+      tags:
+      - integrations
+      summary: List Connected Members
+      description: 'List org members that have connected the given (per-user) provider.
+
+
+        Used by the customer IntegrationsTab to render a "Synced by …" list
+
+        for per-user integrations (gmail, google_calendar, …) so admins can
+
+        see whose mailbox/calendar contributes to customer sync.
+
+
+        Org-scoped providers always return at most one row (the admin who
+
+        connected). Per-user providers return one row per connected member.'
+      operationId: list_connected_members_api_v1_integrations__provider__connected_members_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/github/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Github
+      description: Get GitHub OAuth URL to start connection (admin only)
+      operationId: connect_github_api_v1_integrations_github_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/github/callback:
+    get:
+      tags:
+      - integrations
+      summary: Github Callback
+      description: Handle GitHub OAuth callback
+      operationId: github_callback_api_v1_integrations_github_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/github/repositories:
+    get:
+      tags:
+      - integrations
+      summary: List Github Repositories
+      description: List accessible GitHub repositories
+      operationId: list_github_repositories_api_v1_integrations_github_repositories_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GitHubRepository'
+                type: array
+                title: Response List Github Repositories Api V1 Integrations Github Repositories Get
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/github/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Github
+      description: Disconnect GitHub integration
+      operationId: disconnect_github_api_v1_integrations_github_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/google_drive/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Google Drive
+      description: Get Google OAuth URL to start a Drive-only connection (admin only).
+      operationId: connect_google_drive_api_v1_integrations_google_drive_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_drive/callback:
+    get:
+      tags:
+      - integrations
+      summary: Google Drive Callback
+      description: Handle Google Drive OAuth callback.
+      operationId: google_drive_callback_api_v1_integrations_google_drive_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_drive/search:
+    get:
+      tags:
+      - integrations
+      summary: Search Drive Files
+      description: 'Search files in Google Drive. Empty query returns the most-
+
+        recently-modified ``limit`` files (search_files orders by
+
+        modifiedTime desc). Pass ``exclude_folders=true`` to skip
+
+        ``application/vnd.google-apps.folder`` rows — used by the customer
+
+        document picker, where folders aren''t linkable as documents.'
+      operationId: search_drive_files_api_v1_integrations_google_drive_search_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Query
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 25
+          title: Limit
+      - name: exclude_folders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Exclude Folders
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DriveFile'
+                title: Response Search Drive Files Api V1 Integrations Google Drive Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_drive/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Google Drive
+      description: Disconnect Google Drive integration.
+      operationId: disconnect_google_drive_api_v1_integrations_google_drive_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/slack/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Slack
+      description: Get Slack OAuth URL to start connection (admin only)
+      operationId: connect_slack_api_v1_integrations_slack_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/slack/callback:
+    get:
+      tags:
+      - integrations
+      summary: Slack Callback
+      description: Handle Slack OAuth callback
+      operationId: slack_callback_api_v1_integrations_slack_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/slack/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Slack
+      description: Disconnect Slack integration
+      operationId: disconnect_slack_api_v1_integrations_slack_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/slack/status:
+    get:
+      tags:
+      - integrations
+      summary: Get Slack Status
+      description: 'Return whether Slack is connected for the org + workspace display info.
+
+
+        Hydrates ``team_name`` / ``team_icon`` lazily into
+
+        ``IntegrationToken.provider_metadata`` so subsequent pageloads don''t
+
+        each round-trip Slack for display data.'
+      operationId: get_slack_status_api_v1_integrations_slack_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/slack/notifications:
+    get:
+      tags:
+      - integrations
+      summary: List Slack Notification Configs
+      description: Return the org's saved Slack notification configs.
+      operationId: list_slack_notification_configs_api_v1_integrations_slack_notifications_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/slack/notifications/{notification_type}:
+    put:
+      tags:
+      - integrations
+      summary: Upsert Slack Notification Config
+      operationId: upsert_slack_notification_config_api_v1_integrations_slack_notifications__notification_type__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Notification Type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlackNotificationConfigBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - integrations
+      summary: Delete Slack Notification Config
+      operationId: delete_slack_notification_config_api_v1_integrations_slack_notifications__notification_type__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Notification Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/slack/notifications/{notification_type}/test:
+    post:
+      tags:
+      - integrations
+      summary: Send Slack Notification Test
+      operationId: send_slack_notification_test_api_v1_integrations_slack_notifications__notification_type__test_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Notification Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/slack/events:
+    post:
+      tags:
+      - integrations
+      summary: Slack Events
+      description: 'Slack Events API + interactivity endpoint (handled by Bolt).
+
+
+        Bolt owns signature verification, the ``url_verification`` challenge,
+
+        per-workspace token resolution (via the custom ``authorize`` that
+
+        bridges to ``IntegrationToken``), and dispatch to the event / action
+
+        / assistant listeners registered in ``app.integrations.slack_bolt_app``.
+
+        Point both the Slack *Events* and *Interactivity* Request URLs here.'
+      operationId: slack_events_api_v1_integrations_slack_events_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/teams/messages:
+    post:
+      tags:
+      - integrations
+      summary: Teams Messages
+      description: 'Inbound Bot Framework endpoint (Activities). JWT auth + dispatch.
+
+
+        The adapter validates the Bot-Framework JWT (the Teams analog of Slack''s
+
+        signature check) inside ``process_activity``; we just deserialize the
+
+        Activity and hand it to the bot''s ``on_turn``.'
+      operationId: teams_messages_api_v1_integrations_teams_messages_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/teams/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Teams
+      description: 'Start the Teams connection: returns a pairing code (admin only).
+
+
+        The admin installs the Unisson Teams app, then messages the bot
+
+        ``/connect <code>``; the bot claims the code and stores the tenant link.'
+      operationId: connect_teams_api_v1_integrations_teams_connect_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/teams/status:
+    get:
+      tags:
+      - integrations
+      summary: Teams Status
+      operationId: teams_status_api_v1_integrations_teams_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/teams/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Teams
+      operationId: disconnect_teams_api_v1_integrations_teams_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/whatsapp/webhook:
+    post:
+      tags:
+      - integrations
+      summary: Whatsapp Webhook
+      description: 'Inbound Twilio WhatsApp webhook (form-encoded). Acks immediately.
+
+
+        Verifies ``X-Twilio-Signature``, dedups on ``MessageSid``, then either
+
+        completes a pending verification (the member echoed their code) or routes the
+
+        message to the bound member''s org. Twilio retries on a slow response, so the
+
+        heavy turn runs in a background task.'
+      operationId: whatsapp_webhook_api_v1_integrations_whatsapp_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/email/inbound:
+    post:
+      tags:
+      - integrations
+      summary: Email Inbound
+      description: 'Inbound Postmark email webhook (JSON). Acks immediately.
+
+
+        Verifies the shared secret, enforces DMARC, dedups on ``Message-ID``, then
+
+        either completes a pending verification or routes the mail to the bound
+
+        member''s org. Threads by the email''s root ``Message-ID``.'
+      operationId: email_inbound_api_v1_integrations_email_inbound_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/messaging-channels/status:
+    get:
+      tags:
+      - integrations
+      summary: Messaging Channels Status
+      description: 'Whether the server is configured for each channel + this org''s paired count.
+
+
+        "Configured" is derived from the credentials actually needed to operate —
+
+        there''s no separate enable flag; each provider is always registered and
+
+        simply no-ops without these (like Slack without a token).'
+      operationId: messaging_channels_status_api_v1_integrations_messaging_channels_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/messaging-channels/members:
+    get:
+      tags:
+      - integrations
+      summary: Messaging Channels Members
+      description: Org members joined to their WhatsApp / Email bindings (admin view).
+      operationId: messaging_channels_members_api_v1_integrations_messaging_channels_members_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/messaging-channels/pair:
+    post:
+      tags:
+      - integrations
+      summary: Pair Messaging Channel
+      description: 'Pair a member''s phone/email; returns the verify code + instructions.
+
+
+        The member must confirm by sending the code from that phone/email (so we know
+
+        they control it) before routing activates.'
+      operationId: pair_messaging_channel_api_v1_integrations_messaging_channels_pair_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagingPairRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/messaging-channels/{binding_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Unpair Messaging Channel
+      operationId: unpair_messaging_channel_api_v1_integrations_messaging_channels__binding_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: binding_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Binding Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/pylon/connect:
+    post:
+      tags:
+      - integrations
+      summary: Connect Pylon
+      description: 'Connect Pylon integration using API token (admin only).
+
+
+        Returns the webhook URL that the customer must configure in their
+
+        Pylon Trigger settings.'
+      operationId: connect_pylon_api_v1_integrations_pylon_connect_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PylonConnectRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/pylon/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Pylon
+      description: Disconnect Pylon integration.
+      operationId: disconnect_pylon_api_v1_integrations_pylon_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/pylon/webhooks/{org_slug}:
+    post:
+      tags:
+      - integrations
+      summary: Pylon Webhooks
+      description: 'Handle Pylon webhook events.
+
+
+        No auth required — verified via webhook signature.
+
+        The org_slug in the URL identifies the organization.'
+      operationId: pylon_webhooks_api_v1_integrations_pylon_webhooks__org_slug__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: org_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/hubspot/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Hubspot
+      description: Get HubSpot OAuth URL to start connection (admin only).
+      operationId: connect_hubspot_api_v1_integrations_hubspot_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/hubspot/callback:
+    get:
+      tags:
+      - integrations
+      summary: Hubspot Callback
+      description: Handle HubSpot OAuth callback.
+      operationId: hubspot_callback_api_v1_integrations_hubspot_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/hubspot/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Hubspot
+      description: Disconnect HubSpot integration and remove all customer configs.
+      operationId: disconnect_hubspot_api_v1_integrations_hubspot_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/samsara/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Samsara Api Keys
+      description: 'Import one or many Samsara API keys (admin only).
+
+
+        For each key the backend calls Samsara''s ``GET /me`` to learn the
+
+        customer''s ``samsara_org_id`` + name, upserts ``samsara_accounts``,
+
+        and stores the encrypted key. Returns a per-key result so the UI
+
+        can show the success/failure for each line of the textarea
+
+        independently.'
+      operationId: import_samsara_api_keys_api_v1_integrations_samsara_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportApiKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/samsara/accounts:
+    get:
+      tags:
+      - integrations
+      summary: List Samsara Accounts
+      description: 'List every known Samsara customer org for this workspace, with
+
+        key + assignment counts (admin only).'
+      operationId: list_samsara_accounts_api_v1_integrations_samsara_accounts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/samsara/accounts/{account_id}:
+    get:
+      tags:
+      - integrations
+      summary: Get Samsara Account
+      description: Fetch one account + all its keys + all assignments (admin only).
+      operationId: get_samsara_account_api_v1_integrations_samsara_accounts__account_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Update Samsara Account
+      description: 'Reassign the Unisson customer this Samsara account is linked to
+
+        (admin only). The new customer must already exist.
+
+
+        Returns 409 if the target customer is already linked to a
+
+        different Samsara account — the
+
+        ``uq_samsara_accounts_org_customer`` constraint enforces a 1:1
+
+        mapping.'
+      operationId: update_samsara_account_api_v1_integrations_samsara_accounts__account_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/samsara/accounts/{account_id}/keys/{key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Samsara Api Key
+      description: 'Delete a Samsara API key (admin only). Cascades to any
+
+        ``samsara_user_keys`` rows that pointed at this key.'
+      operationId: revoke_samsara_api_key_api_v1_integrations_samsara_accounts__account_id__keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Rename Samsara Api Key
+      description: Rename a Samsara API key (admin only).
+      operationId: rename_samsara_api_key_api_v1_integrations_samsara_accounts__account_id__keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/samsara/accounts/{account_id}/assignments:
+    post:
+      tags:
+      - integrations
+      summary: Assign Samsara User Key
+      description: 'Assign a user to one specific key for one account. Upserts on
+
+        (user_id, account_id) — picking a new key for the same pair just
+
+        swaps the api_key reference, no duplicate row (admin only).'
+      operationId: assign_samsara_user_key_api_v1_integrations_samsara_accounts__account_id__assignments_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/samsara/accounts/{account_id}/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Samsara User Key
+      description: 'Unassign one user from one account. The underlying key row is
+
+        left intact (other users may still hold it). Admin only.'
+      operationId: revoke_samsara_user_key_api_v1_integrations_samsara_accounts__account_id__assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/samsara/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Samsara Keys
+      description: 'Return the requesting user''s own Samsara assignments.
+
+
+        Non-admins use this to see what they have access to — they can''t
+
+        see assignments belonging to other workspace members, can''t import
+
+        keys, can''t reassign themselves. Admins see the same thing for
+
+        themselves but use ``/samsara/accounts`` for the full picture.'
+      operationId: list_my_samsara_keys_api_v1_integrations_samsara_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/snyk/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Snyk Api Keys
+      description: 'Import one or many Snyk API tokens (admin only).
+
+
+        For each token the backend calls Snyk''s ``GET /self`` to validate it
+
+        and learn the identity (``snyk_user_id`` + name), upserts
+
+        ``snyk_accounts``, and stores the encrypted token. Returns a per-token
+
+        result so the UI can show success/failure for each line of the
+
+        textarea independently.'
+      operationId: import_snyk_api_keys_api_v1_integrations_snyk_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportApiKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/snyk/accounts:
+    get:
+      tags:
+      - integrations
+      summary: List Snyk Accounts
+      description: 'List every known Snyk token identity for this workspace, with key
+
+        + assignment counts (admin only).'
+      operationId: list_snyk_accounts_api_v1_integrations_snyk_accounts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/snyk/accounts/{account_id}:
+    get:
+      tags:
+      - integrations
+      summary: Get Snyk Account
+      description: Fetch one account + all its tokens + all assignments (admin only).
+      operationId: get_snyk_account_api_v1_integrations_snyk_accounts__account_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/snyk/accounts/{account_id}/keys/{key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Snyk Api Key
+      description: 'Delete a Snyk API token (admin only). Cascades to any
+
+        ``snyk_user_keys`` rows that pointed at this token.'
+      operationId: revoke_snyk_api_key_api_v1_integrations_snyk_accounts__account_id__keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Rename Snyk Api Key
+      description: Rename a Snyk API token (admin only).
+      operationId: rename_snyk_api_key_api_v1_integrations_snyk_accounts__account_id__keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/snyk/accounts/{account_id}/assignments:
+    post:
+      tags:
+      - integrations
+      summary: Assign Snyk User Key
+      description: 'Assign a user to one specific token for one account. Upserts on
+
+        (user_id, account_id) — picking a new token for the same pair just
+
+        swaps the api_key reference, no duplicate row (admin only).'
+      operationId: assign_snyk_user_key_api_v1_integrations_snyk_accounts__account_id__assignments_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/snyk/accounts/{account_id}/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Snyk User Key
+      description: 'Unassign one user from one account. The underlying token row is
+
+        left intact (other users may still hold it). Admin only.'
+      operationId: revoke_snyk_user_key_api_v1_integrations_snyk_accounts__account_id__assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/snyk/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Snyk Keys
+      description: 'Return the requesting user''s own Snyk assignments.
+
+
+        Non-admins use this to see what they have access to — they can''t see
+
+        assignments belonging to other workspace members, can''t import tokens,
+
+        can''t reassign themselves.'
+      operationId: list_my_snyk_keys_api_v1_integrations_snyk_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/checkout/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Checkout Api Keys
+      description: 'Import one or many Checkout.com secret API keys (admin only).
+
+
+        For each key the backend parses its prefix to derive
+
+        ``(environment, checkout_entity_id)`` — there''s no ``/me``
+
+        equivalent on Checkout''s API. Returns a per-key result so the
+
+        UI can show success/failure for each line of the textarea
+
+        independently.'
+      operationId: import_checkout_api_keys_api_v1_integrations_checkout_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportApiKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/checkout/accounts:
+    get:
+      tags:
+      - integrations
+      summary: List Checkout Accounts
+      description: 'List every known Checkout.com merchant entity for this workspace,
+
+        with key + assignment counts (admin only).'
+      operationId: list_checkout_accounts_api_v1_integrations_checkout_accounts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/checkout/accounts/{account_id}:
+    get:
+      tags:
+      - integrations
+      summary: Get Checkout Account
+      description: Fetch one Checkout account + all its keys + all assignments (admin only).
+      operationId: get_checkout_account_api_v1_integrations_checkout_accounts__account_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Update Checkout Account
+      description: 'Reassign the Unisson customer this Checkout account is linked to
+
+        (admin only). The new customer must already exist.
+
+
+        Returns 409 if the target customer is already linked to a
+
+        different Checkout account — the
+
+        ``uq_checkout_accounts_org_customer`` constraint enforces a 1:1
+
+        mapping.'
+      operationId: update_checkout_account_api_v1_integrations_checkout_accounts__account_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/checkout/accounts/{account_id}/keys/{key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Checkout Api Key
+      description: 'Delete a Checkout API key (admin only). Cascades to any
+
+        ``checkout_user_keys`` rows that pointed at this key.'
+      operationId: revoke_checkout_api_key_api_v1_integrations_checkout_accounts__account_id__keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Rename Checkout Api Key
+      description: Rename a Checkout API key (admin only).
+      operationId: rename_checkout_api_key_api_v1_integrations_checkout_accounts__account_id__keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/checkout/accounts/{account_id}/assignments:
+    post:
+      tags:
+      - integrations
+      summary: Assign Checkout User Key
+      description: 'Assign a user to one specific key for one Checkout account.
+
+        Upserts on (user_id, account_id) — picking a new key for the same
+
+        pair just swaps the api_key reference, no duplicate row (admin
+
+        only).'
+      operationId: assign_checkout_user_key_api_v1_integrations_checkout_accounts__account_id__assignments_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/checkout/accounts/{account_id}/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Checkout User Key
+      description: 'Unassign one user from one Checkout account. The underlying key
+
+        row is left intact (other users may still hold it). Admin only.'
+      operationId: revoke_checkout_user_key_api_v1_integrations_checkout_accounts__account_id__assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/checkout/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Checkout Keys
+      description: Return the requesting user's own Checkout.com assignments.
+      operationId: list_my_checkout_keys_api_v1_integrations_checkout_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/razorpay/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Razorpay Api Keys
+      description: "Import one or many Razorpay API key pairs (admin only).\n\nBody shape:\n    {\n      \"items\": [\n        {\"key_id\": \"rzp_test_…\", \"key_secret\": \"…\",\n         \"display_name\": \"Acme India PG\", \"label\": \"primary\"},\n        ...\n      ]\n    }\n\nEach key's environment is derived from the ``key_id`` prefix and\neach pair is probed via ``GET /v1/payments?count=1`` to confirm\nvalidity. The admin-supplied ``display_name`` is the dedup key —\nre-importing under the same name attaches the new pair to the\nsame account. Returns a per-item result so the UI can show\nsuccess / failure for each row independently."
+      operationId: import_razorpay_api_keys_api_v1_integrations_razorpay_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportRazorpayKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/razorpay/accounts:
+    get:
+      tags:
+      - integrations
+      summary: List Razorpay Accounts
+      description: 'List every known Razorpay merchant account for this workspace,
+
+        with key + assignment counts (admin only).'
+      operationId: list_razorpay_accounts_api_v1_integrations_razorpay_accounts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/razorpay/accounts/{account_id}:
+    get:
+      tags:
+      - integrations
+      summary: Get Razorpay Account
+      description: Fetch one Razorpay account + all its keys + all assignments (admin only).
+      operationId: get_razorpay_account_api_v1_integrations_razorpay_accounts__account_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Update Razorpay Account
+      description: 'Reassign the Unisson customer this Razorpay account is linked to
+
+        (admin only). The new customer must already exist.
+
+
+        Returns 409 if the target customer is already linked to a
+
+        different Razorpay account — the
+
+        ``uq_razorpay_accounts_org_customer`` constraint enforces a 1:1
+
+        mapping.'
+      operationId: update_razorpay_account_api_v1_integrations_razorpay_accounts__account_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/razorpay/accounts/{account_id}/keys/{key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Razorpay Api Key
+      description: 'Delete a Razorpay API key (admin only). Cascades to any
+
+        ``razorpay_user_keys`` rows that pointed at this key.'
+      operationId: revoke_razorpay_api_key_api_v1_integrations_razorpay_accounts__account_id__keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - integrations
+      summary: Rename Razorpay Api Key
+      description: Rename a Razorpay API key (admin only).
+      operationId: rename_razorpay_api_key_api_v1_integrations_razorpay_accounts__account_id__keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/razorpay/accounts/{account_id}/assignments:
+    post:
+      tags:
+      - integrations
+      summary: Assign Razorpay User Key
+      description: 'Assign a user to one specific key for one Razorpay account.
+
+        Upserts on (user_id, account_id) — picking a new key for the same
+
+        pair just swaps the api_key reference, no duplicate row (admin
+
+        only).'
+      operationId: assign_razorpay_user_key_api_v1_integrations_razorpay_accounts__account_id__assignments_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/razorpay/accounts/{account_id}/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Razorpay User Key
+      description: 'Unassign one user from one Razorpay account. The underlying key
+
+        row is left intact (other users may still hold it). Admin only.'
+      operationId: revoke_razorpay_user_key_api_v1_integrations_razorpay_accounts__account_id__assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/razorpay/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Razorpay Keys
+      description: Return the requesting user's own Razorpay assignments.
+      operationId: list_my_razorpay_keys_api_v1_integrations_razorpay_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/grafana/connect:
+    post:
+      tags:
+      - integrations
+      summary: Connect Grafana
+      description: Connect Grafana integration using URL + API key (admin only).
+      operationId: connect_grafana_api_v1_integrations_grafana_connect_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/grafana/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Grafana
+      description: Disconnect Grafana integration and remove all customer configs.
+      operationId: disconnect_grafana_api_v1_integrations_grafana_disconnect_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/grafana/dashboards:
+    get:
+      tags:
+      - integrations
+      summary: List Grafana Dashboards
+      description: List available Grafana dashboards.
+      operationId: list_grafana_dashboards_api_v1_integrations_grafana_dashboards_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GrafanaDashboardListItem'
+                type: array
+                title: Response List Grafana Dashboards Api V1 Integrations Grafana Dashboards Get
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/grafana/alert-rules:
+    get:
+      tags:
+      - integrations
+      summary: List Grafana Alert Rules
+      description: List available Grafana alert rules.
+      operationId: list_grafana_alert_rules_api_v1_integrations_grafana_alert_rules_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/google_drive/drive-folders:
+    get:
+      tags:
+      - integrations
+      summary: List Google Drive Folders
+      description: 'List/search Google Drive folders for the org''s `google_drive` token.
+
+
+        Returns at most 25 folders matching the query (or the most-
+
+        recently-modified 25 when q is empty). Used by the per-customer
+
+        Drive folder picker.'
+      operationId: list_google_drive_folders_api_v1_integrations_google_drive_drive_folders_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/notion/pages:
+    get:
+      tags:
+      - integrations
+      summary: List Notion Pages
+      description: List/search Notion pages the integration can access.
+      operationId: list_notion_pages_api_v1_integrations_notion_pages_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/slack/channels:
+    get:
+      tags:
+      - integrations
+      summary: List Slack Channels Endpoint
+      description: List Slack channels the org's bot can see.
+      operationId: list_slack_channels_endpoint_api_v1_integrations_slack_channels_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/grafana/webhooks/{org_slug}:
+    post:
+      tags:
+      - integrations
+      summary: Grafana Webhooks
+      description: Handle Grafana alert webhook events. Bearer token auth.
+      operationId: grafana_webhooks_api_v1_integrations_grafana_webhooks__org_slug__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: org_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/gmail/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Gmail
+      description: 'Get Google OAuth URL for per-user Gmail consent.
+
+
+        ``redirect_url`` is an optional same-origin path (must start with ``/``
+
+        and not ``//``) that the callback will return to after the flow
+
+        completes. Invalid values are silently dropped so we always fall back to
+
+        ``/platform/connectors``.'
+      operationId: connect_gmail_api_v1_integrations_gmail_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/gmail/callback:
+    get:
+      tags:
+      - integrations
+      summary: Gmail Callback
+      operationId: gmail_callback_api_v1_integrations_gmail_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/gmail/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Gmail
+      description: 'Revoke the current user''s native Gmail token.
+
+
+        We stop the mailbox''s push watch, attempt to revoke the token at Google
+
+        (best-effort), and then delete the local record.'
+      operationId: disconnect_gmail_api_v1_integrations_gmail_disconnect_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/google_tag_manager/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Google Tag Manager
+      description: 'Get Google OAuth URL for per-user Tag Manager consent.
+
+
+        ``redirect_url`` is an optional same-origin path the callback returns
+
+        to after the flow completes; invalid values are silently dropped.'
+      operationId: connect_google_tag_manager_api_v1_integrations_google_tag_manager_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_tag_manager/callback:
+    get:
+      tags:
+      - integrations
+      summary: Google Tag Manager Callback
+      operationId: google_tag_manager_callback_api_v1_integrations_google_tag_manager_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_tag_manager/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Google Tag Manager
+      description: 'Revoke the current user''s native Google Tag Manager token.
+
+
+        We attempt to revoke the token at Google (best-effort) and then
+
+        delete the local record.'
+      operationId: disconnect_google_tag_manager_api_v1_integrations_google_tag_manager_disconnect_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/google_calendar/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Google Calendar
+      description: Get Google OAuth URL for per-user Calendar consent.
+      operationId: connect_google_calendar_api_v1_integrations_google_calendar_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_calendar/callback:
+    get:
+      tags:
+      - integrations
+      summary: Google Calendar Callback
+      operationId: google_calendar_callback_api_v1_integrations_google_calendar_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/google_calendar/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Google Calendar
+      description: Revoke the current user's native Google Calendar token.
+      operationId: disconnect_google_calendar_api_v1_integrations_google_calendar_disconnect_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/notion/connect:
+    get:
+      tags:
+      - integrations
+      summary: Connect Notion
+      description: 'Admin-only: start Notion OAuth for the whole org.
+
+
+        ``redirect_url`` is an optional same-origin path (must start with ``/``
+
+        and not ``//``) that the callback will return to after the flow
+
+        completes. Invalid values are silently dropped so we always fall back to
+
+        ``/platform/connectors``.'
+      operationId: connect_notion_api_v1_integrations_notion_connect_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/notion/callback:
+    get:
+      tags:
+      - integrations
+      summary: Notion Callback
+      operationId: notion_callback_api_v1_integrations_notion_callback_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Code
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+          title: State
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/notion/disconnect:
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Notion
+      description: 'Admin-only: remove the org''s Notion token.'
+      operationId: disconnect_notion_api_v1_integrations_notion_disconnect_delete
+      responses:
+        '204':
+          description: Successful Response
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/adobe/credential:
+    get:
+      tags:
+      - integrations
+      summary: Get Adobe Credential
+      description: Return the org's Adobe credential summary (admin only); no secret.
+      operationId: get_adobe_credential_api_v1_integrations_adobe_credential_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Import Adobe Credential
+      description: 'Import the org''s Adobe Reactor credential (admin only).
+
+
+        Validates the OAuth Server-to-Server credential by minting an IMS token and
+
+        reading GET /profile, then stores it (one per org).'
+      operationId: import_adobe_credential_api_v1_integrations_adobe_credential_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Adobe Credential
+      description: Delete the org's Adobe credential (admin only).
+      operationId: disconnect_adobe_credential_api_v1_integrations_adobe_credential_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/scribe/credential:
+    get:
+      tags:
+      - integrations
+      summary: Get Scribe Credential
+      description: Return the org's Scribe credential summary (admin only); no secret.
+      operationId: get_scribe_credential_api_v1_integrations_scribe_credential_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Import Scribe Credential
+      description: 'Import the org''s Scribe API key (admin only).
+
+
+        Validates the key by calling GET /v1/teams/ (learning the accessible teams
+
+        for a display name), then stores it (one per org).'
+      operationId: import_scribe_credential_api_v1_integrations_scribe_credential_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Scribe Credential
+      description: Delete the org's Scribe credential (admin only).
+      operationId: disconnect_scribe_credential_api_v1_integrations_scribe_credential_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/tealium/credential:
+    get:
+      tags:
+      - integrations
+      summary: Get Tealium Credential
+      description: Return the org's Tealium credential summary (admin only); no key.
+      operationId: get_tealium_credential_api_v1_integrations_tealium_credential_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Import Tealium Credential
+      description: 'Import the org''s Tealium iQ credential (admin only).
+
+
+        Validates by performing the two-step auth (learns the region host), then
+
+        stores it (one per org).'
+      operationId: import_tealium_credential_api_v1_integrations_tealium_credential_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Tealium Credential
+      description: Delete the org's Tealium credential (admin only).
+      operationId: disconnect_tealium_credential_api_v1_integrations_tealium_credential_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/shopify/credential:
+    get:
+      tags:
+      - integrations
+      summary: Get Shopify Credential
+      description: Return the org's Shopify credential summary (admin only); no token.
+      operationId: get_shopify_credential_api_v1_integrations_shopify_credential_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Import Shopify Credential
+      description: 'Import the org''s Shopify credential (admin only).
+
+
+        Validates by reading ``shop { name }`` with the token, then stores it (one
+
+        shop per org).'
+      operationId: import_shopify_credential_api_v1_integrations_shopify_credential_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - integrations
+      summary: Disconnect Shopify Credential
+      description: Delete the org's Shopify credential (admin only).
+      operationId: disconnect_shopify_credential_api_v1_integrations_shopify_credential_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/productboard/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Productboard Api Keys
+      description: 'Import one or many Productboard Public API tokens (admin only).
+
+
+        Each token is validated by calling Productboard''s GET /products with it,
+
+        then stored encrypted in the org-level pool. There''s no identity to
+
+        resolve (the Public API exposes none) and no per-token account — admins
+
+        assign tokens to users separately. Returns a per-token result so the UI
+
+        can show success/failure for each line of the textarea independently.'
+      operationId: import_productboard_api_keys_api_v1_integrations_productboard_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportApiKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/productboard/api-keys:
+    get:
+      tags:
+      - integrations
+      summary: List Productboard Api Keys
+      description: 'List the org''s Productboard token pool (admin only). No secrets — only
+
+        the last 4 plaintext chars so the UI can mask the rest.'
+      operationId: list_productboard_api_keys_api_v1_integrations_productboard_api_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/productboard/api-keys/{key_id}:
+    patch:
+      tags:
+      - integrations
+      summary: Rename Productboard Api Key
+      description: Rename a Productboard API token (admin only).
+      operationId: rename_productboard_api_key_api_v1_integrations_productboard_api_keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Productboard Api Key
+      description: 'Delete a Productboard API token (admin only). Cascades to any
+
+        ``productboard_user_keys`` rows that pointed at this token.'
+      operationId: revoke_productboard_api_key_api_v1_integrations_productboard_api_keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/productboard/assignments:
+    get:
+      tags:
+      - integrations
+      summary: List Productboard Assignments
+      description: 'List every per-user token assignment in the org (admin only). Feeds the
+
+        member → token dropdowns in the management UI.'
+      operationId: list_productboard_assignments_api_v1_integrations_productboard_assignments_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Assign Productboard User Key
+      description: 'Assign a user to one token (admin only). Upserts on user_id — picking a
+
+        new token for the same user just swaps the api_key reference, no duplicate
+
+        row.'
+      operationId: assign_productboard_user_key_api_v1_integrations_productboard_assignments_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/productboard/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Productboard User Key
+      description: 'Unassign one user (admin only). The underlying token row is left intact
+
+        (other users may still hold it).'
+      operationId: revoke_productboard_user_key_api_v1_integrations_productboard_assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/productboard/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Productboard Keys
+      description: 'Return the requesting user''s own Productboard assignment.
+
+
+        Non-admins use this to see what they have access to — they can''t see
+
+        other members'' assignments, can''t import tokens, can''t reassign themselves.'
+      operationId: list_my_productboard_keys_api_v1_integrations_productboard_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/mirakl/api-keys/import:
+    post:
+      tags:
+      - integrations
+      summary: Import Mirakl Api Keys
+      description: "Import one or many Mirakl API keys (admin only).\n\nBody shape:\n    {\n      \"items\": [\n        {\"instance_url\": \"https://acme.mirakl.net\", \"persona\": \"operator\",\n         \"api_key\": \"…\", \"label\": \"Acme operator\"},\n        ...\n      ]\n    }\n\nEach key is validated against its instance URL with a persona-appropriate,\nparam-less GET, then stored encrypted in the org-level pool. There's no\nper-key account — admins assign keys to users separately. Returns a per-item\nresult so the UI can show success/failure for each row independently."
+      operationId: import_mirakl_api_keys_api_v1_integrations_mirakl_api_keys_import_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportMiraklKeysRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/mirakl/api-keys:
+    get:
+      tags:
+      - integrations
+      summary: List Mirakl Api Keys
+      description: 'List the org''s Mirakl key pool (admin only). No secrets — only the last 4
+
+        plaintext chars so the UI can mask the rest.'
+      operationId: list_mirakl_api_keys_api_v1_integrations_mirakl_api_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/mirakl/api-keys/{key_id}:
+    patch:
+      tags:
+      - integrations
+      summary: Rename Mirakl Api Key
+      description: Rename a Mirakl API key (admin only).
+      operationId: rename_mirakl_api_key_api_v1_integrations_mirakl_api_keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Mirakl Api Key
+      description: 'Delete a Mirakl API key (admin only). Cascades to any ``mirakl_user_keys``
+
+        rows that pointed at this key.'
+      operationId: revoke_mirakl_api_key_api_v1_integrations_mirakl_api_keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/mirakl/assignments:
+    get:
+      tags:
+      - integrations
+      summary: List Mirakl Assignments
+      description: 'List every per-user key assignment in the org (admin only). Feeds the
+
+        member → key dropdowns in the management UI.'
+      operationId: list_mirakl_assignments_api_v1_integrations_mirakl_assignments_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - integrations
+      summary: Assign Mirakl User Key
+      description: 'Assign a user to one key (admin only). Upserts on user_id — picking a new
+
+        key for the same user just swaps the api_key reference, no duplicate row.'
+      operationId: assign_mirakl_user_key_api_v1_integrations_mirakl_assignments_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignUserKeyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/integrations/mirakl/assignments/{user_key_id}:
+    delete:
+      tags:
+      - integrations
+      summary: Revoke Mirakl User Key
+      description: 'Unassign one user (admin only). The underlying key row is left intact
+
+        (other users may still hold it).'
+      operationId: revoke_mirakl_user_key_api_v1_integrations_mirakl_assignments__user_key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/integrations/mirakl/users/me/keys:
+    get:
+      tags:
+      - integrations
+      summary: List My Mirakl Keys
+      description: 'Return the requesting user''s own Mirakl assignment.
+
+
+        Non-admins use this to see what they have access to — they can''t see other
+
+        members'' assignments, can''t import keys, can''t reassign themselves.'
+      operationId: list_my_mirakl_keys_api_v1_integrations_mirakl_users_me_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    ImportMiraklKeysRequest:
+      properties:
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ImportMiraklKeysRequest
+      description: 'Body for the Mirakl bulk key-import endpoint.
+
+
+        Each item is ``{instance_url, persona, api_key, label?}`` — Mirakl is
+
+        self-hosted per customer (so the base URL is part of the credential) and a
+
+        key acts as one persona (operator | seller). Items are validated per-row
+
+        downstream so one malformed row surfaces as a per-item failure instead of
+
+        rejecting the whole batch — hence the permissive element type.'
+    PylonConnectRequest:
+      properties:
+        api_token:
+          type: string
+          title: Api Token
+        webhook_secret:
+          type: string
+          title: Webhook Secret
+      type: object
+      required:
+      - api_token
+      - webhook_secret
+      title: PylonConnectRequest
+    MessagingPairRequest:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        channel:
+          type: string
+          pattern: ^(whatsapp|email)$
+          title: Channel
+        identifier:
+          type: string
+          title: Identifier
+      type: object
+      required:
+      - user_id
+      - channel
+      - identifier
+      title: MessagingPairRequest
+    SlackNotificationConfigBody:
+      properties:
+        channel_id:
+          type: string
+          maxLength: 32
+          minLength: 1
+          title: Channel Id
+        channel_name:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Channel Name
+      type: object
+      required:
+      - channel_id
+      - channel_name
+      title: SlackNotificationConfigBody
+    GitHubRepository:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        full_name:
+          type: string
+          title: Full Name
+        private:
+          type: boolean
+          title: Private
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - id
+      - name
+      - full_name
+      - private
+      - description
+      - url
+      title: GitHubRepository
+    GranolaCredentialRequest:
+      properties:
+        api_key:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Api Key
+      type: object
+      required:
+      - api_key
+      title: GranolaCredentialRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AssignUserKeyRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        key_id:
+          type: string
+          format: uuid
+          title: Key Id
+      type: object
+      required:
+      - user_id
+      - key_id
+      title: AssignUserKeyRequest
+      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
+    ImportApiKeysRequest:
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Keys
+        labels:
+          items:
+            type: string
+          type: array
+          title: Labels
+      type: object
+      required:
+      - keys
+      title: ImportApiKeysRequest
+      description: 'Body for the Samsara/Snyk/Checkout bulk key-import endpoints.
+
+
+        ``keys`` and ``labels`` are positionally aligned (``labels`` may be shorter
+
+        than ``keys``; missing positions default to the provider''s own name).
+
+        Blank ``keys`` entries are dropped downstream, so a list of only blanks is
+
+        accepted here and yields an empty per-key result rather than an error.'
+    IntegrationStatus:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        connected:
+          type: boolean
+          title: Connected
+        needs_reconnect:
+          type: boolean
+          title: Needs Reconnect
+          default: false
+        connected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Connected At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - provider
+      - connected
+      title: IntegrationStatus
+    DriveFile:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        mime_type:
+          type: string
+          title: Mime Type
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        modified_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modified Time
+        created_time:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created Time
+      type: object
+      required:
+      - id
+      - name
+      - mime_type
+      - description
+      - url
+      - modified_time
+      - created_time
+      title: DriveFile
+    ImportRazorpayKeysRequest:
+      properties:
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ImportRazorpayKeysRequest
+      description: 'Body for the Razorpay bulk key-pair import endpoint.
+
+
+        Each item is ``{key_id, key_secret, display_name, label?}``. Items are
+
+        validated per-row downstream so one malformed row surfaces as a per-item
+
+        failure instead of rejecting the whole batch — hence the permissive element
+
+        type; only the non-empty envelope is enforced here.'
+    GrafanaDashboardListItem:
+      properties:
+        uid:
+          type: string
+          title: Uid
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+          default: ''
+      type: object
+      required:
+      - uid
+      - title
+      title: GrafanaDashboardListItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

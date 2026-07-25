@@ -1,0 +1,721 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals widget API
+  version: 1.0.0
+tags:
+- name: widget
+paths:
+  /api/v1/widget/config:
+    get:
+      tags:
+      - widget
+      summary: Get Widget Config
+      description: 'Return widget branding and behavior configuration.
+
+
+        Called once when the widget loads. Uses API key to look up config.'
+      operationId: get_widget_config_api_v1_widget_config_get
+      parameters:
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/org:
+    get:
+      tags:
+      - widget
+      summary: List End User Sessions
+      description: 'List all end-user sessions for the organization.
+
+
+        Combines widget sessions and external API activity into a single list.
+
+        Admin-only endpoint. Supports pagination via limit/offset.'
+      operationId: list_end_user_sessions_api_v1_widget_sessions_org_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUserSessionsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/{session_id}/admin:
+    delete:
+      tags:
+      - widget
+      summary: Delete Widget Session
+      description: 'Delete a widget session and its linked conversation.
+
+
+        Admin-only. The CASCADE on conversation_id will also delete messages.'
+      operationId: delete_widget_session_api_v1_widget_sessions__session_id__admin_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/api/{api_key_id}/{end_user_email}:
+    delete:
+      tags:
+      - widget
+      summary: Revoke Api Key User Session
+      description: 'Revoke an API-key end-user''s Kernel profile + presence row.
+
+
+        Mirrors ``DELETE /browser-contexts/user/{user_id}`` for the
+
+        user-driven path: deletes the Kernel profile (server-side cookies
+
+        + browser state) AND the Unisson presence row, in that order so a
+
+        failure on the Kernel side leaves the row intact for retry.'
+      operationId: revoke_api_key_user_session_api_v1_widget_sessions_api__api_key_id___end_user_email__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Key Id
+      - name: end_user_email
+        in: path
+        required: true
+        schema:
+          type: string
+          title: End User Email
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/slack/{end_user_email}:
+    delete:
+      tags:
+      - widget
+      summary: Revoke Slack User Session
+      description: 'Revoke an external Slack user''s Kernel profile + presence row.
+
+
+        Slack analog of :func:`revoke_api_key_user_session`. Keyed by
+
+        ``(org, email)`` since Slack profiles carry no api_key. Deletes the
+
+        Kernel profile first (so a Kernel failure leaves the row for retry),
+
+        then the presence row.'
+      operationId: revoke_slack_user_session_api_v1_widget_sessions_slack__end_user_email__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: end_user_email
+        in: path
+        required: true
+        schema:
+          type: string
+          title: End User Email
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions:
+    post:
+      tags:
+      - widget
+      summary: Create Or Resume Session
+      description: 'Create a new widget session or resume an existing one.
+
+
+        If session_id is provided and valid, returns the existing session.
+
+        Otherwise creates a new ChatConversation and WidgetSession.'
+      operationId: create_or_resume_session_api_v1_widget_sessions_post
+      parameters:
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetSessionCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetSessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/{session_id}/messages:
+    get:
+      tags:
+      - widget
+      summary: Get Widget Messages
+      description: Return message history for a widget session.
+      operationId: get_widget_messages_api_v1_widget_sessions__session_id__messages_get
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - widget
+      summary: Send Widget Message
+      description: 'Send a message in a widget session and stream the response via SSE.
+
+
+        Reuses ChatService.process_message_stream() with API key auth
+
+        instead of Clerk auth, and without a user_id (anonymous widget user).'
+      operationId: send_widget_message_api_v1_widget_sessions__session_id__messages_post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetMessageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/{session_id}/execute-task:
+    post:
+      tags:
+      - widget
+      summary: Execute Widget Task
+      description: Execute a task from a widget session (TaskSuggestionCard button click).
+      operationId: execute_widget_task_api_v1_widget_sessions__session_id__execute_task_post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetExecuteTaskRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetExecuteTaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/{session_id}/runs/{run_id}/resume:
+    post:
+      tags:
+      - widget
+      summary: Resume Widget Run
+      description: Resume a widget run after authentication or clarifying question.
+      operationId: resume_widget_run_api_v1_widget_sessions__session_id__runs__run_id__resume_post
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetResumeRunRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/widget/sessions/{session_id}/runs/{run_id}/result-screenshots:
+    get:
+      tags:
+      - widget
+      summary: Get Widget Result Screenshots
+      description: Get presigned URLs for result screenshots saved by the agent.
+      operationId: get_widget_result_screenshots_api_v1_widget_sessions__session_id__runs__run_id__result_screenshots_get
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      - name: X-API-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    WidgetSessionCreateRequest:
+      properties:
+        session_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Session Id
+          description: Existing session ID to resume
+        end_user_id:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: End User Id
+        end_user_email:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: End User Email
+        end_user_name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: End User Name
+        user_hash:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: User Hash
+          description: HMAC-SHA256(identity_secret, end_user_email) for identity verification
+        auth_token:
+          anyOf:
+          - type: string
+            maxLength: 10000
+          - type: 'null'
+          title: Auth Token
+          description: Auth token to inject into browser localStorage for the customer's site
+        force_new:
+          type: boolean
+          title: Force New
+          description: When true, always create a new session (skip email-based resume)
+          default: false
+      type: object
+      title: WidgetSessionCreateRequest
+      description: Create or resume a widget session.
+    EndUserSessionsResponse:
+      properties:
+        sessions:
+          items:
+            $ref: '#/components/schemas/EndUserSessionInfo'
+          type: array
+          title: Sessions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - sessions
+      - total
+      - limit
+      - offset
+      title: EndUserSessionsResponse
+      description: Paginated end-user sessions for an organization.
+    EndUserSessionInfo:
+      properties:
+        source:
+          type: string
+          enum:
+          - widget
+          - api
+          - slack
+          - guest
+          title: Source
+        verified:
+          type: boolean
+          title: Verified
+          default: false
+        has_browser_profile:
+          type: boolean
+          title: Has Browser Profile
+          default: false
+        session_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Session Id
+        conversation_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Conversation Id
+        end_user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End User Email
+        end_user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End User Name
+        end_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: End User Id
+        api_key_name:
+          type: string
+          title: Api Key Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        last_activity_at:
+          type: string
+          format: date-time
+          title: Last Activity At
+        run_count:
+          type: integer
+          title: Run Count
+          default: 0
+      type: object
+      required:
+      - source
+      - api_key_name
+      - created_at
+      - last_activity_at
+      title: EndUserSessionInfo
+      description: A single end-user session from either widget or external API.
+    WidgetMessageRequest:
+      properties:
+        content:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Content
+          description: Message content
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode for tasks: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - content
+      title: WidgetMessageRequest
+      description: Send a message in a widget session.
+    WidgetConfigResponse:
+      properties:
+        branding:
+          additionalProperties: true
+          type: object
+          title: Branding
+        behavior:
+          additionalProperties: true
+          type: object
+          title: Behavior
+      type: object
+      required:
+      - branding
+      - behavior
+      title: WidgetConfigResponse
+      description: Widget configuration returned to the frontend widget.
+    WidgetResumeRunRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Answer
+          description: User answer for clarifying questions
+      type: object
+      title: WidgetResumeRunRequest
+      description: Resume a run that is waiting for input or authentication.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WidgetExecuteTaskResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - run_id
+      - message_id
+      title: WidgetExecuteTaskResponse
+      description: Response after starting a task execution.
+    WidgetExecuteTaskRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+          description: Task description
+        message_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Message Id
+          description: Source message ID (from task suggestion)
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - request_text
+      title: WidgetExecuteTaskRequest
+      description: Execute a task from a widget session.
+    WidgetSessionResponse:
+      properties:
+        session_id:
+          type: string
+          format: uuid4
+          title: Session Id
+        conversation_id:
+          type: string
+          format: uuid4
+          title: Conversation Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - session_id
+      - conversation_id
+      - created_at
+      title: WidgetSessionResponse
+      description: Widget session with conversation link.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

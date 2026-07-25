@@ -1,0 +1,870 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals apis API
+  version: 1.0.0
+tags:
+- name: apis
+paths:
+  /api/v1/apis/:
+    get:
+      tags:
+      - apis
+      summary: List Apis And Recordings
+      description: 'List generated APIs and network recordings for the organization.
+
+
+        Optionally filter by workflow_id.'
+      operationId: list_apis_and_recordings_api_v1_apis__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CombinedAPIDataResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/:
+    get:
+      tags:
+      - apis
+      summary: List Recordings
+      description: 'List network recordings for the organization.
+
+
+        Optionally filter by workflow_id.'
+      operationId: list_recordings_api_v1_apis_recordings__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/{recording_id}/har:
+    get:
+      tags:
+      - apis
+      summary: Get Recording Har
+      description: Get the HAR data for a single network recording.
+      operationId: get_recording_har_api_v1_apis_recordings__recording_id__har_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: recording_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Recording Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingHarResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/{recording_id}/generate:
+    post:
+      tags:
+      - apis
+      summary: Generate Api From Recording
+      description: 'Generate an API from a network recording.
+
+
+        Starts LLM analysis in the background using the shared API generation service.
+
+        Use WebSocket updates to monitor progress.'
+      operationId: generate_api_from_recording_api_v1_apis_recordings__recording_id__generate_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: recording_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Recording Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/{recording_id}:
+    delete:
+      tags:
+      - apis
+      summary: Delete Recording
+      description: Delete a network recording (soft delete).
+      operationId: delete_recording_api_v1_apis_recordings__recording_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: recording_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Recording Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/manual/start:
+    post:
+      tags:
+      - apis
+      summary: Start Manual Recording
+      description: 'Start a new manual recording session.
+
+
+        Opens a Kernel browser window and starts recording network traffic.
+
+        Returns a LiveView URL for the user to interact with the browser.'
+      operationId: start_manual_recording_api_v1_apis_recordings_manual_start_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartManualRecordingRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartManualRecordingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/apis/recordings/manual/{session_id}/stop:
+    post:
+      tags:
+      - apis
+      summary: Stop Manual Recording
+      description: 'Stop a manual recording session and save the captured data.
+
+
+        Creates a workflow and network recording from the captured traffic.'
+      operationId: stop_manual_recording_api_v1_apis_recordings_manual__session_id__stop_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StopManualRecordingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/manual/{session_id}/cancel:
+    post:
+      tags:
+      - apis
+      summary: Cancel Manual Recording
+      description: Cancel a manual recording session without saving.
+      operationId: cancel_manual_recording_api_v1_apis_recordings_manual__session_id__cancel_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/manual/{session_id}/copilot/message:
+    post:
+      tags:
+      - apis
+      summary: Send Copilot Message
+      description: Send a user message to the copilot observer during a recording session.
+      operationId: send_copilot_message_api_v1_apis_recordings_manual__session_id__copilot_message_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CopilotMessageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/recordings/manual/active:
+    get:
+      tags:
+      - apis
+      summary: Get Active Manual Recording
+      description: Check if the current user has an active manual recording session.
+      operationId: get_active_manual_recording_api_v1_apis_recordings_manual_active_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveRecordingResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/apis/{api_id}:
+    get:
+      tags:
+      - apis
+      summary: Get Api
+      description: Get a specific generated API by ID.
+      operationId: get_api_api_v1_apis__api_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - apis
+      summary: Delete Api
+      description: Delete a generated API (soft delete).
+      operationId: delete_api_api_v1_apis__api_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apis/{api_id}/execute:
+    post:
+      tags:
+      - apis
+      summary: Execute Api
+      description: 'Execute a generated API with provided auth tokens and parameters.
+
+
+        The client should extract cookies/localStorage from the browser
+
+        and pass them here for authentication.'
+      operationId: execute_api_api_v1_apis__api_id__execute_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: api_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Api Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteAPIRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteAPIResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    StartManualRecordingResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        liveview_url:
+          type: string
+          title: Liveview Url
+        kernel_browser_id:
+          type: string
+          title: Kernel Browser Id
+        organization_id:
+          type: string
+          title: Organization Id
+      type: object
+      required:
+      - session_id
+      - liveview_url
+      - kernel_browser_id
+      - organization_id
+      title: StartManualRecordingResponse
+      description: Response for starting a manual recording.
+    ExecuteAPIRequest:
+      properties:
+        cookies:
+          additionalProperties:
+            type: string
+          type: object
+          title: Cookies
+          default: {}
+        storage:
+          additionalProperties:
+            type: string
+          type: object
+          title: Storage
+          default: {}
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Headers
+          default: {}
+        params:
+          additionalProperties:
+            type: string
+          type: object
+          title: Params
+          default: {}
+      type: object
+      title: ExecuteAPIRequest
+      description: Request body for executing an API.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RecordingListResponse:
+      properties:
+        recordings:
+          items:
+            $ref: '#/components/schemas/RecordingResponse'
+          type: array
+          title: Recordings
+      type: object
+      required:
+      - recordings
+      title: RecordingListResponse
+      description: Response model for listing recordings.
+    CombinedAPIDataResponse:
+      properties:
+        apis:
+          items:
+            $ref: '#/components/schemas/APIResponse'
+          type: array
+          title: Apis
+        recordings:
+          items:
+            $ref: '#/components/schemas/RecordingResponse'
+          type: array
+          title: Recordings
+      type: object
+      required:
+      - apis
+      - recordings
+      title: CombinedAPIDataResponse
+      description: Combined response with both APIs and recordings.
+    APIStepResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        method:
+          type: string
+          title: Method
+        url:
+          type: string
+          title: Url
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Headers
+        body:
+          anyOf:
+          - type: string
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Body
+        extract:
+          additionalProperties:
+            type: string
+          type: object
+          title: Extract
+          default: {}
+        requires:
+          items:
+            type: string
+          type: array
+          title: Requires
+          default: []
+        loop_over:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Loop Over
+      type: object
+      required:
+      - name
+      - method
+      - url
+      - headers
+      title: APIStepResponse
+      description: A single step in an API definition.
+    StartManualRecordingRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        copilot_enabled:
+          type: boolean
+          title: Copilot Enabled
+          default: false
+      type: object
+      required:
+      - title
+      title: StartManualRecordingRequest
+      description: Request body for starting a manual recording.
+    RecordingResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        workflow_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Id
+        workflow_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Name
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+        task_description:
+          type: string
+          title: Task Description
+        starting_url:
+          type: string
+          title: Starting Url
+        request_count:
+          type: integer
+          title: Request Count
+        status:
+          type: string
+          title: Status
+        recorded_at:
+          type: string
+          title: Recorded At
+        har_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Har Data
+        recording_type:
+          type: string
+          title: Recording Type
+          default: cua
+      type: object
+      required:
+      - id
+      - workflow_id
+      - workflow_name
+      - run_id
+      - task_description
+      - starting_url
+      - request_count
+      - status
+      - recorded_at
+      title: RecordingResponse
+      description: Response model for a network recording.
+    ActiveRecordingResponse:
+      properties:
+        has_active_session:
+          type: boolean
+          title: Has Active Session
+        session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        copilot_enabled:
+          type: boolean
+          title: Copilot Enabled
+          default: false
+      type: object
+      required:
+      - has_active_session
+      title: ActiveRecordingResponse
+      description: Response for active recording check.
+    RecordingHarResponse:
+      properties:
+        har_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Har Data
+      type: object
+      title: RecordingHarResponse
+      description: Response model for a recording's HAR data.
+    APIResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        workflow_id:
+          type: string
+          title: Workflow Id
+        workflow_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Name
+        source_recording_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Recording Id
+        api_id:
+          type: string
+          title: Api Id
+        description:
+          type: string
+          title: Description
+        input_schema:
+          additionalProperties: true
+          type: object
+          title: Input Schema
+        output_schema:
+          additionalProperties: true
+          type: object
+          title: Output Schema
+        steps:
+          items:
+            $ref: '#/components/schemas/APIStepResponse'
+          type: array
+          title: Steps
+        auth_requirements:
+          items:
+            type: string
+          type: array
+          title: Auth Requirements
+        status:
+          type: string
+          title: Status
+        execution_count:
+          type: integer
+          title: Execution Count
+        success_count:
+          type: integer
+          title: Success Count
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - id
+      - workflow_id
+      - api_id
+      - description
+      - input_schema
+      - output_schema
+      - steps
+      - auth_requirements
+      - status
+      - execution_count
+      - success_count
+      - created_at
+      title: APIResponse
+      description: Response model for a generated API.
+    CopilotMessageRequest:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: CopilotMessageRequest
+      description: Request body for sending a message to the copilot observer.
+    ExecuteAPIResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data
+        execution_time_ms:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Execution Time Ms
+        steps_executed:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Steps Executed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Step
+        status_code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Status Code
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+      type: object
+      required:
+      - success
+      title: ExecuteAPIResponse
+      description: Response from API execution.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    StopManualRecordingResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        recording_id:
+          type: string
+          title: Recording Id
+        workflow_id:
+          type: string
+          title: Workflow Id
+        request_count:
+          type: integer
+          title: Request Count
+        api_request_count:
+          type: integer
+          title: Api Request Count
+        interaction_count:
+          type: integer
+          title: Interaction Count
+      type: object
+      required:
+      - success
+      - recording_id
+      - workflow_id
+      - request_count
+      - api_request_count
+      - interaction_count
+      title: StopManualRecordingResponse
+      description: Response for stopping a manual recording.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,66 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals task-types API
+  version: 1.0.0
+tags:
+- name: task-types
+paths:
+  /api/v1/task-types/:
+    get:
+      tags:
+      - task-types
+      summary: List Registered Task Types
+      description: 'Return all registered task_types.
+
+
+        Orgs not on the API-exposure allowlist (see
+
+        ``app.core.task_types.API_EXPOSURE_ORG_SLUGS``) get an empty list,
+
+        which the workflow editor reads as "feature disabled" and hides the
+
+        "API exposure" section entirely.'
+      operationId: list_registered_task_types_api_v1_task_types__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RegisteredTaskTypeResponse'
+                type: array
+                title: Response List Registered Task Types Api V1 Task Types  Get
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    RegisteredTaskTypeResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        label:
+          type: string
+          title: Label
+        output_schema:
+          additionalProperties: true
+          type: object
+          title: Output Schema
+        sandbox_scenarios:
+          items:
+            type: string
+          type: array
+          title: Sandbox Scenarios
+      type: object
+      required:
+      - slug
+      - label
+      - output_schema
+      - sandbox_scenarios
+      title: RegisteredTaskTypeResponse
+      description: One entry in the registered-task_types list.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

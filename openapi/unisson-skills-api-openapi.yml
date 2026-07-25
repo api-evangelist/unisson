@@ -1,0 +1,666 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals skills API
+  version: 1.0.0
+tags:
+- name: skills
+paths:
+  /api/v1/skills:
+    get:
+      tags:
+      - skills
+      summary: List Skills
+      description: List the org's skills (built-in + custom), built-ins first.
+      operationId: list_skills_api_v1_skills_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SkillResponse'
+                type: array
+                title: Response List Skills Api V1 Skills Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - skills
+      summary: Create Skill
+      description: Create a custom skill (members only).
+      operationId: create_skill_api_v1_skills_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/skills/builder-conversation:
+    get:
+      tags:
+      - skills
+      summary: Get Or Create Skill Builder Conversation
+      description: 'Get-or-create the organization''s Skill-Builder conversation (members
+
+        only). One persistent thread per org (``is_skill_builder``); the
+
+        partial unique index makes get-or-create race-safe; excluded from every
+
+        conversation list.'
+      operationId: get_or_create_skill_builder_conversation_api_v1_skills_builder_conversation_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/skills/{skill_id}:
+    get:
+      tags:
+      - skills
+      summary: Get Skill
+      description: Get a single skill.
+      operationId: get_skill_api_v1_skills__skill_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - skills
+      summary: Update Skill
+      description: 'Direct edit of a skill (members only). name/description/instructions are
+
+        versioned (source ``manual``); icon is set directly.'
+      operationId: update_skill_api_v1_skills__skill_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - skills
+      summary: Delete Skill
+      description: Soft-delete a custom skill (members only). Built-ins reject delete (403).
+      operationId: delete_skill_api_v1_skills__skill_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/skills/{skill_id}/rename:
+    patch:
+      tags:
+      - skills
+      summary: Rename Skill
+      description: 'Rename a custom skill''s slug (and optionally its name). Built-in slugs are
+
+        wiring — 403. Members only.'
+      operationId: rename_skill_api_v1_skills__skill_id__rename_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillRenameRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/skills/{skill_id}/instruction-versions:
+    get:
+      tags:
+      - skills
+      summary: List Instruction Versions
+      description: A skill's instruction version history, newest first.
+      operationId: list_instruction_versions_api_v1_skills__skill_id__instruction_versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SkillInstructionVersionResponse'
+                title: Response List Instruction Versions Api V1 Skills  Skill Id  Instruction Versions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/skills/{skill_id}/instruction-versions/{version_id}:
+    get:
+      tags:
+      - skills
+      summary: Get Instruction Version
+      description: A single instruction version (full text).
+      operationId: get_instruction_version_api_v1_skills__skill_id__instruction_versions__version_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillInstructionVersionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/skills/{skill_id}/instruction-versions/{version_id}/revert:
+    post:
+      tags:
+      - skills
+      summary: Revert Instruction Version
+      description: 'Restore the skill''s profile to a prior version (members only). Appends a
+
+        new ``revert`` version — history is never rewritten.'
+      operationId: revert_instruction_version_api_v1_skills__skill_id__instruction_versions__version_id__revert_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: skill_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Skill Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SkillResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        origin:
+          type: string
+          title: Origin
+        is_builtin:
+          type: boolean
+          title: Is Builtin
+        entry_tool:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entry Tool
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - slug
+      - name
+      - origin
+      - is_builtin
+      - created_at
+      - updated_at
+      title: SkillResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    SkillInstructionVersionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        skill_id:
+          type: string
+          format: uuid
+          title: Skill Id
+        version_number:
+          type: integer
+          title: Version Number
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - skill_id
+      - version_number
+      - source
+      - created_at
+      title: SkillInstructionVersionResponse
+      description: One immutable snapshot in a skill's instruction history.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SkillRenameRequest:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          title: Slug
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+      type: object
+      required:
+      - slug
+      title: SkillRenameRequest
+      description: Rename a custom skill's slug (and optionally its display name).
+    ChatConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationResponse
+    SkillCreate:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          title: Slug
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 100000
+          - type: 'null'
+          title: Instructions
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+      type: object
+      required:
+      - slug
+      - name
+      title: SkillCreate
+    SkillUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 100000
+          - type: 'null'
+          title: Instructions
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+      type: object
+      title: SkillUpdate
+      description: Direct edit (PUT). name/description/instructions are versioned; icon isn't.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

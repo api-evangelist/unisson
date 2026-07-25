@@ -1,0 +1,697 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals tasks API
+  version: 1.0.0
+tags:
+- name: tasks
+paths:
+  /api/v1/tasks/analytics:
+    get:
+      tags:
+      - tasks
+      summary: Get Task Analytics
+      description: Get analytics data for the organization's tasks.
+      operationId: get_task_analytics_api_v1_tasks_analytics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskAnalyticsResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/tasks:
+    get:
+      tags:
+      - tasks
+      summary: List Tasks
+      description: List all tasks for the organization with pagination and filters.
+      operationId: list_tasks_api_v1_tasks_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      - name: severity_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity Filter
+      - name: can_resolve_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Can Resolve Filter
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - tasks
+      summary: Create Task
+      description: 'Create a new task. The chat agent drafts an execution plan in the
+
+        background (in the conversation that will later execute it), which sets
+
+        can_resolve + plan_steps and links the conversation for approval.'
+      operationId: create_task_api_v1_tasks_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/tasks/{task_id}:
+    get:
+      tags:
+      - tasks
+      summary: Get Task
+      description: Get a specific task by ID.
+      operationId: get_task_api_v1_tasks__task_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - tasks
+      summary: Update Task
+      description: 'Update a task. Manual status moves follow the transition policy in
+
+        _MANUAL_MOVE_MESSAGES and notify the executing conversation so the agent
+
+        reacts (stop / continue / wrap up) — the board and the chat stay in sync.'
+      operationId: update_task_api_v1_tasks__task_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - tasks
+      summary: Delete Task
+      description: Soft-delete a task.
+      operationId: delete_task_api_v1_tasks__task_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/tasks/{task_id}/approve:
+    post:
+      tags:
+      - tasks
+      summary: Approve Task
+      description: 'Approve a scheduled task: create a conversation that autonomously executes
+
+        its plan (scoped to the primary agent + the task''s customer) and link it back.'
+      operationId: approve_task_api_v1_tasks__task_id__approve_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskApproveResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    TaskAnalyticsStatusCount:
+      properties:
+        status:
+          type: string
+          title: Status
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - status
+      - count
+      title: TaskAnalyticsStatusCount
+      description: Count of tasks by status.
+    TaskApproveResponse:
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - conversation_id
+      - status
+      - message
+      title: TaskApproveResponse
+      description: Response after approving a task — links to the executing conversation.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TaskAnalyticsResponse:
+      properties:
+        total_tasks:
+          type: integer
+          title: Total Tasks
+        open_tasks:
+          type: integer
+          title: Open Tasks
+        resolved_tasks:
+          type: integer
+          title: Resolved Tasks
+        resolved_by_agents:
+          type: integer
+          title: Resolved By Agents
+        resolution_rate:
+          type: number
+          title: Resolution Rate
+        by_status:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsStatusCount'
+          type: array
+          title: By Status
+        by_severity:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsSeverityCount'
+          type: array
+          title: By Severity
+        monthly_trend:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsMonthlyCount'
+          type: array
+          title: Monthly Trend
+      type: object
+      required:
+      - total_tasks
+      - open_tasks
+      - resolved_tasks
+      - resolved_by_agents
+      - resolution_rate
+      - by_status
+      - by_severity
+      - monthly_trend
+      title: TaskAnalyticsResponse
+      description: Analytics data for tasks.
+    TaskAnalyticsMonthlyCount:
+      properties:
+        month:
+          type: string
+          title: Month
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - month
+      - count
+      title: TaskAnalyticsMonthlyCount
+      description: Count of tasks created in a month.
+    TaskAgentRef:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: TaskAgentRef
+      description: Lightweight agent reference for rendering avatars on a task card.
+    TaskAnalyticsSeverityCount:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - severity
+      - count
+      title: TaskAnalyticsSeverityCount
+      description: Count of tasks by severity.
+    TaskListResponse:
+      properties:
+        tasks:
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+          type: array
+          title: Tasks
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - tasks
+      - total
+      - page
+      - page_size
+      title: TaskListResponse
+      description: Paginated list of tasks.
+    TaskCreate:
+      properties:
+        title:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        severity:
+          type: string
+          pattern: ^(critical|high|medium|low)$
+          title: Severity
+          default: medium
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+        target_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Date
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+      type: object
+      required:
+      - title
+      title: TaskCreate
+      description: Schema for creating a task. LLM will determine can_resolve + suggested_task.
+    TaskUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 500
+            minLength: 1
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        status:
+          anyOf:
+          - type: string
+            pattern: ^(scheduled|in_progress|needs_review|completed)$
+          - type: 'null'
+          title: Status
+        severity:
+          anyOf:
+          - type: string
+            pattern: ^(critical|high|medium|low)$
+          - type: 'null'
+          title: Severity
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+        target_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Date
+      type: object
+      title: TaskUpdate
+      description: Schema for updating a task. All fields optional for PATCH semantics.
+    TaskResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        status:
+          type: string
+          title: Status
+        severity:
+          type: string
+          title: Severity
+        can_resolve:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Can Resolve
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+        assignee_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assignee Name
+        created_by_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By Id
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+        target_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Date
+        suggested_task:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Suggested Task
+        plan_steps:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/PlanStep'
+            type: array
+          - type: 'null'
+          title: Plan Steps
+        agent_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Agent Ids
+        agents:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/TaskAgentRef'
+            type: array
+          - type: 'null'
+          title: Agents
+        linked_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Linked Run Id
+        linked_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linked Run Status
+        linked_conversation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Linked Conversation Id
+        execution_started:
+          type: boolean
+          title: Execution Started
+          default: false
+        meeting_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Meeting Id
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - title
+      - status
+      - severity
+      - created_at
+      title: TaskResponse
+      description: Schema for task response.
+    PlanStep:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        status:
+          type: string
+          title: Status
+          default: pending
+        agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+      type: object
+      required:
+      - id
+      - label
+      title: PlanStep
+      description: A single step in a task's execution plan (shown on the Kanban card).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

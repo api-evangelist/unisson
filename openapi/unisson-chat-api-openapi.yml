@@ -1,0 +1,1617 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals chat API
+  version: 1.0.0
+tags:
+- name: chat
+paths:
+  /api/v1/chat/conversations:
+    post:
+      tags:
+      - chat
+      summary: Create Conversation
+      description: 'Create a new chat conversation. Agents join by being tagged —
+
+        @-mentions in messages or the optional ``tagged_agent_id`` here.'
+      operationId: create_conversation_api_v1_chat_conversations_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: tagged_agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Optionally tag an agent onto the new conversation (the agent detail page's 'New chat' button) — same additive mechanism as an @-mention, recorded in chat_conversation_agents.
+          title: Tagged Agent Id
+        description: Optionally tag an agent onto the new conversation (the agent detail page's 'New chat' button) — same additive mechanism as an @-mention, recorded in chat_conversation_agents.
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - chat
+      summary: List Conversations
+      description: "List chat conversations, most recent first.\n\nScoping rules:\n  * ``agent_id`` set — tagging an agent makes the conversation visible\n    on that agent's page to the whole org, so we return every\n    conversation that tagged the agent regardless of who created it.\n  * ``agent_id`` unset — personal scope; only the caller's own\n    conversations are listed (URL-share is the only way teammates reach\n    someone else's personal thread).\n\n``scope`` then narrows the list (sidebar filter tabs):\n  * ``my_customers`` — conversations linked to a customer the caller\n    belongs to.\n  * ``personal`` — conversations the caller started or authored a user\n    message in."
+      operationId: list_conversations_api_v1_chat_conversations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 50
+          title: Page Size
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to conversations that tagged this agent. Omit to list the user's own conversations.
+          title: Agent Id
+        description: Filter to conversations that tagged this agent. Omit to list the user's own conversations.
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: scope
+        in: query
+        required: false
+        schema:
+          enum:
+          - all
+          - my_customers
+          - personal
+          type: string
+          description: 'Sidebar filter: ''my_customers'' keeps conversations linked to a customer the caller belongs to; ''personal'' keeps conversations the caller started or wrote a message in.'
+          default: all
+          title: Scope
+        description: 'Sidebar filter: ''my_customers'' keeps conversations linked to a customer the caller belongs to; ''personal'' keeps conversations the caller started or wrote a message in.'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/builder:
+    post:
+      tags:
+      - chat
+      summary: Get Or Create Builder Conversation
+      description: 'Get-or-create the single Agent-Builder conversation for an agent.
+
+
+        Members-only surface. Exactly one persistent thread per agent
+
+        (``builder_agent_id``), or one lazy draft per user (``is_new_agent_draft``)
+
+        for the "New agent" flow — the partial unique indexes make get-or-create
+
+        race-safe. Excluded from every conversation list.'
+      operationId: get_or_create_builder_conversation_api_v1_chat_conversations_builder_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: The agent whose builder chat to open, or the literal 'new' to open the caller's lazy new-agent draft thread.
+          title: Agent Id
+        description: The agent whose builder chat to open, or the literal 'new' to open the caller's lazy new-agent draft thread.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}:
+    get:
+      tags:
+      - chat
+      summary: Get Conversation
+      description: "Get a conversation with a bounded window of messages.\n\nPagination is cursor-based walking backwards in conversation order:\n  - No cursor: return the newest ``limit`` messages.\n  - ``before_message_id``: return the ``limit`` messages immediately\n    older than the cursor.\nThe response's ``next_cursor`` + ``has_more`` let the client fetch the\nnext older page. Messages are returned in chronological order."
+      operationId: get_conversation_api_v1_chat_conversations__conversation_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      - name: before_message_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Before Message Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - chat
+      summary: Delete Conversation
+      description: Soft-delete a conversation.
+      operationId: delete_conversation_api_v1_chat_conversations__conversation_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/context:
+    get:
+      tags:
+      - chat
+      summary: Get Conversation Context
+      description: 'What is actually *in* this conversation''s chat context: the connectors
+
+        the chat agent invoked, plus the customers and agents whose context the
+
+        next turn will load — derived through the same capped helpers the chat
+
+        turn uses, so the panel never shows an agent/customer that contributes no
+
+        prompt block.
+
+
+        Powers the right-sidebar "Context" panel. Unlike ``get_conversation`` this
+
+        scans **all** of the conversation''s tool-call rows (not a paginated message
+
+        window), so the integration list is complete however far back the user has
+
+        scrolled.'
+      operationId: get_conversation_context_api_v1_chat_conversations__conversation_id__context_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationContextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/files:
+    get:
+      tags:
+      - chat
+      summary: List Chat Files
+      description: "List VFS files visible in a chat, with presigned download URLs.\n\nExactly one of ``agent_id`` or ``conversation_id`` must be supplied:\n\n* ``agent_id`` — list the agent's persistent workspace (under its own\n  ``/agents/<slug>/``).\n* ``conversation_id`` — list one ``/agents/<slug>/`` per tagged agent plus\n  ``/chat/`` for the conversation itself.\n\nReturned ``path`` values are mount-prefixed (``/agents/<slug>/...`` or\n``/chat/...``) so identical filenames across scopes don't collide in the\nlisting or in subsequent delete calls."
+      operationId: list_chat_files_api_v1_chat_files_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationFileListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - chat
+      summary: Delete Chat File
+      description: 'Delete a file from the chat-visible workspace.
+
+
+        The path''s leading mount (``/agents/<slug>/`` or ``/chat/``) selects the
+
+        workspace; the remaining segment is the workspace-relative key.
+
+        Refuses paths nested under any hidden workspace subtree (see
+
+        ``HIDDEN_WORKSPACE_PREFIXES``) so the listing filter and the delete
+
+        surface stay consistent.'
+      operationId: delete_chat_file_api_v1_chat_files_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: path
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Mount-prefixed path returned by GET /chat/files.
+          title: Path
+        description: Mount-prefixed path returned by GET /chat/files.
+      - name: conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Agent Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/files/content:
+    get:
+      tags:
+      - chat
+      summary: Get Chat File Content
+      description: 'Stream a workspace file''s bytes through the backend.
+
+
+        Powers the in-app file viewer. Going through the backend (instead of
+
+        fetching the presigned download URL directly from the SPA) sidesteps S3
+
+        CORS — the bucket needn''t allow every dev/preview origin.'
+      operationId: get_chat_file_content_api_v1_chat_files_content_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: path
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Mount-prefixed path returned by GET /chat/files.
+          title: Path
+        description: Mount-prefixed path returned by GET /chat/files.
+      - name: conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Conversation Id
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/stop:
+    post:
+      tags:
+      - chat
+      summary: Stop Conversation Stream
+      description: 'User-initiated stop of the in-flight chat LLM stream.
+
+
+        Halts the chat producer without cancelling spawned CUA runs — those
+
+        continue to completion and the chat-run supervisor still drives an
+
+        auto-turn when the run terminates. Idempotent: returns 204 even when
+
+        no producer is running so the FE can fire-and-forget on Stop clicks.
+
+        The Postgres request is authoritative across workers; the legacy local
+
+        registry call remains as a rolling-deploy compatibility nudge.'
+      operationId: stop_conversation_stream_api_v1_chat_conversations__conversation_id__stop_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/stream:
+    get:
+      tags:
+      - chat
+      summary: Resume Message Stream
+      description: 'Re-attach to an in-flight chat-stream producer.
+
+
+        Replays the durable turn snapshot and then tails live events, regardless of
+
+        which API worker accepted or executes the turn. Legacy process-local
+
+        sessions remain as a rolling-deploy fallback.'
+      operationId: resume_message_stream_api_v1_chat_conversations__conversation_id__stream_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/turns/{turn_id}/stream:
+    get:
+      tags:
+      - chat
+      summary: Stream Durable Turn
+      description: Replay and live-tail one explicit durable turn.
+      operationId: stream_durable_turn_api_v1_chat_conversations__conversation_id__turns__turn_id__stream_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      - name: turn_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Turn Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/transcribe:
+    post:
+      tags:
+      - chat
+      summary: Transcribe Audio
+      description: 'Transcribe a short voice recording from the chat composer.
+
+
+        Forwards the uploaded audio blob to OpenAI''s transcription API and
+
+        returns the recognised text. The frontend records via MediaRecorder
+
+        (webm/opus on Chromium, mp4 on Safari), so we accept the common
+
+        browser audio MIMEs.'
+      operationId: transcribe_audio_api_v1_chat_transcribe_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_transcribe_audio_api_v1_chat_transcribe_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/chat/conversations/{conversation_id}/messages:
+    post:
+      tags:
+      - chat
+      summary: Send Message
+      description: 'Send a user message and stream the assistant response via SSE.
+
+
+        Accepts multipart/form-data with a text content field and optional image files.
+
+        Saves the user message, then streams the LLM response as Server-Sent Events.
+
+        The final message_complete event contains the saved assistant message.'
+      operationId: send_message_api_v1_chat_conversations__conversation_id__messages_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_send_message_api_v1_chat_conversations__conversation_id__messages_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/executor-health:
+    get:
+      tags:
+      - chat
+      summary: Chat Executor Health
+      description: 'Operational health of the durable chat execution pool.
+
+
+        This endpoint is intentionally separate from the API task''s load-balancer
+
+        readiness: removing healthy API tasks cannot repair a missing executor.
+
+        Operators get an explicit 503 while accepted turns remain safely queued.'
+      operationId: chat_executor_health_api_v1_chat_executor_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/chat/conversations/{conversation_id}/turns:
+    post:
+      tags:
+      - chat
+      summary: Accept Conversation Turn
+      description: Accept a turn durably; observation happens through its stream URL.
+      operationId: accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatTurnAccepted'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/turns:
+    post:
+      tags:
+      - chat
+      summary: Create Conversation With Turn
+      description: Atomically create a conversation, its first message, and its turn.
+      operationId: create_conversation_with_turn_api_v1_chat_conversations_turns_post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatTurnAccepted'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/chat/conversations/{conversation_id}/execute-task:
+    post:
+      tags:
+      - chat
+      summary: Execute Task
+      description: 'Execute a task from a chat conversation.
+
+
+        Creates a Run and starts orchestrated execution in the background.'
+      operationId: execute_task_api_v1_chat_conversations__conversation_id__execute_task_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteTaskRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteTaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/apply-kb-edits:
+    post:
+      tags:
+      - chat
+      summary: Apply Kb Edits
+      description: Apply KB edits proposed in a kb_edit_proposal chat message.
+      operationId: apply_kb_edits_api_v1_chat_conversations__conversation_id__apply_kb_edits_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplyKBEditsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplyKBEditsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/proposals/{message_id}/accept:
+    post:
+      tags:
+      - chat
+      summary: Accept Proposal
+      description: Accept an agent-builder proposal, apply it, and resume the builder turn.
+      operationId: accept_proposal_api_v1_chat_conversations__conversation_id__proposals__message_id__accept_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      - name: message_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Message Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptProposalRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/chat/conversations/{conversation_id}/proposals/{message_id}/refuse:
+    post:
+      tags:
+      - chat
+      summary: Refuse Proposal
+      description: 'Refuse an agent-builder proposal and resume the builder turn so it can
+
+        revise (optionally informed by the user''s comment).'
+      operationId: refuse_proposal_api_v1_chat_conversations__conversation_id__proposals__message_id__refuse_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      - name: message_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Message Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefuseProposalRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ChatTurnSummary:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        conversation_id:
+          type: string
+          format: uuid4
+          title: Conversation Id
+        seed_message_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Seed Message Id
+        sequence:
+          type: integer
+          title: Sequence
+        status:
+          type: string
+          title: Status
+        attempt_count:
+          type: integer
+          title: Attempt Count
+          default: 0
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        heartbeat_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Heartbeat At
+        finished_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Finished At
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        error_detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Detail
+      type: object
+      required:
+      - id
+      - conversation_id
+      - sequence
+      - status
+      title: ChatTurnSummary
+    ConversationFileResponse:
+      properties:
+        path:
+          type: string
+          title: Path
+        size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+        last_modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Modified
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+      type: object
+      required:
+      - path
+      title: ConversationFileResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UsedCustomer:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedCustomer
+      description: 'A customer @-mentioned in a conversation (subset of CustomerResponse
+
+        sufficient to render the sidebar''s CustomerAvatar chip).'
+    AcceptProposalRequest:
+      properties:
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+      type: object
+      title: AcceptProposalRequest
+    ChatConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationResponse
+    RefuseProposalRequest:
+      properties:
+        comment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Comment
+      type: object
+      title: RefuseProposalRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApplyKBEditsRequest:
+      properties:
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - message_id
+      title: ApplyKBEditsRequest
+    ApplyKBEditsResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        applied_count:
+          type: integer
+          title: Applied Count
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - applied_count
+      - message
+      title: ApplyKBEditsResponse
+    ConversationContextResponse:
+      properties:
+        integrations:
+          items:
+            $ref: '#/components/schemas/UsedIntegration'
+          type: array
+          title: Integrations
+        customers:
+          items:
+            $ref: '#/components/schemas/UsedCustomer'
+          type: array
+          title: Customers
+        agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Agents
+        task:
+          anyOf:
+          - $ref: '#/components/schemas/LinkedTaskRef'
+          - type: 'null'
+        tables:
+          items:
+            $ref: '#/components/schemas/UsedDbTable'
+          type: array
+          title: Tables
+          default: []
+      type: object
+      required:
+      - integrations
+      - customers
+      - agents
+      title: ConversationContextResponse
+      description: 'What was actually used in one conversation: the connectors the agent
+
+        invoked and the customers/agents referenced. Powers the right-sidebar
+
+        Context panel (replaces the old org-wide connected-integrations list).'
+    Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+        tagged_agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tagged Agent Id
+      type: object
+      title: Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post
+    ConversationFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/ConversationFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: ConversationFileListResponse
+    Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+      type: object
+      title: Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post
+    Body_transcribe_audio_api_v1_chat_transcribe_post:
+      properties:
+        audio:
+          type: string
+          contentMediaType: application/octet-stream
+          title: Audio
+      type: object
+      required:
+      - audio
+      title: Body_transcribe_audio_api_v1_chat_transcribe_post
+    UsedDbTable:
+      properties:
+        name:
+          type: string
+          title: Name
+        scope:
+          type: string
+          title: Scope
+        approx_rows:
+          type: integer
+          title: Approx Rows
+      type: object
+      required:
+      - name
+      - scope
+      - approx_rows
+      title: UsedDbTable
+      description: 'An app-database table visible to the next chat turn (the DATABASE
+
+        prompt block lists the same set). scope is "org" or a customer name.'
+    ExecuteTaskRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - request_text
+      - message_id
+      title: ExecuteTaskRequest
+    LinkedTaskRef:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Customer Id
+      type: object
+      required:
+      - id
+      - title
+      - status
+      title: LinkedTaskRef
+      description: 'The Kanban task this conversation plans/executes (when any) — enough
+
+        for the Context panel to deep-link to the customer board''s task modal.'
+    ExecuteTaskResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - run_id
+      - message_id
+      title: ExecuteTaskResponse
+    ChatTurnAccepted:
+      properties:
+        conversation:
+          $ref: '#/components/schemas/ChatConversationResponse'
+        user_message:
+          $ref: '#/components/schemas/ChatMessageResponse'
+        turn_id:
+          type: string
+          format: uuid4
+          title: Turn Id
+        sequence:
+          type: integer
+          title: Sequence
+        status:
+          type: string
+          title: Status
+        executor_status:
+          type: string
+          enum:
+          - available
+          - unavailable
+          - unknown
+          title: Executor Status
+          default: unknown
+      type: object
+      required:
+      - conversation
+      - user_message
+      - turn_id
+      - sequence
+      - status
+      title: ChatTurnAccepted
+    Body_send_message_api_v1_chat_conversations__conversation_id__messages_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+      type: object
+      title: Body_send_message_api_v1_chat_conversations__conversation_id__messages_post
+    ChatConversationDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessageResponse'
+          type: array
+          title: Messages
+          default: []
+        next_cursor:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+        is_streaming:
+          type: boolean
+          title: Is Streaming
+          default: false
+        active_turn:
+          anyOf:
+          - $ref: '#/components/schemas/ChatTurnSummary'
+          - type: 'null'
+        pending_turns:
+          items:
+            $ref: '#/components/schemas/ChatTurnSummary'
+          type: array
+          title: Pending Turns
+        latest_turn:
+          anyOf:
+          - $ref: '#/components/schemas/ChatTurnSummary'
+          - type: 'null'
+        executor_status:
+          type: string
+          enum:
+          - available
+          - unavailable
+          - unknown
+          title: Executor Status
+          default: unknown
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationDetailResponse
+    UsedIntegration:
+      properties:
+        app_slug:
+          type: string
+          title: App Slug
+        invocation_count:
+          type: integer
+          title: Invocation Count
+      type: object
+      required:
+      - app_slug
+      - invocation_count
+      title: UsedIntegration
+      description: A connector the chat agent actually invoked in a conversation.
+    ChatMessageResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        conversation_id:
+          type: string
+          format: uuid4
+          title: Conversation Id
+        role:
+          type: string
+          title: Role
+        content:
+          type: string
+          title: Content
+        message_type:
+          anyOf:
+          - $ref: '#/components/schemas/MessageType'
+          - type: 'null'
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Run Id
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        author_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Name
+        author_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Email
+      type: object
+      required:
+      - id
+      - conversation_id
+      - role
+      - content
+      - created_at
+      title: ChatMessageResponse
+    ChatConversationListResponse:
+      properties:
+        conversations:
+          items:
+            $ref: '#/components/schemas/ChatConversationResponse'
+          type: array
+          title: Conversations
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - conversations
+      - total
+      - page
+      - page_size
+      title: ChatConversationListResponse
+    MessageType:
+      type: string
+      enum:
+      - general
+      - system
+      - planning
+      - task_suggestion
+      - task_execution
+      - task_result
+      - tool_call
+      - run_question
+      - user_question
+      - kb_answer
+      - kb_edit_proposal
+      - agent_builder_proposal
+      - agent_created
+      - trigger_created
+      - workflow_created
+      - workflow_updated
+      - plan_update
+      title: MessageType
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

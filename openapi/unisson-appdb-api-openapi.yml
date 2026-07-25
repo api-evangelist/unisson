@@ -1,0 +1,399 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals appdb API
+  version: 1.0.0
+tags:
+- name: appdb
+paths:
+  /api/v1/appdb/query:
+    post:
+      tags:
+      - appdb
+      summary: Run Query
+      operationId: run_query_api_v1_appdb_query_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbQueryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/appdb/execute:
+    post:
+      tags:
+      - appdb
+      summary: Run Execute
+      operationId: run_execute_api_v1_appdb_execute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbExecuteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/appdb/tables:
+    get:
+      tags:
+      - appdb
+      summary: List Tables
+      operationId: list_tables_api_v1_appdb_tables_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scope
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbTablesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/appdb/apps/{app_id}/query:
+    post:
+      tags:
+      - appdb
+      summary: App Query
+      operationId: app_query_api_v1_appdb_apps__app_id__query_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbQueryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/appdb/apps/{app_id}/execute:
+    post:
+      tags:
+      - appdb
+      summary: App Execute
+      operationId: app_execute_api_v1_appdb_apps__app_id__execute_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbExecuteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/appdb/sandbox/query:
+    post:
+      tags:
+      - appdb
+      summary: Sandbox Query
+      operationId: sandbox_query_api_v1_appdb_sandbox_query_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbQueryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/appdb/sandbox/execute:
+    post:
+      tags:
+      - appdb
+      summary: Sandbox Execute
+      operationId: sandbox_execute_api_v1_appdb_sandbox_execute_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDbStatementRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppDbExecuteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AppDbQueryResponse:
+      properties:
+        columns:
+          items:
+            type: string
+          type: array
+          title: Columns
+        rows:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Rows
+        row_count:
+          type: integer
+          title: Row Count
+        truncated:
+          type: boolean
+          title: Truncated
+      type: object
+      required:
+      - columns
+      - rows
+      - row_count
+      - truncated
+      title: AppDbQueryResponse
+    AppDbStatementRequest:
+      properties:
+        sql:
+          type: string
+          maxLength: 100000
+          minLength: 1
+          title: Sql
+        params:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Params
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      type: object
+      required:
+      - sql
+      title: AppDbStatementRequest
+    AppDbColumn:
+      properties:
+        name:
+          type: string
+          title: Name
+        type:
+          type: string
+          title: Type
+        nullable:
+          type: boolean
+          title: Nullable
+        default:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default
+      type: object
+      required:
+      - name
+      - type
+      - nullable
+      title: AppDbColumn
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppDbTable:
+      properties:
+        name:
+          type: string
+          title: Name
+        columns:
+          items:
+            $ref: '#/components/schemas/AppDbColumn'
+          type: array
+          title: Columns
+        primary_key:
+          items:
+            type: string
+          type: array
+          title: Primary Key
+        approx_rows:
+          type: integer
+          title: Approx Rows
+      type: object
+      required:
+      - name
+      - columns
+      - primary_key
+      - approx_rows
+      title: AppDbTable
+    AppDbTablesResponse:
+      properties:
+        scope:
+          type: string
+          title: Scope
+        tables:
+          items:
+            $ref: '#/components/schemas/AppDbTable'
+          type: array
+          title: Tables
+      type: object
+      required:
+      - scope
+      - tables
+      title: AppDbTablesResponse
+    AppDbExecuteResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        statements:
+          type: integer
+          title: Statements
+        rows:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rows
+      type: object
+      required:
+      - status
+      - statements
+      title: AppDbExecuteResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,537 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals agent-triggers API
+  version: 1.0.0
+tags:
+- name: agent-triggers
+paths:
+  /api/v1/agents/{agent_id}/triggers:
+    post:
+      tags:
+      - agent-triggers
+      summary: Create Trigger
+      description: Create a new trigger for an agent.
+      operationId: create_trigger_api_v1_agents__agent_id__triggers_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTriggerCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - agent-triggers
+      summary: List Triggers
+      description: List all triggers for an agent.
+      operationId: list_triggers_api_v1_agents__agent_id__triggers_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentTriggerResponse'
+                title: Response List Triggers Api V1 Agents  Agent Id  Triggers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/triggers/{trigger_id}:
+    get:
+      tags:
+      - agent-triggers
+      summary: Get Trigger
+      description: Get a specific trigger.
+      operationId: get_trigger_api_v1_agents__agent_id__triggers__trigger_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      - name: trigger_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Trigger Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - agent-triggers
+      summary: Update Trigger
+      description: Update a trigger.
+      operationId: update_trigger_api_v1_agents__agent_id__triggers__trigger_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      - name: trigger_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Trigger Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTriggerUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - agent-triggers
+      summary: Delete Trigger
+      description: Soft-delete a trigger.
+      operationId: delete_trigger_api_v1_agents__agent_id__triggers__trigger_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      - name: trigger_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Trigger Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/triggers/{trigger_id}/enable:
+    post:
+      tags:
+      - agent-triggers
+      summary: Enable Trigger
+      description: Enable a trigger.
+      operationId: enable_trigger_api_v1_agents__agent_id__triggers__trigger_id__enable_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      - name: trigger_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Trigger Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agents/{agent_id}/triggers/{trigger_id}/disable:
+    post:
+      tags:
+      - agent-triggers
+      summary: Disable Trigger
+      description: Disable a trigger.
+      operationId: disable_trigger_api_v1_agents__agent_id__triggers__trigger_id__disable_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Agent Id
+      - name: trigger_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Trigger Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTriggerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentTriggerResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        trigger_type:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - event
+          title: Trigger Type
+        name:
+          type: string
+          title: Name
+        request_text_template:
+          type: string
+          title: Request Text Template
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Token
+        scheduled_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Scheduled Run Id
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Recurring
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recurrence Value
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+        is_enabled:
+          type: boolean
+          title: Is Enabled
+        last_triggered_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Triggered At
+        trigger_count:
+          type: integer
+          title: Trigger Count
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - agent_id
+      - trigger_type
+      - name
+      - request_text_template
+      - is_enabled
+      - last_triggered_at
+      - trigger_count
+      - created_at
+      - updated_at
+      title: AgentTriggerResponse
+      description: Schema for agent trigger response.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentTriggerUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        request_text_template:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Text Template
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Recurring
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Recurrence Value
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+      type: object
+      title: AgentTriggerUpdate
+      description: 'Schema for updating an agent trigger.
+
+
+        Every field is optional; missing fields are left alone, explicit None clears
+
+        the corresponding column. Use `model_dump(exclude_unset=True)` at the call
+
+        site to distinguish "left alone" from "set to None".'
+    AgentTriggerCreate:
+      properties:
+        trigger_type:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - event
+          title: Trigger Type
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        request_text_template:
+          type: string
+          title: Request Text Template
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          type: boolean
+          title: Is Recurring
+          default: false
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Recurrence Value
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+      type: object
+      required:
+      - trigger_type
+      - name
+      - request_text_template
+      title: AgentTriggerCreate
+      description: Schema for creating an agent trigger.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

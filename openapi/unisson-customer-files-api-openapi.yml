@@ -1,0 +1,249 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals customer-files API
+  version: 1.0.0
+tags:
+- name: customer-files
+paths:
+  /api/v1/customers/{customer_id}/files:
+    get:
+      tags:
+      - customer-files
+      summary: List Customer Files
+      description: 'List the generated workspace files linked to this customer, newest first.
+
+
+        Each file carries a presigned download URL plus source attribution (the
+
+        conversation that produced it and, for agent-workspace files, the owning
+
+        agent). Metadata comes straight from the provenance row — no per-file S3
+
+        HEAD — so this stays a pure DB read + URL signing (cf. documents.py).'
+      operationId: list_customer_files_api_v1_customers__customer_id__files_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerFileListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/files/{file_id}/content:
+    get:
+      tags:
+      - customer-files
+      summary: Get Customer File Content
+      description: 'Stream a customer file''s bytes through the backend for the in-app viewer.
+
+
+        Going through the backend (instead of the presigned URL) sidesteps S3 CORS
+
+        and serves the guessed mime type so the previewer renders inline rather
+
+        than forcing the attachment download the presigned URL carries.'
+      operationId: get_customer_file_content_api_v1_customers__customer_id__files__file_id__content_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: File Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/files/{file_id}:
+    delete:
+      tags:
+      - customer-files
+      summary: Delete Customer File
+      description: 'Delete a generated file from the customer.
+
+
+        Members only — the guest write guard blocks this DELETE (it is not in
+
+        ``deps.py::_GUEST_WRITE_ALLOWLIST``). The provenance row keys the single
+
+        physical object, so deleting here also removes it from the originating
+
+        agent/conversation workspace.'
+      operationId: delete_customer_file_api_v1_customers__customer_id__files__file_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: File Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CustomerFileResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        path:
+          type: string
+          title: Path
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+        source_conversation_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Conversation Id
+        source_conversation_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Conversation Title
+        source_agent_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Agent Id
+        source_agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Agent Name
+        source_agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Agent Icon
+        source_agent_gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Agent Gradient
+      type: object
+      required:
+      - id
+      - name
+      - path
+      title: CustomerFileResponse
+      description: 'A generated workspace file linked to a customer (see
+
+        ``models.workspace_file_customer``). ``id`` is the provenance row''s PK —
+
+        used to address the file in the content/delete endpoints.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CustomerFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/CustomerFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: CustomerFileListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

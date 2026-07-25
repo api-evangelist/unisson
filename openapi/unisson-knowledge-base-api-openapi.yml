@@ -1,0 +1,1707 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals knowledge-base API
+  version: 1.0.0
+tags:
+- name: knowledge-base
+paths:
+  /api/v1/knowledge-base/workflow-tools:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Workflow Tools
+      description: Return the catalog of tools that can be assigned to workflows.
+      operationId: list_workflow_tools_api_v1_knowledge_base_workflow_tools_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/knowledge-base/features:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Features
+      description: List all extracted features for the organization.
+      operationId: list_features_api_v1_knowledge_base_features_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by product
+          title: Product Id
+        description: Filter by product
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBFeatureResponse'
+                title: Response List Features Api V1 Knowledge Base Features Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/features/{feature_id}:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Feature
+      description: Get a specific feature by ID.
+      operationId: get_feature_api_v1_knowledge_base_features__feature_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: feature_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feature Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBFeatureResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - knowledge-base
+      summary: Update Feature
+      description: Update a feature.
+      operationId: update_feature_api_v1_knowledge_base_features__feature_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: feature_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feature Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBFeatureUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBFeatureResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - knowledge-base
+      summary: Delete Feature
+      description: Delete a specific feature (soft delete).
+      operationId: delete_feature_api_v1_knowledge_base_features__feature_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: feature_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feature Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/workflows:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Workflows
+      description: List all extracted workflows for the organization.
+      operationId: list_workflows_api_v1_knowledge_base_workflows_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBWorkflowResponse'
+                title: Response List Workflows Api V1 Knowledge Base Workflows Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/workflows/{workflow_id}:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Workflow
+      description: Get a specific workflow by ID.
+      operationId: get_workflow_api_v1_knowledge_base_workflows__workflow_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - knowledge-base
+      summary: Update Workflow
+      description: Update a workflow (name, description, additional_info, inputs).
+      operationId: update_workflow_api_v1_knowledge_base_workflows__workflow_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Workflow Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBWorkflowUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - knowledge-base
+      summary: Delete Workflow
+      description: 'Delete a specific workflow (soft delete).
+
+
+        Also soft-deletes associated GeneratedAPI and NetworkRecordings.'
+      operationId: delete_workflow_api_v1_knowledge_base_workflows__workflow_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: workflow_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Workflow Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/summary:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Summary
+      description: Get a summary of the knowledge base.
+      operationId: get_summary_api_v1_knowledge_base_summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter counts by product
+          title: Product Id
+        description: Filter counts by product
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBSummary'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/draft-workflows/generate:
+    post:
+      tags:
+      - knowledge-base
+      summary: Generate Draft Workflow Endpoint
+      description: Generate a draft workflow from a user description using LLM.
+      operationId: generate_draft_workflow_endpoint_api_v1_knowledge_base_draft_workflows_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateDraftWorkflowRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateDraftWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/knowledge-base/draft-workflows:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Draft Workflows
+      description: List all draft workflows for the organization.
+      operationId: list_draft_workflows_api_v1_knowledge_base_draft_workflows_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/KBDraftWorkflowResponse'
+                type: array
+                title: Response List Draft Workflows Api V1 Knowledge Base Draft Workflows Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - knowledge-base
+      summary: Create Draft Workflow
+      description: 'Create a new draft workflow.
+
+
+        Generates an LLM-based description automatically based on the workflow''s
+
+        name and blocks.'
+      operationId: create_draft_workflow_api_v1_knowledge_base_draft_workflows_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBDraftWorkflowCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBDraftWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/knowledge-base/draft-workflows/{draft_id}:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Draft Workflow
+      description: Get a specific draft workflow by ID.
+      operationId: get_draft_workflow_api_v1_knowledge_base_draft_workflows__draft_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBDraftWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - knowledge-base
+      summary: Update Draft Workflow
+      description: 'Update a draft workflow.
+
+
+        When name or blocks are updated, a new LLM-based description is generated
+
+        automatically to reflect the workflow''s purpose.'
+      operationId: update_draft_workflow_api_v1_knowledge_base_draft_workflows__draft_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBDraftWorkflowUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBDraftWorkflowResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - knowledge-base
+      summary: Delete Draft Workflow
+      description: Delete a draft workflow (soft delete).
+      operationId: delete_draft_workflow_api_v1_knowledge_base_draft_workflows__draft_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: draft_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Draft Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/company-knowledge:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Company Knowledge
+      description: List all company knowledge entries for the organization.
+      operationId: list_company_knowledge_api_v1_knowledge_base_company_knowledge_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by product
+          title: Product Id
+        description: Filter by product
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+                title: Response List Company Knowledge Api V1 Knowledge Base Company Knowledge Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - knowledge-base
+      summary: Create Company Knowledge
+      description: Create a new company knowledge entry.
+      operationId: create_company_knowledge_api_v1_knowledge_base_company_knowledge_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBCompanyKnowledgeCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/company-knowledge/{entry_id}:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Company Knowledge
+      description: Get a specific company knowledge entry by ID.
+      operationId: get_company_knowledge_api_v1_knowledge_base_company_knowledge__entry_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - knowledge-base
+      summary: Update Company Knowledge
+      description: Update a company knowledge entry (title, description).
+      operationId: update_company_knowledge_api_v1_knowledge_base_company_knowledge__entry_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBCompanyKnowledgeUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - knowledge-base
+      summary: Delete Company Knowledge
+      description: Delete a company knowledge entry (soft delete).
+      operationId: delete_company_knowledge_api_v1_knowledge_base_company_knowledge__entry_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/company-knowledge/import/file:
+    post:
+      tags:
+      - knowledge-base
+      summary: Import Company Knowledge From File
+      description: 'Import company knowledge entries by uploading a file.
+
+
+        Supports .txt, .md, .pdf, .docx files. The file content is parsed
+
+        through an LLM to extract company knowledge entries.'
+      operationId: import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Product to assign imported entries to
+          title: Product Id
+        description: Product to assign imported entries to
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+                title: Response Import Company Knowledge From File Api V1 Knowledge Base Company Knowledge Import File Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/company-knowledge/import/google-doc:
+    post:
+      tags:
+      - knowledge-base
+      summary: Import Company Knowledge From Google Doc
+      description: 'Import company knowledge entries from a Google Doc.
+
+
+        Fetches the document content from Google Drive and parses it
+
+        through an LLM to extract company knowledge entries.'
+      operationId: import_company_knowledge_from_google_doc_api_v1_knowledge_base_company_knowledge_import_google_doc_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: file_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Google Drive file ID
+          title: File Id
+        description: Google Drive file ID
+      - name: product_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: Product to assign imported entries to
+          title: Product Id
+        description: Product to assign imported entries to
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBCompanyKnowledgeResponse'
+                title: Response Import Company Knowledge From Google Doc Api V1 Knowledge Base Company Knowledge Import Google Doc Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/agent-insights:
+    get:
+      tags:
+      - knowledge-base
+      summary: List Agent Insights
+      description: List all agent insights for the organization.
+      operationId: list_agent_insights_api_v1_knowledge_base_agent_insights_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter by product
+          title: Product Id
+        description: Filter by product
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KBAgentInsightResponse'
+                title: Response List Agent Insights Api V1 Knowledge Base Agent Insights Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/knowledge-base/agent-insights/{insight_id}:
+    get:
+      tags:
+      - knowledge-base
+      summary: Get Agent Insight
+      description: Get a specific agent insight by ID.
+      operationId: get_agent_insight_api_v1_knowledge_base_agent_insights__insight_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: insight_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Insight Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBAgentInsightResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - knowledge-base
+      summary: Update Agent Insight
+      description: Update an agent insight (title, description, product_domain, category, is_pinned).
+      operationId: update_agent_insight_api_v1_knowledge_base_agent_insights__insight_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: insight_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Insight Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KBAgentInsightUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KBAgentInsightResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - knowledge-base
+      summary: Delete Agent Insight
+      description: Delete an agent insight (soft delete).
+      operationId: delete_agent_insight_api_v1_knowledge_base_agent_insights__insight_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: insight_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Insight Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    GenerateDraftWorkflowResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          items:
+            $ref: '#/components/schemas/DraftWorkflowBlock'
+          type: array
+          title: Blocks
+      type: object
+      required:
+      - name
+      - starting_url
+      - blocks
+      title: GenerateDraftWorkflowResponse
+      description: Generated draft workflow ready for editing.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    KBCompanyKnowledgeUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_pinned:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Pinned
+      type: object
+      title: KBCompanyKnowledgeUpdate
+      description: Schema for updating a company knowledge entry.
+    KBFeatureUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        navigation_path:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Navigation Path
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Url
+        key_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Key Actions
+        related_terms:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Related Terms
+      type: object
+      title: KBFeatureUpdate
+      description: Schema for updating a KB feature.
+    GenerateDraftWorkflowRequest:
+      properties:
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - description
+      title: GenerateDraftWorkflowRequest
+      description: Request to generate a draft workflow from user description.
+    WorkflowStep:
+      properties:
+        step_number:
+          type: integer
+          title: Step Number
+        action:
+          type: string
+          title: Action
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        skips_to_step:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Skips To Step
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        step_type:
+          type: string
+          enum:
+          - cua
+          - chat
+          title: Step Type
+          default: cua
+        chat_tool:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chat Tool
+        chat_args:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Chat Args
+      type: object
+      required:
+      - step_number
+      - action
+      title: WorkflowStep
+      description: A single step in a workflow.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    KBWorkflowResponse:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        steps:
+          items:
+            $ref: '#/components/schemas/WorkflowStep'
+          type: array
+          title: Steps
+          default: []
+        additional_info:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Additional Info
+        inputs:
+          items:
+            $ref: '#/components/schemas/WorkflowInput'
+          type: array
+          title: Inputs
+          default: []
+        linked_workflows:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LinkedWorkflow'
+            type: array
+          - type: 'null'
+          title: Linked Workflows
+        tools:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tools
+        output_schema:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Output Schema
+        task_type:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Task Type
+          description: API exposure slug from app.core.task_types. When set, the workflow is callable via POST /external/runs with this task_type. Unique per organization.
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        discovered_by_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Discovered By Run Id
+        run_count:
+          type: integer
+          title: Run Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        has_api_mode:
+          type: boolean
+          title: Has Api Mode
+          default: false
+        api_mode_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Api Mode Status
+        api_mode_input_schema:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Api Mode Input Schema
+        api_mode_output_schema:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Api Mode Output Schema
+      type: object
+      required:
+      - name
+      - id
+      - organization_id
+      - created_at
+      - updated_at
+      title: KBWorkflowResponse
+      description: Schema for KB workflow response.
+    KBAgentInsightUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        product_domain:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Product Domain
+        category:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Category
+        is_pinned:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Pinned
+      type: object
+      title: KBAgentInsightUpdate
+      description: Schema for updating an agent insight entry.
+    KBWorkflowUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        additional_info:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Additional Info
+        inputs:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WorkflowInput'
+            type: array
+          - type: 'null'
+          title: Inputs
+        steps:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WorkflowStep'
+            type: array
+          - type: 'null'
+          title: Steps
+        linked_workflows:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/LinkedWorkflow'
+            type: array
+          - type: 'null'
+          title: Linked Workflows
+        tools:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Tools
+        output_schema:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Output Schema
+        task_type:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Task Type
+      type: object
+      title: KBWorkflowUpdate
+      description: Schema for updating a KB workflow.
+    LinkedWorkflow:
+      properties:
+        workflow_id:
+          type: string
+          title: Workflow Id
+        trigger_name:
+          type: string
+          title: Trigger Name
+      type: object
+      required:
+      - workflow_id
+      - trigger_name
+      title: LinkedWorkflow
+      description: A reference to a sub-workflow that can be loaded on demand during execution.
+    KBDraftWorkflowUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DraftWorkflowBlock'
+            type: array
+          - type: 'null'
+          title: Blocks
+      type: object
+      title: KBDraftWorkflowUpdate
+      description: Schema for updating a draft workflow.
+    KBCompanyKnowledgeResponse:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          title: Title
+        description:
+          type: string
+          title: Description
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        is_pinned:
+          type: boolean
+          title: Is Pinned
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - title
+      - description
+      - id
+      - organization_id
+      - product_id
+      - is_pinned
+      - created_at
+      - updated_at
+      title: KBCompanyKnowledgeResponse
+      description: Schema for company knowledge response.
+    DraftWorkflowBlock:
+      properties:
+        block_number:
+          type: integer
+          title: Block Number
+        feature_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feature Id
+        feature_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feature Name
+        feature_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feature Url
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - block_number
+      - description
+      title: DraftWorkflowBlock
+      description: A block in a draft workflow - either feature-linked or plain text.
+    Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post
+    KBSummary:
+      properties:
+        features_count:
+          type: integer
+          title: Features Count
+        workflows_count:
+          type: integer
+          title: Workflows Count
+        explorations_count:
+          type: integer
+          title: Explorations Count
+          default: 0
+        company_knowledge_count:
+          type: integer
+          title: Company Knowledge Count
+          default: 0
+        agent_insights_count:
+          type: integer
+          title: Agent Insights Count
+          default: 0
+      type: object
+      required:
+      - features_count
+      - workflows_count
+      title: KBSummary
+      description: Summary of KB contents.
+    KBDraftWorkflowResponse:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          items:
+            $ref: '#/components/schemas/DraftWorkflowBlock'
+          type: array
+          title: Blocks
+          default: []
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        created_by_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By User Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - name
+      - id
+      - organization_id
+      - created_at
+      - updated_at
+      title: KBDraftWorkflowResponse
+      description: Schema for draft workflow response.
+    KBAgentInsightResponse:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          title: Title
+        description:
+          type: string
+          title: Description
+        product_domain:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Product Domain
+        category:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Category
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        discovered_by_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Discovered By Run Id
+        is_pinned:
+          type: boolean
+          title: Is Pinned
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - title
+      - description
+      - id
+      - organization_id
+      - product_id
+      - is_pinned
+      - created_at
+      - updated_at
+      title: KBAgentInsightResponse
+      description: Schema for agent insight response.
+    WorkflowInput:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+        required:
+          type: boolean
+          title: Required
+          default: true
+      type: object
+      required:
+      - name
+      - description
+      title: WorkflowInput
+      description: A required input for a workflow (variable value the user must provide).
+    KBFeatureResponse:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        navigation_path:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Navigation Path
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Url
+        key_actions:
+          items:
+            type: string
+          type: array
+          title: Key Actions
+          default: []
+        related_terms:
+          items:
+            type: string
+          type: array
+          title: Related Terms
+          default: []
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        discovered_by_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Discovered By Run Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - name
+      - id
+      - organization_id
+      - product_id
+      - created_at
+      - updated_at
+      title: KBFeatureResponse
+      description: Schema for KB feature response.
+    KBDraftWorkflowCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          items:
+            $ref: '#/components/schemas/DraftWorkflowBlock'
+          type: array
+          title: Blocks
+          default: []
+      type: object
+      required:
+      - name
+      title: KBDraftWorkflowCreate
+      description: Schema for creating a draft workflow.
+    KBCompanyKnowledgeCreate:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          title: Title
+        description:
+          type: string
+          title: Description
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+      type: object
+      required:
+      - title
+      - description
+      - product_id
+      title: KBCompanyKnowledgeCreate
+      description: Schema for creating a company knowledge entry.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

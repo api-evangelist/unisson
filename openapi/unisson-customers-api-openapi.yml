@@ -1,0 +1,3705 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals customers API
+  version: 1.0.0
+tags:
+- name: customers
+paths:
+  /api/v1/customers:
+    post:
+      tags:
+      - customers
+      summary: Create Customer
+      description: Create a new customer.
+      operationId: create_customer_api_v1_customers_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - customers
+      summary: List Customers
+      description: List customers with pagination and filters.
+      operationId: list_customers_api_v1_customers_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      - name: owner_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner Filter
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search
+      - name: sort_by
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^(created_at|updated_at)$
+          default: created_at
+          title: Sort By
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/digest:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Digest
+      description: Get a daily intelligence digest across all customers.
+      operationId: get_customer_digest_api_v1_customers_digest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDigestResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/customers/chat/cross-customer:
+    post:
+      tags:
+      - customers
+      summary: Cross Customer Chat
+      description: 'Ask questions across all customers (portfolio-level insights).
+
+
+        Streams response via SSE.'
+      operationId: cross_customer_chat_api_v1_customers_chat_cross_customer_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrossCustomerChatRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/customers/playbook-templates:
+    get:
+      tags:
+      - customers
+      summary: List Playbook Templates
+      description: List playbook templates for the organization.
+      operationId: list_playbook_templates_api_v1_customers_playbook_templates_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybookTemplatesResponse'
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - customers
+      summary: Create Playbook Template
+      description: Create a playbook template with steps.
+      operationId: create_playbook_template_api_v1_customers_playbook_templates_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaybookTemplateCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybookTemplateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/customers/playbook-templates/{template_id}:
+    delete:
+      tags:
+      - customers
+      summary: Delete Playbook Template
+      description: Soft-delete a playbook template.
+      operationId: delete_playbook_template_api_v1_customers_playbook_templates__template_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Template Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}:
+    get:
+      tags:
+      - customers
+      summary: Get Customer
+      description: Get a single customer with details.
+      operationId: get_customer_api_v1_customers__customer_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - customers
+      summary: Update Customer
+      description: Update a customer.
+      operationId: update_customer_api_v1_customers__customer_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Delete Customer
+      description: Soft-delete a customer.
+      operationId: delete_customer_api_v1_customers__customer_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/meetings:
+    get:
+      tags:
+      - customers
+      summary: List Customer Meetings
+      description: List meetings for a customer.
+      operationId: list_customer_meetings_api_v1_customers__customer_id__meetings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/calendar-events:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Calendar Events
+      description: 'Get upcoming Google Calendar events relevant to a customer.
+
+
+        Same source of truth as the Meetings page Upcoming bucket: a live
+
+        fan-out across every per-user google_calendar token in the org,
+
+        deduped by Calendar event id, filtered by THIS customer''s target
+
+        emails/domains so the two views stay aligned.'
+      operationId: get_customer_calendar_events_api_v1_customers__customer_id__calendar_events_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: days_ahead
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 60
+          minimum: 1
+          default: 14
+          title: Days Ahead
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/tasks:
+    get:
+      tags:
+      - customers
+      summary: List Customer Tasks
+      description: List tasks for a customer.
+      operationId: list_customer_tasks_api_v1_customers__customer_id__tasks_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/conversations:
+    get:
+      tags:
+      - customers
+      summary: List Customer Conversations
+      description: 'Paginated list of chats that ever @-mentioned this customer.
+
+
+        Ordering uses ``chat_conversation_customers.first_mentioned_at DESC``
+
+        so the most recently introduced chat shows first. Response shape
+
+        matches ``GET /chat/conversations`` so the customer page can reuse
+
+        the home page''s conversation card directly.'
+      operationId: list_customer_conversations_api_v1_customers__customer_id__conversations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/summary:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Summary
+      description: Get AI-generated customer summary.
+      operationId: get_customer_summary_api_v1_customers__customer_id__summary_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: regenerate
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Regenerate
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/timeline:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Timeline
+      description: Get customer timeline events.
+      operationId: get_customer_timeline_api_v1_customers__customer_id__timeline_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerTimelineResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/risks:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Risks
+      description: Get active risks for a customer.
+      operationId: get_customer_risks_api_v1_customers__customer_id__risks_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerRisksResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/risks/detect:
+    post:
+      tags:
+      - customers
+      summary: Detect Customer Risks
+      description: Run risk detection for a customer.
+      operationId: detect_customer_risks_api_v1_customers__customer_id__risks_detect_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerRisksResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/generate-report:
+    post:
+      tags:
+      - customers
+      summary: Generate Customer Report
+      description: Generate a stakeholder report for the customer and return as PDF.
+      operationId: generate_customer_report_api_v1_customers__customer_id__generate_report_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/onboarding-brief:
+    post:
+      tags:
+      - customers
+      summary: Generate Onboarding Brief
+      description: Generate an onboarding brief for new team members joining this customer.
+      operationId: generate_onboarding_brief_api_v1_customers__customer_id__onboarding_brief_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/send-report:
+    post:
+      tags:
+      - customers
+      summary: Send Customer Report
+      description: Send the customer report to stakeholders via email.
+      operationId: send_customer_report_api_v1_customers__customer_id__send_report_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+              title: Emails
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/playbooks:
+    get:
+      tags:
+      - customers
+      summary: List Playbooks
+      description: List playbooks for a customer.
+      operationId: list_playbooks_api_v1_customers__customer_id__playbooks_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybooksResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - customers
+      summary: Create Playbook
+      description: Create a new playbook with steps. Optionally clone from a template.
+      operationId: create_playbook_api_v1_customers__customer_id__playbooks_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaybookCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybookResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/playbooks/{playbook_id}/steps:
+    post:
+      tags:
+      - customers
+      summary: Add Playbook Step
+      description: Add a step to a playbook.
+      operationId: add_playbook_step_api_v1_customers__customer_id__playbooks__playbook_id__steps_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: playbook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Playbook Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaybookStepCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaybookStepResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/playbooks/{playbook_id}/steps/{step_id}:
+    patch:
+      tags:
+      - customers
+      summary: Toggle Playbook Step
+      description: Toggle a playbook step's completion status.
+      operationId: toggle_playbook_step_api_v1_customers__customer_id__playbooks__playbook_id__steps__step_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: playbook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Playbook Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Delete Playbook Step
+      description: Delete a playbook step.
+      operationId: delete_playbook_step_api_v1_customers__customer_id__playbooks__playbook_id__steps__step_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: playbook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Playbook Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/playbooks/{playbook_id}:
+    delete:
+      tags:
+      - customers
+      summary: Delete Playbook
+      description: 'Hard-delete a playbook. Cascades to its steps via the
+
+        ``ondelete=''CASCADE''`` FK on ``playbook_steps.playbook_id``.'
+      operationId: delete_playbook_api_v1_customers__customer_id__playbooks__playbook_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: playbook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Playbook Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/meeting-prep:
+    get:
+      tags:
+      - customers
+      summary: Get Meeting Prep
+      description: Return the persisted prep for one upcoming meeting, or null if none yet.
+      operationId: get_meeting_prep_api_v1_customers__customer_id__meeting_prep_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: calendar_event_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Calendar Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/MeetingPrepResponse'
+                - type: 'null'
+                title: Response Get Meeting Prep Api V1 Customers  Customer Id  Meeting Prep Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - customers
+      summary: Generate Meeting Prep
+      description: Manually (re)generate prep for one upcoming meeting in this customer.
+      operationId: generate_meeting_prep_api_v1_customers__customer_id__meeting_prep_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetingPrepRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPrepResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/meetings/{meeting_id}/follow-ups:
+    post:
+      tags:
+      - customers
+      summary: Generate Meeting Followups
+      description: Generate follow-up action items from a meeting transcript as tasks.
+      operationId: generate_meeting_followups_api_v1_customers__customer_id__meetings__meeting_id__follow_ups_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations:
+    get:
+      tags:
+      - customers
+      summary: List Customer Integrations
+      description: List all integration configs for a customer.
+      operationId: list_customer_integrations_api_v1_customers__customer_id__integrations_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerIntegrationConfigResponse'
+                title: Response List Customer Integrations Api V1 Customers  Customer Id  Integrations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/grafana:
+    post:
+      tags:
+      - customers
+      summary: Link Grafana Dashboard
+      description: Link a Grafana dashboard to a customer.
+      operationId: link_grafana_dashboard_api_v1_customers__customer_id__integrations_grafana_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaLinkRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerIntegrationConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - customers
+      summary: Update Grafana Config
+      description: Update Grafana integration config (alert rules).
+      operationId: update_grafana_config_api_v1_customers__customer_id__integrations_grafana_patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaConfigUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerIntegrationConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Unlink Grafana Dashboard
+      description: Unlink Grafana dashboard from a customer.
+      operationId: unlink_grafana_dashboard_api_v1_customers__customer_id__integrations_grafana_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/grafana/embed-url:
+    get:
+      tags:
+      - customers
+      summary: Get Grafana Embed Url
+      description: Get the iframe embed URL for the linked Grafana dashboard.
+      operationId: get_grafana_embed_url_api_v1_customers__customer_id__integrations_grafana_embed_url_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/grafana/sync:
+    post:
+      tags:
+      - customers
+      summary: Resync Grafana
+      description: Manually trigger a Grafana re-sync (check alerts).
+      operationId: resync_grafana_api_v1_customers__customer_id__integrations_grafana_sync_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/meetings/sync:
+    post:
+      tags:
+      - customers
+      summary: Sync Customer Meeting Sources
+      description: Sync every configured meeting source with per-source outcomes.
+      operationId: sync_customer_meeting_sources_api_v1_customers__customer_id__meetings_sync_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerMeetingSourcesSyncResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/granola:
+    put:
+      tags:
+      - customers
+      summary: Configure Customer Granola
+      operationId: configure_customer_granola_api_v1_customers__customer_id__integrations_granola_put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerGranolaConfigRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Disable Customer Granola
+      operationId: disable_customer_granola_api_v1_customers__customer_id__integrations_granola_delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/granola/sync:
+    post:
+      tags:
+      - customers
+      summary: Sync Customer Granola
+      operationId: sync_customer_granola_api_v1_customers__customer_id__integrations_granola_sync_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/{provider}:
+    post:
+      tags:
+      - customers
+      summary: Link Customer Resource
+      description: 'Link a Drive folder / Notion page / Slack channel to a customer.
+
+
+        One link per (customer, provider) — re-linking replaces the prior
+
+        selection in place rather than rejecting with a 409.'
+      operationId: link_customer_resource_api_v1_customers__customer_id__integrations__provider__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerResourceLinkRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerIntegrationConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Unlink Customer Resource
+      description: Unlink a Drive folder / Notion page / Slack channel from a customer.
+      operationId: unlink_customer_resource_api_v1_customers__customer_id__integrations__provider__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/{provider}/sync:
+    post:
+      tags:
+      - customers
+      summary: Sync Customer Resource
+      description: 'Trigger a one-shot manual sync for a Drive/Notion/Slack link.
+
+
+        No background scheduler — returns synchronously with a small
+
+        summary so the UI can show "12 synced" / "Nothing new".'
+      operationId: sync_customer_resource_api_v1_customers__customer_id__integrations__provider__sync_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/sync-logs:
+    get:
+      tags:
+      - customers
+      summary: List Sync Logs
+      description: List sync logs for a customer's integrations.
+      operationId: list_sync_logs_api_v1_customers__customer_id__integrations_sync_logs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: provider
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IntegrationSyncLogResponse'
+                title: Response List Sync Logs Api V1 Customers  Customer Id  Integrations Sync Logs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/samsara:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Samsara Context
+      description: 'Return the Samsara state for one customer — the linked customer
+
+        account, its keys, and the per-user assignments.
+
+
+        Used by the customer''s Integrations tab to render the Samsara row.
+
+        Returns ``{linked: false}`` when no Samsara account is mapped to
+
+        this customer — the row still renders in the UI but in the "not
+
+        yet linked" state, prompting the admin to import a key via
+
+        ``/platform/connectors/samsara`` instead.'
+      operationId: get_customer_samsara_context_api_v1_customers__customer_id__integrations_samsara_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/checkout:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Checkout Context
+      description: 'Return the Checkout.com state for one customer — the linked
+
+        merchant entity, its keys, and the per-user assignments.
+
+
+        Used by the customer''s Integrations tab to render the Checkout row.
+
+        Returns ``{linked: false}`` when no Checkout account is mapped to
+
+        this customer — the row stays hidden in the UI in that case (the
+
+        customer Integrations tab uses ``customer-checkout`` connectionScope
+
+        to suppress unlinked rows).'
+      operationId: get_customer_checkout_context_api_v1_customers__customer_id__integrations_checkout_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/integrations/razorpay:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Razorpay Context
+      description: 'Return the Razorpay state for one customer — the linked
+
+        merchant account, its keys, and the per-user assignments.
+
+
+        Used by the customer''s Integrations tab to render the Razorpay row.
+
+        Returns ``{linked: false}`` when no Razorpay account is mapped to
+
+        this customer — the row stays hidden in the UI in that case (the
+
+        customer Integrations tab uses ``customer-razorpay`` connectionScope
+
+        to suppress unlinked rows).'
+      operationId: get_customer_razorpay_context_api_v1_customers__customer_id__integrations_razorpay_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles:
+    get:
+      tags:
+      - customers
+      summary: Get Customer Browser Profiles
+      description: 'List a customer''s browser profiles + member assignments (admin only).
+
+
+        Admin-gated to match the management surface — the only consumer is the
+
+        admin-only Browser Profiles card. Members are fetched client-side (org
+
+        members plus customer guests); this returns the profiles (with their
+
+        authenticated domains) and the (user_id -> profile_id) assignments.'
+      operationId: get_customer_browser_profiles_api_v1_customers__customer_id__browser_profiles_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/auth/start:
+    post:
+      tags:
+      - customers
+      summary: Start Customer Browser Profile Auth
+      description: 'Create a profile (or pick an existing one) and start Managed Auth for a
+
+        login URL. Returns the handoff payload the frontend feeds to the
+
+        ``KernelManagedAuth`` widget (admin only).'
+      operationId: start_customer_browser_profile_auth_api_v1_customers__customer_id__browser_profiles_auth_start_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartProfileAuthBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/{profile_id}/auth/finalize:
+    post:
+      tags:
+      - customers
+      summary: Finalize Customer Browser Profile Auth
+      description: 'Record the authenticated domain after the widget reports success
+
+        (admin only).'
+      operationId: finalize_customer_browser_profile_auth_api_v1_customers__customer_id__browser_profiles__profile_id__auth_finalize_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeProfileAuthBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/{profile_id}/auth/{connection_id}:
+    delete:
+      tags:
+      - customers
+      summary: Cancel Customer Browser Profile Auth
+      description: Cancel an in-progress profile login and stop its Kernel auth browser.
+      operationId: cancel_customer_browser_profile_auth_api_v1_customers__customer_id__browser_profiles__profile_id__auth__connection_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      - name: connection_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connection Id
+      - name: cleanup_token
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cleanup Token
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/{profile_id}:
+    delete:
+      tags:
+      - customers
+      summary: Delete Customer Browser Profile
+      description: 'Delete a profile + its Kernel state, assignments, and domains
+
+        (admin only).'
+      operationId: delete_customer_browser_profile_api_v1_customers__customer_id__browser_profiles__profile_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/{profile_id}/assignments:
+    post:
+      tags:
+      - customers
+      summary: Assign Customer Browser Profile
+      description: 'Assign a member to a profile. Upserts on (customer, user) — one profile
+
+        per user per customer (admin only).'
+      operationId: assign_customer_browser_profile_api_v1_customers__customer_id__browser_profiles__profile_id__assignments_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: profile_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Profile Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignProfileBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/browser-profiles/assignments/{user_id}:
+    delete:
+      tags:
+      - customers
+      summary: Unassign Customer Browser Profile
+      description: Remove a member's profile assignment in a customer (admin only).
+      operationId: unassign_customer_browser_profile_api_v1_customers__customer_id__browser_profiles_assignments__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/guests:
+    get:
+      tags:
+      - customers
+      summary: List Customer Guests
+      description: List accepted guests + pending invitations for a customer.
+      operationId: list_customer_guests_api_v1_customers__customer_id__guests_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/guests/invite:
+    post:
+      tags:
+      - customers
+      summary: Invite Customer Guest
+      description: 'Invite an external user (by email) as a guest on this customer.
+
+
+        A brand-new email gets a Clerk org invitation (Clerk emails them + handles
+
+        signup); on accept they become a guest scoped to this customer. An email
+
+        that already belongs to a *guest* of this org is granted access directly.
+
+        An email belonging to an existing non-guest Unisson user is rejected — a
+
+        full member can''t be turned into a guest.'
+      operationId: invite_customer_guest_api_v1_customers__customer_id__guests_invite_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestInviteRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/guests/{user_id}:
+    patch:
+      tags:
+      - customers
+      summary: Update Customer Guest
+      description: 'Edit an accepted guest''s agent allowlist and access expiry.
+
+
+        Replaces both settings on the ``customer_guests`` grant. Setting a future
+
+        ``expires_at`` on an expired guest re-grants their access (the grant row is
+
+        never deleted on expiry — access is blocked at read time, so it simply
+
+        becomes live again).'
+      operationId: update_customer_guest_api_v1_customers__customer_id__guests__user_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - customers
+      summary: Remove Customer Guest
+      description: 'Revoke an accepted guest''s access to this customer.
+
+
+        Removes the customer grant. ``is_guest`` is never cleared (no path to a
+
+        silent privilege gain). When this was the guest''s **last** grant in the org,
+
+        we also remove them from the org entirely — drop their Clerk membership and
+
+        unlink them locally (``organization_id=None``) — so they can no longer sign
+
+        in and use chat / their own connectors with no customer access. Their Clerk
+
+        account survives, so the same email can be re-invited later.'
+      operationId: remove_customer_guest_api_v1_customers__customer_id__guests__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/customers/{customer_id}/guests/invitations/{invitation_id}:
+    delete:
+      tags:
+      - customers
+      summary: Revoke Customer Guest Invitation
+      description: 'Revoke a pending guest invitation.
+
+
+        Also revokes the underlying Clerk invitation so the recipient can''t accept
+
+        it later and join the org as a full member (which would happen if no
+
+        pending guest invitation remained to flag them on join).'
+      operationId: revoke_customer_guest_invitation_api_v1_customers__customer_id__guests_invitations__invitation_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Invitation Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    PlaybookResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        name:
+          type: string
+          title: Name
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepResponse'
+          type: array
+          title: Steps
+          default: []
+        progress_percent:
+          type: number
+          title: Progress Percent
+          default: 0.0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - customer_id
+      - name
+      - created_at
+      title: PlaybookResponse
+      description: Schema for playbook response.
+    CustomerRisksResponse:
+      properties:
+        risks:
+          items:
+            $ref: '#/components/schemas/CustomerRiskResponse'
+          type: array
+          title: Risks
+      type: object
+      required:
+      - risks
+      title: CustomerRisksResponse
+      description: Response with list of customer risks.
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    CustomerIntegrationConfigResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        provider:
+          type: string
+          title: Provider
+        external_id:
+          type: string
+          title: External Id
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+          default: {}
+        sync_status:
+          type: string
+          title: Sync Status
+        last_synced_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Synced At
+        sync_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sync Error
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - customer_id
+      - provider
+      - external_id
+      - sync_status
+      - is_active
+      title: CustomerIntegrationConfigResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CustomerCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        status:
+          type: string
+          pattern: ^(active|on_hold|completed|cancelled)$
+          title: Status
+          default: active
+        priority:
+          type: string
+          pattern: ^(high|medium|low)$
+          title: Priority
+          default: medium
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        owner_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Owner Ids
+      type: object
+      required:
+      - name
+      title: CustomerCreate
+      description: Schema for creating a customer.
+    CustomerDigestItem:
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        customer_name:
+          type: string
+          title: Customer Name
+        insight_type:
+          type: string
+          title: Insight Type
+        severity:
+          type: string
+          title: Severity
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - customer_id
+      - customer_name
+      - insight_type
+      - severity
+      - message
+      title: CustomerDigestItem
+      description: A single insight in the daily digest.
+    CustomerListResponse:
+      properties:
+        customers:
+          items:
+            $ref: '#/components/schemas/CustomerListItem'
+          type: array
+          title: Customers
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - customers
+      - total
+      - page
+      - page_size
+      title: CustomerListResponse
+      description: Paginated list of customers.
+    ChatConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationResponse
+    CustomerDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          title: Status
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        priority:
+          type: string
+          title: Priority
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        recall_bot_enabled:
+          type: boolean
+          title: Recall Bot Enabled
+          default: true
+        owners:
+          items:
+            $ref: '#/components/schemas/CustomerOwnerInfo'
+          type: array
+          title: Owners
+          default: []
+        created_by_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By Id
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        open_tasks_count:
+          type: integer
+          title: Open Tasks Count
+          default: 0
+        total_tasks_count:
+          type: integer
+          title: Total Tasks Count
+          default: 0
+        total_meetings_count:
+          type: integer
+          title: Total Meetings Count
+          default: 0
+        total_emails_count:
+          type: integer
+          title: Total Emails Count
+          default: 0
+        total_documents_count:
+          type: integer
+          title: Total Documents Count
+          default: 0
+        total_playbooks_count:
+          type: integer
+          title: Total Playbooks Count
+          default: 0
+        total_integrations_count:
+          type: integer
+          title: Total Integrations Count
+          default: 0
+        total_conversations_count:
+          type: integer
+          title: Total Conversations Count
+          default: 0
+        total_runs_count:
+          type: integer
+          title: Total Runs Count
+          default: 0
+        total_files_count:
+          type: integer
+          title: Total Files Count
+          default: 0
+        total_guests_count:
+          type: integer
+          title: Total Guests Count
+          default: 0
+        summary_cache:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary Cache
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - status
+      - priority
+      - created_at
+      title: CustomerDetailResponse
+      description: Detailed customer response with aggregations.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AssignProfileBody:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+      type: object
+      required:
+      - user_id
+      title: AssignProfileBody
+    PlaybooksResponse:
+      properties:
+        playbooks:
+          items:
+            $ref: '#/components/schemas/PlaybookResponse'
+          type: array
+          title: Playbooks
+      type: object
+      required:
+      - playbooks
+      title: PlaybooksResponse
+      description: Response with list of playbooks.
+    FinalizeProfileAuthBody:
+      properties:
+        connection_id:
+          type: string
+          title: Connection Id
+      type: object
+      required:
+      - connection_id
+      title: FinalizeProfileAuthBody
+    GuestInviteRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        allowed_agent_ids:
+          items:
+            type: string
+            format: uuid4
+          type: array
+          title: Allowed Agent Ids
+          default: []
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - email
+      title: GuestInviteRequest
+    IntegrationSyncLogResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        direction:
+          type: string
+          title: Direction
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Id
+        status:
+          type: string
+          title: Status
+        details:
+          additionalProperties: true
+          type: object
+          title: Details
+          default: {}
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - direction
+      - entity_type
+      - status
+      title: IntegrationSyncLogResponse
+    GuestAccountResponse:
+      properties:
+        user_id:
+          type: string
+          format: uuid4
+          title: User Id
+        email:
+          type: string
+          title: Email
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        allowed_agent_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Agent Ids
+      type: object
+      required:
+      - user_id
+      - email
+      title: GuestAccountResponse
+    PendingInviteResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        email:
+          type: string
+          title: Email
+        invited_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Invited At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        allowed_agent_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Agent Ids
+      type: object
+      required:
+      - id
+      - email
+      title: PendingInviteResponse
+    CustomerOwnerInfo:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        initials:
+          type: string
+          title: Initials
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+      type: object
+      required:
+      - id
+      - name
+      - initials
+      title: CustomerOwnerInfo
+      description: 'Owner avatar payload — id + display name + initials + image url.
+
+
+        Initials are precomputed server-side so the table can render the
+
+        avatar stack without re-deriving them per row. `image_url` is the
+
+        Clerk-synced profile photo when available; the frontend falls
+
+        back to initials when it''s null.'
+    CustomerTimelineEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - event_type
+      - title
+      - timestamp
+      title: CustomerTimelineEvent
+      description: Schema for a timeline event.
+    CustomerListIntegrationSummary:
+      properties:
+        provider:
+          type: string
+          title: Provider
+      type: object
+      required:
+      - provider
+      title: CustomerListIntegrationSummary
+      description: Per-row integration summary surfaced in the customers table.
+    PlaybookCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          default: Onboarding Playbook
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepCreate'
+          type: array
+          title: Steps
+          default: []
+        template_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Template Id
+      type: object
+      title: PlaybookCreate
+      description: Schema for creating a playbook.
+    GuestUpdateRequest:
+      properties:
+        allowed_agent_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid4
+            type: array
+          - type: 'null'
+          title: Allowed Agent Ids
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - allowed_agent_ids
+      - expires_at
+      title: GuestUpdateRequest
+      description: 'Full replacement of an accepted guest''s agent allowlist + expiry.
+
+
+        Used by the customer Guests page to edit a guest or re-grant access to an
+
+        expired one (set a future ``expires_at``).
+
+
+        Both fields are REQUIRED (no defaults) because this is a full replacement —
+
+        a partial PATCH omitting one would otherwise silently reset it (e.g.
+
+        omitting ``allowed_agent_ids`` would wipe an explicit allowlist to
+
+        unrestricted). ``allowed_agent_ids``: ``None`` = unrestricted (all agents) —
+
+        lets the editor preserve a legacy guest''s "all agents" access; ``[]`` = no
+
+        agents; ``[...]`` = exactly those.'
+    MeetingPrepRequest:
+      properties:
+        calendar_event_id:
+          type: string
+          minLength: 1
+          title: Calendar Event Id
+      type: object
+      required:
+      - calendar_event_id
+      title: MeetingPrepRequest
+      description: Request to (re)generate prep for a specific upcoming meeting.
+    MeetingSourceSyncResult:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        result:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Result
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - success
+      title: MeetingSourceSyncResult
+    CrossCustomerChatRequest:
+      properties:
+        content:
+          type: string
+          minLength: 1
+          title: Content
+      type: object
+      required:
+      - content
+      title: CrossCustomerChatRequest
+      description: Schema for a cross-customer chat message (portfolio-wide chat).
+    GrafanaLinkRequest:
+      properties:
+        dashboard_uid:
+          type: string
+          title: Dashboard Uid
+        alert_rule_ids:
+          items:
+            type: string
+          type: array
+          title: Alert Rule Ids
+      type: object
+      required:
+      - dashboard_uid
+      title: GrafanaLinkRequest
+    CustomerSummaryResponse:
+      properties:
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        key_achievements:
+          items:
+            type: string
+          type: array
+          title: Key Achievements
+          default: []
+        outstanding_blockers:
+          items:
+            type: string
+          type: array
+          title: Outstanding Blockers
+          default: []
+        next_actions:
+          items:
+            type: string
+          type: array
+          title: Next Actions
+          default: []
+      type: object
+      title: CustomerSummaryResponse
+      description: Response with AI-generated customer summary.
+    StartProfileAuthBody:
+      properties:
+        login_url:
+          type: string
+          title: Login Url
+        profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Profile Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        force_reconnect:
+          type: boolean
+          title: Force Reconnect
+          default: false
+      type: object
+      required:
+      - login_url
+      title: StartProfileAuthBody
+    GuestListResponse:
+      properties:
+        guests:
+          items:
+            $ref: '#/components/schemas/GuestAccountResponse'
+          type: array
+          title: Guests
+        pending_invitations:
+          items:
+            $ref: '#/components/schemas/PendingInviteResponse'
+          type: array
+          title: Pending Invitations
+      type: object
+      required:
+      - guests
+      - pending_invitations
+      title: GuestListResponse
+    CustomerListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          title: Status
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        priority:
+          type: string
+          title: Priority
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        owners:
+          items:
+            $ref: '#/components/schemas/CustomerOwnerInfo'
+          type: array
+          title: Owners
+          default: []
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        open_tasks_count:
+          type: integer
+          title: Open Tasks Count
+          default: 0
+        total_tasks_count:
+          type: integer
+          title: Total Tasks Count
+          default: 0
+        total_meetings_count:
+          type: integer
+          title: Total Meetings Count
+          default: 0
+        total_emails_count:
+          type: integer
+          title: Total Emails Count
+          default: 0
+        total_documents_count:
+          type: integer
+          title: Total Documents Count
+          default: 0
+        integrations:
+          items:
+            $ref: '#/components/schemas/CustomerListIntegrationSummary'
+          type: array
+          title: Integrations
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - status
+      - priority
+      - created_at
+      title: CustomerListItem
+      description: Lightweight customer item for list views.
+    PlaybookTemplateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookTemplateStepResponse'
+          type: array
+          title: Steps
+          default: []
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - name
+      - created_at
+      title: PlaybookTemplateResponse
+      description: Schema for template response.
+    PlaybookTemplateStepResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          type: integer
+          title: Order Index
+      type: object
+      required:
+      - id
+      - title
+      - order_index
+      title: PlaybookTemplateStepResponse
+      description: Schema for template step response.
+    CustomerTimelineResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/CustomerTimelineEvent'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: CustomerTimelineResponse
+      description: Response with customer timeline.
+    PlaybookTemplateCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepCreate'
+          type: array
+          title: Steps
+          default: []
+      type: object
+      required:
+      - name
+      title: PlaybookTemplateCreate
+      description: Schema for creating a playbook template.
+    CustomerResourceLinkRequest:
+      properties:
+        external_id:
+          type: string
+          title: External Id
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+      type: object
+      required:
+      - external_id
+      title: CustomerResourceLinkRequest
+      description: 'Generic shape for linking a single external resource to a
+
+        customer. Used by the Drive folder / Notion page / Slack channel
+
+        pickers — each writes one CustomerIntegrationConfig row keyed by
+
+        `(customer_id, provider)`. Display name is stored alongside the id
+
+        so the UI can show "Q4 Planning" instead of just `1Bxy…`.'
+    GrafanaConfigUpdate:
+      properties:
+        alert_rule_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Alert Rule Ids
+      type: object
+      title: GrafanaConfigUpdate
+    CustomerDigestResponse:
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        insights:
+          items:
+            $ref: '#/components/schemas/CustomerDigestItem'
+          type: array
+          title: Insights
+        summary:
+          type: string
+          title: Summary
+      type: object
+      required:
+      - generated_at
+      - insights
+      - summary
+      title: CustomerDigestResponse
+      description: Daily digest across all customers.
+    MeetingPrepResponse:
+      properties:
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        calendar_event_id:
+          type: string
+          title: Calendar Event Id
+        title:
+          type: string
+          title: Title
+        meeting_start:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Meeting Start
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        auto_generated:
+          type: boolean
+          title: Auto Generated
+          default: false
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - calendar_event_id
+      - title
+      - generated_at
+      title: MeetingPrepResponse
+      description: 'A persisted, AI-generated pre-meeting prep.
+
+
+        ``summary`` is a 1-2 sentence headline; ``content`` is the full markdown
+
+        briefing. ``auto_generated`` distinguishes the 1-hour-before sweep from a
+
+        manual "Generate" click.'
+    CustomerGranolaConfigRequest:
+      properties:
+        folder_ids:
+          items:
+            type: string
+          type: array
+          title: Folder Ids
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+      type: object
+      title: CustomerGranolaConfigRequest
+      description: Customer-specific Granola narrowing; attendee targets stay mandatory.
+    CustomerUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+            pattern: ^(active|on_hold|completed|cancelled)$
+          - type: 'null'
+          title: Status
+        priority:
+          anyOf:
+          - type: string
+            pattern: ^(high|medium|low)$
+          - type: 'null'
+          title: Priority
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        recall_bot_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Recall Bot Enabled
+        owner_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Owner Ids
+      type: object
+      title: CustomerUpdate
+      description: Schema for updating a customer. All fields optional for PATCH semantics.
+    PlaybookStepResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          type: integer
+          title: Order Index
+        is_completed:
+          type: boolean
+          title: Is Completed
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - order_index
+      - is_completed
+      - created_at
+      title: PlaybookStepResponse
+      description: Schema for playbook step response.
+    CustomerResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          title: Status
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        priority:
+          type: string
+          title: Priority
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        recall_bot_enabled:
+          type: boolean
+          title: Recall Bot Enabled
+          default: true
+        owners:
+          items:
+            $ref: '#/components/schemas/CustomerOwnerInfo'
+          type: array
+          title: Owners
+          default: []
+        created_by_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By Id
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - status
+      - priority
+      - created_at
+      title: CustomerResponse
+      description: Schema for basic customer response.
+    ChatConversationListResponse:
+      properties:
+        conversations:
+          items:
+            $ref: '#/components/schemas/ChatConversationResponse'
+          type: array
+          title: Conversations
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - conversations
+      - total
+      - page
+      - page_size
+      title: ChatConversationListResponse
+    CustomerRiskResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        risk_type:
+          type: string
+          title: Risk Type
+        severity:
+          type: string
+          title: Severity
+        description:
+          type: string
+          title: Description
+        detected_at:
+          type: string
+          format: date-time
+          title: Detected At
+        resolved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Resolved At
+      type: object
+      required:
+      - id
+      - customer_id
+      - risk_type
+      - severity
+      - description
+      - detected_at
+      title: CustomerRiskResponse
+      description: Schema for a customer risk.
+    CustomerMeetingSourcesSyncResponse:
+      properties:
+        sources:
+          additionalProperties:
+            $ref: '#/components/schemas/MeetingSourceSyncResult'
+          type: object
+          title: Sources
+      type: object
+      required:
+      - sources
+      title: CustomerMeetingSourcesSyncResponse
+    PlaybookTemplatesResponse:
+      properties:
+        templates:
+          items:
+            $ref: '#/components/schemas/PlaybookTemplateResponse'
+          type: array
+          title: Templates
+      type: object
+      required:
+      - templates
+      title: PlaybookTemplatesResponse
+      description: Response with list of templates.
+    PlaybookStepCreate:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Order Index
+      type: object
+      required:
+      - title
+      title: PlaybookStepCreate
+      description: Schema for creating a playbook step.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

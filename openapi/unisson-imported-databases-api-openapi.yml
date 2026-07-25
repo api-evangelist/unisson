@@ -1,0 +1,402 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals imported-databases API
+  version: 1.0.0
+tags:
+- name: imported-databases
+paths:
+  /api/v1/imported-databases/initiate:
+    post:
+      tags:
+      - imported-databases
+      summary: Initiate Import
+      operationId: initiate_import_api_v1_imported_databases_initiate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateImportRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitiateImportResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/imported-databases/{import_id}/sign-part:
+    post:
+      tags:
+      - imported-databases
+      summary: Sign Part
+      operationId: sign_part_api_v1_imported_databases__import_id__sign_part_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: import_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Import Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignPartRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignPartResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/imported-databases/{import_id}/complete:
+    post:
+      tags:
+      - imported-databases
+      summary: Complete Import
+      operationId: complete_import_api_v1_imported_databases__import_id__complete_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: import_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Import Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteImportRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportedDatabaseResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/imported-databases/{import_id}/abort:
+    post:
+      tags:
+      - imported-databases
+      summary: Abort Import
+      operationId: abort_import_api_v1_imported_databases__import_id__abort_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: import_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Import Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/imported-databases:
+    get:
+      tags:
+      - imported-databases
+      summary: List Imports
+      operationId: list_imports_api_v1_imported_databases_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scope
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportedDatabaseListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/imported-databases/{import_id}:
+    delete:
+      tags:
+      - imported-databases
+      summary: Delete Import
+      operationId: delete_import_api_v1_imported_databases__import_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: import_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Import Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ImportedDatabaseResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        source_filename:
+          type: string
+          title: Source Filename
+        source_format:
+          type: string
+          title: Source Format
+        status:
+          type: string
+          title: Status
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        tables_total:
+          type: integer
+          title: Tables Total
+        tables_loaded:
+          type: integer
+          title: Tables Loaded
+        size_bytes:
+          type: integer
+          title: Size Bytes
+        scope:
+          type: string
+          title: Scope
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - customer_id
+      - customer_name
+      - source_filename
+      - source_format
+      - status
+      - error
+      - tables_total
+      - tables_loaded
+      - size_bytes
+      - scope
+      - created_at
+      - updated_at
+      title: ImportedDatabaseResponse
+    SignPartRequest:
+      properties:
+        part_number:
+          type: integer
+          maximum: 10000.0
+          minimum: 1.0
+          title: Part Number
+      type: object
+      required:
+      - part_number
+      title: SignPartRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ImportedDatabaseListResponse:
+      properties:
+        imports:
+          items:
+            $ref: '#/components/schemas/ImportedDatabaseResponse'
+          type: array
+          title: Imports
+      type: object
+      required:
+      - imports
+      title: ImportedDatabaseListResponse
+    InitiateImportRequest:
+      properties:
+        filename:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Filename
+        size_bytes:
+          type: integer
+          minimum: 0.0
+          title: Size Bytes
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      type: object
+      required:
+      - filename
+      - size_bytes
+      title: InitiateImportRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CompleteImportRequest:
+      properties:
+        parts:
+          items:
+            $ref: '#/components/schemas/CompletedPart'
+          type: array
+          minItems: 1
+          title: Parts
+      type: object
+      required:
+      - parts
+      title: CompleteImportRequest
+    CompletedPart:
+      properties:
+        part_number:
+          type: integer
+          maximum: 10000.0
+          minimum: 1.0
+          title: Part Number
+        etag:
+          type: string
+          title: Etag
+      type: object
+      required:
+      - part_number
+      - etag
+      title: CompletedPart
+    SignPartResponse:
+      properties:
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - url
+      title: SignPartResponse
+    InitiateImportResponse:
+      properties:
+        import_id:
+          type: string
+          format: uuid
+          title: Import Id
+        upload_id:
+          type: string
+          title: Upload Id
+        s3_key:
+          type: string
+          title: S3 Key
+        part_size:
+          type: integer
+          title: Part Size
+      type: object
+      required:
+      - import_id
+      - upload_id
+      - s3_key
+      - part_size
+      title: InitiateImportResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

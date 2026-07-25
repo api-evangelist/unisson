@@ -1,0 +1,266 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals notifications API
+  version: 1.0.0
+tags:
+- name: notifications
+paths:
+  /api/v1/notifications:
+    get:
+      tags:
+      - notifications
+      summary: List Notifications
+      description: Return the current user's notifications, most recent first.
+      operationId: list_notifications_api_v1_notifications_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: unread_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Unread Only
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/notifications/unread-count:
+    get:
+      tags:
+      - notifications
+      summary: Unread Count
+      description: Return the number of unread notifications for the bell badge.
+      operationId: unread_count_api_v1_notifications_unread_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCountResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/notifications/{notification_id}:
+    patch:
+      tags:
+      - notifications
+      summary: Mark Read
+      description: Mark a single notification as read/unread.
+      operationId: mark_read_api_v1_notifications__notification_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: notification_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Notification Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkReadRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/notifications/mark-all-read:
+    post:
+      tags:
+      - notifications
+      summary: Mark All Read
+      description: Mark every unread notification for the current user as read.
+      operationId: mark_all_read_api_v1_notifications_mark_all_read_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCountResponse'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    MarkReadRequest:
+      properties:
+        is_read:
+          type: boolean
+          title: Is Read
+          default: true
+      type: object
+      title: MarkReadRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NotificationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        title:
+          type: string
+          title: Title
+        message:
+          type: string
+          title: Message
+        run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Status
+        action_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Action Url
+        conversation_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Conversation Id
+        run_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Run Id
+        is_read:
+          type: boolean
+          title: Is Read
+        read_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Read At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - event_type
+      - title
+      - message
+      - is_read
+      - created_at
+      title: NotificationResponse
+    NotificationListResponse:
+      properties:
+        notifications:
+          items:
+            $ref: '#/components/schemas/NotificationResponse'
+          type: array
+          title: Notifications
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        unread_count:
+          type: integer
+          title: Unread Count
+      type: object
+      required:
+      - notifications
+      - total
+      - page
+      - page_size
+      - unread_count
+      title: NotificationListResponse
+    UnreadCountResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - count
+      title: UnreadCountResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

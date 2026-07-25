@@ -1,0 +1,133 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals webhooks API
+  version: 1.0.0
+tags:
+- name: webhooks
+paths:
+  /api/v1/triggers/webhook/{webhook_token}:
+    post:
+      tags:
+      - webhooks
+      summary: Handle Webhook
+      description: 'Public webhook endpoint. Receives payloads and triggers agent runs.
+
+
+        Authentication is via the webhook_token in the URL.
+
+        Optional HMAC-SHA256 signature verification via X-Webhook-Signature header.'
+      operationId: handle_webhook_api_v1_triggers_webhook__webhook_token__post
+      parameters:
+      - name: webhook_token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Webhook Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/webhooks/clerk:
+    post:
+      tags:
+      - webhooks
+      summary: Clerk Webhook
+      description: 'Handle Clerk webhook events
+
+
+        Events handled:
+
+        - organization.created: Create organization in our database
+
+        - organization.updated: Update organization in our database
+
+        - organization.deleted: Delete organization from our database
+
+        - organizationMembership.created: Link user to organization
+
+        - organizationMembership.updated: Update user role
+
+        - organizationMembership.deleted: Unlink user from organization
+
+        - user.created: Create user in our database
+
+        - user.updated: Update user in our database
+
+        - user.deleted: Delete user from our database'
+      operationId: clerk_webhook_api_v1_webhooks_clerk_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/v1/webhooks/recall:
+    post:
+      tags:
+      - webhooks
+      summary: Recall Webhook
+      description: 'Handle Recall.ai meeting-bot webhooks.
+
+
+        When a bot finishes (status ``done``), enqueue transcript ingestion;
+
+        the heavy work (fetch transcript, create meetings, extract tickets)
+
+        runs in a Celery task so the handler returns 200 quickly.'
+      operationId: recall_webhook_api_v1_webhooks_recall_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

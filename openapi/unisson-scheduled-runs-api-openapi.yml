@@ -1,0 +1,352 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals scheduled-runs API
+  version: 1.0.0
+tags:
+- name: scheduled-runs
+paths:
+  /api/v1/scheduled-runs:
+    get:
+      tags:
+      - scheduled-runs
+      summary: List Scheduled Runs
+      description: List all scheduled runs for the organization (non-deleted, ordered by next_run_at).
+      operationId: list_scheduled_runs_api_v1_scheduled_runs_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledRunListResponse'
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - scheduled-runs
+      summary: Create Scheduled Run
+      description: Create a new scheduled run.
+      operationId: create_scheduled_run_api_v1_scheduled_runs_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduledRunCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/scheduled-runs/{scheduled_run_id}:
+    get:
+      tags:
+      - scheduled-runs
+      summary: Get Scheduled Run
+      description: Get a specific scheduled run.
+      operationId: get_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scheduled_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Scheduled Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - scheduled-runs
+      summary: Cancel Scheduled Run
+      description: Cancel and delete a scheduled run.
+      operationId: cancel_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scheduled_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Scheduled Run Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/scheduled-runs/{scheduled_run_id}/pause:
+    post:
+      tags:
+      - scheduled-runs
+      summary: Pause Scheduled Run
+      description: Pause a recurring scheduled run.
+      operationId: pause_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__pause_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scheduled_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Scheduled Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/scheduled-runs/{scheduled_run_id}/resume:
+    post:
+      tags:
+      - scheduled-runs
+      summary: Resume Scheduled Run
+      description: Resume a paused scheduled run.
+      operationId: resume_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__resume_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: scheduled_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Scheduled Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledRunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ScheduledRunListResponse:
+      properties:
+        scheduled_runs:
+          items:
+            $ref: '#/components/schemas/ScheduledRunResponse'
+          type: array
+          title: Scheduled Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - scheduled_runs
+      - total
+      title: ScheduledRunListResponse
+      description: List of scheduled runs
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ScheduledRunCreate:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        run_type:
+          type: string
+          enum:
+          - task
+          - exploration
+          title: Run Type
+          default: task
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+          description: When to execute the run (ISO format with timezone)
+        is_recurring:
+          type: boolean
+          title: Is Recurring
+          default: false
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+          description: Type of recurrence interval
+        recurrence_value:
+          anyOf:
+          - type: integer
+            maximum: 365.0
+            minimum: 1.0
+          - type: 'null'
+          title: Recurrence Value
+          description: Value for recurrence (e.g., 6 for 'every 6 hours')
+      type: object
+      required:
+      - request_text
+      - scheduled_at
+      title: ScheduledRunCreate
+      description: Request to create a new scheduled run
+    ScheduledRunResponse:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Created By
+        creator_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Name
+        run_type:
+          type: string
+          title: Run Type
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+        is_recurring:
+          type: boolean
+          title: Is Recurring
+        recurrence_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recurrence Value
+        status:
+          type: string
+          title: Status
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        last_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Run At
+        run_count:
+          type: integer
+          title: Run Count
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - request_text
+      - id
+      - organization_id
+      - run_type
+      - scheduled_at
+      - is_recurring
+      - status
+      - run_count
+      - created_at
+      title: ScheduledRunResponse
+      description: Scheduled run response
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

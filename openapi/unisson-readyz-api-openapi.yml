@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals Readyz API
+  version: 1.0.0
+tags:
+- name: Readyz
+paths:
+  /readyz:
+    get:
+      summary: Readyz
+      description: 'Deep readiness probe: confirms DB + Redis + WS relay are live.
+
+
+        K8s readiness probes should hit this (not ``/health``) so a worker
+
+        with a degraded dependency is pulled out of the load-balancer pool.'
+      operationId: readyz_readyz_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Readyz
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

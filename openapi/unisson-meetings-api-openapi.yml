@@ -1,0 +1,711 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals meetings API
+  version: 1.0.0
+tags:
+- name: meetings
+paths:
+  /api/v1/meetings/upcoming-events:
+    get:
+      tags:
+      - meetings
+      summary: List Upcoming Events
+      description: 'Live upcoming Calendar events for one customer (no DB persistence).
+
+
+        Same data source and matching rules as the customer Overview Upcoming
+
+        panel (``/customers/{id}/calendar-events``) — both routes call
+
+        ``calendar_events_service.aggregate_upcoming_events`` so the two
+
+        surfaces never drift. ``customer_id`` is required because every
+
+        surface that uses this endpoint is rendered in a customer context.'
+      operationId: list_upcoming_events_api_v1_meetings_upcoming_events_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      - name: days_ahead
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 60
+          minimum: 1
+          default: 14
+          title: Days Ahead
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings:
+    get:
+      tags:
+      - meetings
+      summary: List Meetings
+      description: List all meetings for the organization with pagination and filters.
+      operationId: list_meetings_api_v1_meetings_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: provider_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Filter
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/{meeting_id}:
+    get:
+      tags:
+      - meetings
+      summary: Get Meeting
+      description: Get a specific meeting by ID.
+      operationId: get_meeting_api_v1_meetings__meeting_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - meetings
+      summary: Delete Meeting
+      description: Soft-delete a meeting.
+      operationId: delete_meeting_api_v1_meetings__meeting_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/{meeting_id}/recording:
+    get:
+      tags:
+      - meetings
+      summary: Get Meeting Recording
+      description: 'On-demand Recall playback data for a bot-recorded meeting: a freshly
+
+        presigned video URL (short-lived — fetched live, never stored) plus a
+
+        structured transcript. Returns empties (never errors) when the meeting
+
+        wasn''t bot-recorded or its 7-day recording retention has lapsed, so the
+
+        modal degrades gracefully to the persisted transcript.'
+      operationId: get_meeting_recording_api_v1_meetings__meeting_id__recording_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingRecordingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/{meeting_id}/reprocess:
+    post:
+      tags:
+      - meetings
+      summary: Reprocess Meeting
+      description: Re-run LLM analysis on an existing meeting transcript.
+      operationId: reprocess_meeting_api_v1_meetings__meeting_id__reprocess_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/import:
+    post:
+      tags:
+      - meetings
+      summary: Import Meeting Transcript
+      description: 'Import a meeting transcript from a file as a brand-new
+
+        ``provider=''manual''`` meeting. Used when the user wants to upload
+
+        a transcript without a corresponding Calendar event.'
+      operationId: import_meeting_transcript_api_v1_meetings_import_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: title
+        in: query
+        required: false
+        schema:
+          type: string
+          default: Imported Meeting
+          title: Title
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_import_meeting_transcript_api_v1_meetings_import_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/{meeting_id}/transcript:
+    post:
+      tags:
+      - meetings
+      summary: Attach Meeting Transcript
+      description: 'Attach an uploaded transcript to an EXISTING meeting and run
+
+        LLM analysis. Replaces any prior transcript on that row — useful
+
+        when Gemini notes weren''t ready or when the user has a better
+
+        capture from elsewhere.'
+      operationId: attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/meetings/sync/google_meet:
+    post:
+      tags:
+      - meetings
+      summary: Sync Google Meet
+      description: Sync Google Calendar meetings across all enabled customers.
+      operationId: sync_google_meet_api_v1_meetings_sync_google_meet_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingSyncResponse'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    Body_import_meeting_transcript_api_v1_meetings_import_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_import_meeting_transcript_api_v1_meetings_import_post
+    Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+        start:
+          type: number
+          title: Start
+        end:
+          type: number
+          title: End
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - speaker
+      - start
+      - end
+      - text
+      title: TranscriptSegment
+      description: 'One speaker utterance with timing, for the click-to-seek transcript +
+
+        speaker timeline. ``start``/``end`` are seconds from the recording start.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MeetingSyncResponse:
+      properties:
+        new_meetings:
+          type: integer
+          title: New Meetings
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - new_meetings
+      - message
+      title: MeetingSyncResponse
+      description: Response after syncing meetings from a provider.
+    MeetingResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        title:
+          type: string
+          title: Title
+        provider:
+          type: string
+          title: Provider
+        recorded_by_bot:
+          type: boolean
+          title: Recorded By Bot
+          default: false
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        ended_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Ended At
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        attendee_emails:
+          items:
+            type: string
+          type: array
+          title: Attendee Emails
+          default: []
+        transcript_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Transcript Text
+        transcript_segments:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/TranscriptSegment'
+            type: array
+          - type: 'null'
+          title: Transcript Segments
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        status:
+          type: string
+          title: Status
+        synced_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Synced By Name
+        tasks:
+          items:
+            $ref: '#/components/schemas/MeetingTaskSummary'
+          type: array
+          title: Tasks
+          default: []
+        tasks_count:
+          type: integer
+          title: Tasks Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - title
+      - provider
+      - status
+      - created_at
+      title: MeetingResponse
+      description: Schema for meeting response.
+    MeetingRecordingResponse:
+      properties:
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        segments:
+          items:
+            $ref: '#/components/schemas/TranscriptSegment'
+          type: array
+          title: Segments
+          default: []
+      type: object
+      title: MeetingRecordingResponse
+      description: 'On-demand playback data for a bot-recorded meeting. ``video_url`` is a
+
+        short-lived presigned link fetched live from Recall (never persisted) and is
+
+        null once the 7-day retention window lapses. ``segments`` is a fresh
+
+        structured transcript — a fallback for rows ingested before segments were
+
+        persisted; callers prefer the meeting''s stored ``transcript_segments``.'
+    MeetingListResponse:
+      properties:
+        meetings:
+          items:
+            $ref: '#/components/schemas/MeetingListItem'
+          type: array
+          title: Meetings
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - meetings
+      - total
+      - page
+      - page_size
+      title: MeetingListResponse
+      description: Paginated list of meetings.
+    MeetingListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        title:
+          type: string
+          title: Title
+        provider:
+          type: string
+          title: Provider
+        recorded_by_bot:
+          type: boolean
+          title: Recorded By Bot
+          default: false
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        ended_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Ended At
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        attendee_emails:
+          items:
+            type: string
+          type: array
+          title: Attendee Emails
+          default: []
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        status:
+          type: string
+          title: Status
+        synced_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Synced By Name
+        tasks_count:
+          type: integer
+          title: Tasks Count
+          default: 0
+        has_transcript:
+          type: boolean
+          title: Has Transcript
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - title
+      - provider
+      - status
+      - created_at
+      title: MeetingListItem
+      description: Lightweight meeting for list view (no transcript_text).
+    MeetingTaskSummary:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - title
+      - status
+      title: MeetingTaskSummary
+      description: Lightweight task info for meeting responses.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

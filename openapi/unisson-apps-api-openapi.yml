@@ -1,0 +1,539 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals apps API
+  version: 1.0.0
+tags:
+- name: apps
+paths:
+  /api/v1/apps/templates:
+    get:
+      tags:
+      - apps
+      summary: List Templates
+      operationId: list_templates_api_v1_apps_templates_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AppTemplateResponse'
+                type: array
+                title: Response List Templates Api V1 Apps Templates Get
+      security:
+      - HTTPBearer: []
+  /api/v1/apps:
+    get:
+      tags:
+      - apps
+      summary: List Apps
+      operationId: list_apps_api_v1_apps_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppListResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/apps/{app_id}:
+    get:
+      tags:
+      - apps
+      summary: Get App
+      operationId: get_app_api_v1_apps__app_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - apps
+      summary: Update App
+      operationId: update_app_api_v1_apps__app_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiniAppUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - apps
+      summary: Delete App
+      operationId: delete_app_api_v1_apps__app_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apps/{app_id}/readme:
+    get:
+      tags:
+      - apps
+      summary: Get App Readme
+      description: 'The app''s markdown README only — avoids the heavyweight detail endpoint
+
+        (which image-inlines the full html) just to render the README modal.'
+      operationId: get_app_readme_api_v1_apps__app_id__readme_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppReadmeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apps/{app_id}/versions:
+    get:
+      tags:
+      - apps
+      summary: List App Versions
+      description: 'Newest-first list of an app''s versions — the agent-written change
+
+        summaries users review instead of raw source diffs. Visibility follows the
+
+        app itself (``fetch_app_for_caller`` 404s an unshared app for guests).'
+      operationId: list_app_versions_api_v1_apps__app_id__versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppVersionListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apps/{app_id}/versions/{version_number}:
+    get:
+      tags:
+      - apps
+      summary: Get App Version
+      description: 'Full detail (image-inlined html + readme) of ONE past version, for
+
+        previewing a snapshot in the AppFrame before deciding whether to restore.'
+      operationId: get_app_version_api_v1_apps__app_id__versions__version_number__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      - name: version_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/apps/{app_id}/versions/{version_number}/restore:
+    post:
+      tags:
+      - apps
+      summary: Restore App Version
+      description: 'Revert the live app to a past snapshot. History stays append-only: the
+
+        restore is recorded as a NEW version (so it can itself be undone). Guests are
+
+        blocked at the router level (guest_write_guard); any member may restore.'
+      operationId: restore_app_version_api_v1_apps__app_id__versions__version_number__restore_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: App Id
+      - name: version_number
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Version Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiniAppResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    MiniAppReadmeResponse:
+      properties:
+        readme:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readme
+      type: object
+      title: MiniAppReadmeResponse
+      description: 'Just the app''s markdown README — a light endpoint so the "View README"
+
+        modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
+    MiniAppResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        guest_access:
+          type: string
+          title: Guest Access
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        can_write:
+          type: boolean
+          title: Can Write
+          default: true
+      type: object
+      required:
+      - id
+      - name
+      - guest_access
+      title: MiniAppResponse
+    MiniAppDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        guest_access:
+          type: string
+          title: Guest Access
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        can_write:
+          type: boolean
+          title: Can Write
+          default: true
+        html:
+          type: string
+          title: Html
+        readme:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readme
+        assets:
+          additionalProperties:
+            type: string
+          type: object
+          title: Assets
+      type: object
+      required:
+      - id
+      - name
+      - guest_access
+      - html
+      title: MiniAppDetailResponse
+    MiniAppVersionResponse:
+      properties:
+        version_number:
+          type: integer
+          title: Version Number
+        change_summary:
+          type: string
+          title: Change Summary
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+      type: object
+      required:
+      - version_number
+      - change_summary
+      title: MiniAppVersionResponse
+      description: 'One entry in an app''s version history — the agent-written change summary
+
+        users review instead of raw source diffs. ``html`` is omitted from the list;
+
+        fetch a single version''s detail to preview it.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MiniAppUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        guest_access:
+          anyOf:
+          - type: string
+            pattern: ^(none|view|interact)$
+          - type: 'null'
+          title: Guest Access
+      type: object
+      title: MiniAppUpdate
+      description: 'PATCH semantics — only provided fields change. (App html is updated
+
+        by the agent via update_app, not over this API.)'
+    MiniAppListResponse:
+      properties:
+        apps:
+          items:
+            $ref: '#/components/schemas/MiniAppResponse'
+          type: array
+          title: Apps
+      type: object
+      required:
+      - apps
+      title: MiniAppListResponse
+    AppTemplateResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          type: string
+          title: Icon
+        description:
+          type: string
+          title: Description
+        prompt:
+          type: string
+          title: Prompt
+      type: object
+      required:
+      - id
+      - name
+      - icon
+      - description
+      - prompt
+      title: AppTemplateResponse
+    MiniAppVersionListResponse:
+      properties:
+        versions:
+          items:
+            $ref: '#/components/schemas/MiniAppVersionResponse'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - versions
+      title: MiniAppVersionListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

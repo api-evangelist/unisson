@@ -1,0 +1,250 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals code-map API
+  version: 1.0.0
+tags:
+- name: code-map
+paths:
+  /api/v1/code-map:
+    get:
+      tags:
+      - code-map
+      summary: Get Code Map
+      description: Get the code map for the organization (if one exists).
+      operationId: get_code_map_api_v1_code_map_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/CodeMapResponse'
+                - type: 'null'
+                title: Response Get Code Map Api V1 Code Map Get
+      security:
+      - HTTPBearer: []
+    delete:
+      tags:
+      - code-map
+      summary: Delete Code Map
+      description: Delete the code map for the organization.
+      operationId: delete_code_map_api_v1_code_map_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/code-map/status:
+    get:
+      tags:
+      - code-map
+      summary: Get Analysis Status
+      description: Get the current analysis status.
+      operationId: get_analysis_status_api_v1_code_map_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeMapStatusResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/code-map/analyze:
+    post:
+      tags:
+      - code-map
+      summary: Start Analysis
+      description: Start analyzing a GitHub repository to build a code map.
+      operationId: start_analysis_api_v1_code_map_analyze_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/code-map/branches/{repo_owner}/{repo_name}:
+    get:
+      tags:
+      - code-map
+      summary: Get Repository Branches
+      description: Get list of branches for a repository.
+      operationId: get_repository_branches_api_v1_code_map_branches__repo_owner___repo_name__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: repo_owner
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repo Owner
+      - name: repo_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repo Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CodeMapStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        progress:
+          type: integer
+          title: Progress
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        repository_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Repository Name
+        framework_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework Type
+      type: object
+      required:
+      - status
+      - progress
+      title: CodeMapStatusResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CodeMapResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        repository_url:
+          type: string
+          title: Repository Url
+        repository_name:
+          type: string
+          title: Repository Name
+        framework_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework Type
+        routes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Routes
+        edges:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Edges
+        analysis_status:
+          type: string
+          title: Analysis Status
+        analysis_progress:
+          type: integer
+          title: Analysis Progress
+      type: object
+      required:
+      - id
+      - repository_url
+      - repository_name
+      - framework_type
+      - routes
+      - edges
+      - analysis_status
+      - analysis_progress
+      title: CodeMapResponse
+    AnalyzeRequest:
+      properties:
+        repository_full_name:
+          type: string
+          title: Repository Full Name
+        app_directory:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Directory
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+      type: object
+      required:
+      - repository_full_name
+      title: AnalyzeRequest
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

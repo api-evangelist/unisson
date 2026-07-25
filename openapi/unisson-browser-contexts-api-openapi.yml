@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals browser-contexts API
+  version: 1.0.0
+tags:
+- name: browser-contexts
+paths:
+  /api/v1/browser-contexts/org:
+    get:
+      tags:
+      - browser-contexts
+      summary: List Org Sessions
+      description: 'List users with saved browser sessions for the organization.
+
+
+        Each user has ONE unified context that may contain auth for multiple domains.
+
+        Admins can see all users'' sessions, members can only see their own.'
+      operationId: list_org_sessions_api_v1_browser_contexts_org_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgSessionsResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/browser-contexts/user/{user_id}:
+    delete:
+      tags:
+      - browser-contexts
+      summary: Delete User Session
+      description: "Delete a user's saved authentication.\n\n- If domain is provided: Surgically removes auth for that specific domain\n  (starts a Kernel browser session to filter cookies, then persists)\n- If domain is not provided: Clears ALL auth by deleting the unified context\n\nUsers can delete their own session. Admins can delete any user's session."
+      operationId: delete_user_session_api_v1_browser_contexts_user__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      - name: domain
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Domain to revoke auth for. If not provided, clears ALL auth.
+          title: Domain
+        description: Domain to revoke auth for. If not provided, clears ALL auth.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    OrgSessionsResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserWithSessionsResponse'
+          type: array
+          title: Users
+      type: object
+      required:
+      - users
+      title: OrgSessionsResponse
+      description: Response containing all users with saved sessions in the organization.
+    AuthenticatedDomainInfo:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        authenticated_at:
+          type: string
+          title: Authenticated At
+        last_used_at:
+          type: string
+          title: Last Used At
+      type: object
+      required:
+      - domain
+      - authenticated_at
+      - last_used_at
+      title: AuthenticatedDomainInfo
+      description: Information about an authenticated domain.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UserWithSessionsResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        email:
+          type: string
+          title: Email
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+        profile_image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Profile Image Url
+        context_id:
+          type: string
+          title: Context Id
+        last_used_at:
+          type: string
+          title: Last Used At
+        authenticated_domains:
+          items:
+            $ref: '#/components/schemas/AuthenticatedDomainInfo'
+          type: array
+          title: Authenticated Domains
+      type: object
+      required:
+      - user_id
+      - email
+      - context_id
+      - last_used_at
+      - authenticated_domains
+      title: UserWithSessionsResponse
+      description: User with their unified context and authenticated domains.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

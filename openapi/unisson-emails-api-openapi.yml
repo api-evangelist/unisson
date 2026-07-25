@@ -1,0 +1,721 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals emails API
+  version: 1.0.0
+tags:
+- name: emails
+paths:
+  /api/v1/emails/counts:
+    get:
+      tags:
+      - emails
+      summary: Get Email Counts
+      description: 'Per-direction email counts for the toolbar chips. Honours the
+
+        same customer + search filters as ``list_emails`` so the chip
+
+        numbers match what the user would see if they clicked through.
+
+        Direction filter itself is intentionally NOT applied — the chips
+
+        surface "what would happen if I switched to this direction".'
+      operationId: get_email_counts_api_v1_emails_counts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/emails:
+    get:
+      tags:
+      - emails
+      summary: List Emails
+      description: 'List emails for the organization with pagination and filters.
+
+
+        ``q`` does a case-insensitive contains-match across subject, from
+
+        address, sender name, and snippet — what the toolbar search input
+
+        feeds in. Body text is intentionally excluded for performance: the
+
+        column isn''t indexed and matching it would scan every row in the
+
+        org.'
+      operationId: list_emails_api_v1_emails_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+      - name: direction_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Direction Filter
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status Filter
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/emails/{email_id}:
+    get:
+      tags:
+      - emails
+      summary: Get Email
+      description: Get a specific email by ID.
+      operationId: get_email_api_v1_emails__email_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: email_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Email Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - emails
+      summary: Delete Email
+      description: Soft-delete an email.
+      operationId: delete_email_api_v1_emails__email_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: email_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Email Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/emails/sync/gmail:
+    post:
+      tags:
+      - emails
+      summary: Sync Gmail Emails
+      description: Trigger a manual Gmail sync for the organization.
+      operationId: sync_gmail_emails_api_v1_emails_sync_gmail_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSyncResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/emails/sync/status/{task_id}:
+    get:
+      tags:
+      - emails
+      summary: Get Sync Status
+      description: Check the status of a Gmail sync task.
+      operationId: get_sync_status_api_v1_emails_sync_status__task_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSyncStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/emails/{email_id}/assign:
+    post:
+      tags:
+      - emails
+      summary: Assign Email To Customer
+      description: Manually assign an email to a customer.
+      operationId: assign_email_to_customer_api_v1_emails__email_id__assign_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: email_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Email Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailAssignRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/emails/config/{customer_id}:
+    get:
+      tags:
+      - emails
+      summary: Get Email Sync Config
+      description: Get email sync config for a customer.
+      operationId: get_email_sync_config_api_v1_emails_config__customer_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSyncConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - emails
+      summary: Update Email Sync Config
+      description: Create or update email sync config for a customer.
+      operationId: update_email_sync_config_api_v1_emails_config__customer_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Customer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailSyncConfigUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailSyncConfigResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    EmailListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        from_address:
+          type: string
+          title: From Address
+        from_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Name
+        snippet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snippet
+        provider:
+          type: string
+          title: Provider
+        direction:
+          type: string
+          title: Direction
+        status:
+          type: string
+          title: Status
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        received_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Received At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - from_address
+      - provider
+      - direction
+      - status
+      - created_at
+      title: EmailListItem
+      description: Lightweight email for list view (no body).
+    EmailListResponse:
+      properties:
+        emails:
+          items:
+            $ref: '#/components/schemas/EmailListItem'
+          type: array
+          title: Emails
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - emails
+      - total
+      - page
+      - page_size
+      title: EmailListResponse
+      description: Paginated list of emails.
+    EmailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        from_address:
+          type: string
+          title: From Address
+        from_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: From Name
+        to_addresses:
+          items:
+            type: string
+          type: array
+          title: To Addresses
+          default: []
+        cc_addresses:
+          items:
+            type: string
+          type: array
+          title: Cc Addresses
+          default: []
+        body_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body Text
+        body_html:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body Html
+        snippet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snippet
+        thread_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Thread Id
+        in_reply_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: In Reply To
+        provider:
+          type: string
+          title: Provider
+        direction:
+          type: string
+          title: Direction
+        attachments:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Attachments
+          default: []
+        status:
+          type: string
+          title: Status
+        source:
+          type: string
+          title: Source
+        synced_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Synced By Name
+        sent_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Sent At
+        received_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Received At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - from_address
+      - provider
+      - direction
+      - status
+      - source
+      - created_at
+      title: EmailResponse
+      description: Schema for full email response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EmailSyncConfigResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        customer_domains:
+          items:
+            type: string
+          type: array
+          title: Customer Domains
+          default: []
+        customer_emails:
+          items:
+            type: string
+          type: array
+          title: Customer Emails
+          default: []
+        sync_enabled:
+          type: boolean
+          title: Sync Enabled
+          default: true
+        last_sync_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Sync At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - customer_id
+      - created_at
+      title: EmailSyncConfigResponse
+      description: Schema for email sync config response.
+    EmailSyncConfigUpdate:
+      properties:
+        customer_domains:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Customer Domains
+        customer_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Customer Emails
+        sync_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Sync Enabled
+      type: object
+      title: EmailSyncConfigUpdate
+      description: Schema for updating email sync config.
+    EmailSyncResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - task_id
+      - message
+      title: EmailSyncResponse
+      description: Response after syncing emails.
+    EmailSyncStatusResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+        status:
+          type: string
+          title: Status
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      required:
+      - task_id
+      - status
+      title: EmailSyncStatusResponse
+      description: Response for checking sync task status.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EmailAssignRequest:
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+      type: object
+      required:
+      - customer_id
+      title: EmailAssignRequest
+      description: Schema for assigning an email to a customer.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

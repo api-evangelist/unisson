@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals google-push API
+  version: 1.0.0
+tags:
+- name: google-push
+paths:
+  /api/v1/integrations/google_calendar/webhook:
+    post:
+      tags:
+      - google-push
+      summary: Google Calendar Webhook
+      description: 'Calendar change notification. Google echoes our channel token in
+
+        ``X-Goog-Channel-Token`` and identifies the channel via ``X-Goog-Channel-ID``;
+
+        the body is empty (a "something changed" ping).'
+      operationId: google_calendar_webhook_api_v1_integrations_google_calendar_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/v1/integrations/gmail/webhook:
+    post:
+      tags:
+      - google-push
+      summary: Gmail Webhook
+      description: 'Gmail change notification delivered via a Pub/Sub push subscription. The
+
+        base64 ``message.data`` decodes to ``{emailAddress, historyId}``.'
+      operationId: gmail_webhook_api_v1_integrations_gmail_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

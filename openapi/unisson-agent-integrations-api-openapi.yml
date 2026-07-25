@@ -1,0 +1,349 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals agent-integrations API
+  version: 1.0.0
+tags:
+- name: agent-integrations
+paths:
+  /api/v1/agent-integrations/scopes:
+    get:
+      tags:
+      - agent-integrations
+      summary: List Scopes
+      description: 'Expose the hybrid-scoping registry so the frontend tabs don''t
+
+        duplicate the classification logic in TypeScript.'
+      operationId: list_scopes_api_v1_agent_integrations_scopes_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScopesResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/agent-integrations/apps:
+    get:
+      tags:
+      - agent-integrations
+      summary: List Apps
+      description: Search the Pipedream app catalog (natively-handled apps are hidden).
+      operationId: list_apps_api_v1_agent_integrations_apps_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Q
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppInfo'
+                title: Response List Apps Api V1 Agent Integrations Apps Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agent-integrations/connections:
+    get:
+      tags:
+      - agent-integrations
+      summary: List Connections
+      description: List the current user's connected apps (from Pipedream directly).
+      operationId: list_connections_api_v1_agent_integrations_connections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ConnectionInfo'
+                type: array
+                title: Response List Connections Api V1 Agent Integrations Connections Get
+      security:
+      - HTTPBearer: []
+  /api/v1/agent-integrations/connections/{app_slug}/connect:
+    post:
+      tags:
+      - agent-integrations
+      summary: Connect App
+      description: Get a Pipedream Connect Link URL for the user to authorize an app.
+      operationId: connect_app_api_v1_agent_integrations_connections__app_slug__connect_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: App Slug
+      - name: redirect_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/app__api__v1__agent_integrations__ConnectResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agent-integrations/connections/{app_slug}:
+    delete:
+      tags:
+      - agent-integrations
+      summary: Disconnect App
+      description: Revoke a connection on Pipedream and mark it revoked locally.
+      operationId: disconnect_app_api_v1_agent_integrations_connections__app_slug__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: app_slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: App Slug
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/agent-integrations/pipedream/webhook:
+    post:
+      tags:
+      - agent-integrations
+      summary: Pipedream Webhook
+      description: 'Handle Pipedream Connect webhook notifications.
+
+
+        Called when a user successfully connects or disconnects an app.
+
+        Upserts the IntegrationConnection row accordingly.'
+      operationId: pipedream_webhook_api_v1_agent_integrations_pipedream_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PipedreamWebhookPayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    PipedreamWebhookPayload:
+      properties:
+        event:
+          type: string
+          title: Event
+        external_user_id:
+          type: string
+          title: External User Id
+        app_slug:
+          type: string
+          title: App Slug
+        app_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Name
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+      type: object
+      required:
+      - event
+      - external_user_id
+      - app_slug
+      title: PipedreamWebhookPayload
+      description: Payload from Pipedream when a user connects/disconnects an app.
+    app__api__v1__agent_integrations__ConnectResponse:
+      properties:
+        connect_url:
+          type: string
+          title: Connect Url
+      type: object
+      required:
+      - connect_url
+      title: ConnectResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppInfo:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        categories:
+          items:
+            type: string
+          type: array
+          title: Categories
+          default: []
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        app_scope:
+          type: string
+          enum:
+          - org
+          - user
+          title: App Scope
+          default: user
+      type: object
+      required:
+      - slug
+      - name
+      title: AppInfo
+    ScopesResponse:
+      properties:
+        org_scoped_slugs:
+          items:
+            type: string
+          type: array
+          title: Org Scoped Slugs
+      type: object
+      required:
+      - org_scoped_slugs
+      title: ScopesResponse
+      description: Hybrid-scoping registry, exposed for the frontend.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ConnectionInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+        app_slug:
+          type: string
+          title: App Slug
+        app_name:
+          type: string
+          title: App Name
+        provider:
+          type: string
+          title: Provider
+        status:
+          type: string
+          title: Status
+        connected_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Connected At
+        last_used_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Used At
+        last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Error
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        app_scope:
+          type: string
+          enum:
+          - org
+          - user
+          title: App Scope
+          default: user
+      type: object
+      required:
+      - id
+      - app_slug
+      - app_name
+      - provider
+      - status
+      title: ConnectionInfo
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

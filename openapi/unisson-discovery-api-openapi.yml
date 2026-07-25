@@ -1,0 +1,440 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals discovery API
+  version: 1.0.0
+tags:
+- name: discovery
+paths:
+  /api/v1/discovery/builder-conversation:
+    get:
+      tags:
+      - discovery
+      summary: Get Or Create Discovery Conversation
+      description: 'Get-or-create the organization''s single Discovery conversation (one
+
+        persistent thread per org; the ``is_discovery`` partial unique index makes
+
+        get-or-create race-safe; excluded from every conversation list).'
+      operationId: get_or_create_discovery_conversation_api_v1_discovery_builder_conversation_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatConversationResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/discovery/sources:
+    get:
+      tags:
+      - discovery
+      summary: List Discovery Sources
+      description: List the org's connected Discovery sources.
+      operationId: list_discovery_sources_api_v1_discovery_sources_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DiscoverySourceResponse'
+                type: array
+                title: Response List Discovery Sources Api V1 Discovery Sources Get
+      security:
+      - HTTPBearer: []
+    put:
+      tags:
+      - discovery
+      summary: Upsert Discovery Source
+      description: Connect/update email, Slack, Granola, or logs for Discovery.
+      operationId: upsert_discovery_source_api_v1_discovery_sources_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoverySourceUpsert'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoverySourceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/discovery/sources/{source_type}:
+    delete:
+      tags:
+      - discovery
+      summary: Delete Discovery Source
+      description: Disconnect a source (soft-delete).
+      operationId: delete_discovery_source_api_v1_discovery_sources__source_type__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: source_type
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Source Type
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/discovery/opportunities:
+    get:
+      tags:
+      - discovery
+      summary: List Discovery Opportunities
+      description: 'List the opportunities surfaced in a Discovery conversation (right pane).
+
+
+        Every member of the organization may read its shared opportunities.'
+      operationId: list_discovery_opportunities_api_v1_discovery_opportunities_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: conversation_id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Conversation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DiscoveryOpportunityResponse'
+                title: Response List Discovery Opportunities Api V1 Discovery Opportunities Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/discovery/opportunities/{opportunity_id}/build:
+    post:
+      tags:
+      - discovery
+      summary: Build Opportunity Agent
+      description: 'Create the proposed agent (a normal org agent — it just exists, like any
+
+        other) and return its id so the frontend opens the Agent Builder on it,
+
+        pre-filled, to refine + add triggers. Idempotent: if the agent was already
+
+        built, returns the existing one.'
+      operationId: build_opportunity_agent_api_v1_discovery_opportunities__opportunity_id__build_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: opportunity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Opportunity Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildOpportunityResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/discovery/opportunities/{opportunity_id}:
+    delete:
+      tags:
+      - discovery
+      summary: Dismiss Opportunity
+      description: Dismiss (soft-delete) an opportunity from the org's shared thread.
+      operationId: dismiss_opportunity_api_v1_discovery_opportunities__opportunity_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: opportunity_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Opportunity Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DiscoveryOpportunityResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        evidence:
+          items: {}
+          type: array
+          title: Evidence
+        impact_estimate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Estimate
+        proposed_agent_spec:
+          additionalProperties: true
+          type: object
+          title: Proposed Agent Spec
+        built_agent_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Built Agent Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - conversation_id
+      - title
+      - status
+      title: DiscoveryOpportunityResponse
+    DiscoverySourceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_type:
+          type: string
+          title: Source Type
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+        status:
+          type: string
+          title: Status
+        last_read_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Read At
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - source_type
+      - config
+      - status
+      title: DiscoverySourceResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BuildOpportunityResponse:
+      properties:
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        skipped_automations:
+          type: integer
+          title: Skipped Automations
+          default: 0
+      type: object
+      required:
+      - agent_id
+      title: BuildOpportunityResponse
+      description: Result of "Build this" — the draft agent to open in the Agent Builder.
+    ChatConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationResponse
+    DiscoverySourceUpsert:
+      properties:
+        source_type:
+          type: string
+          maxLength: 20
+          title: Source Type
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+        status:
+          type: string
+          maxLength: 20
+          title: Status
+          default: connected
+      type: object
+      required:
+      - source_type
+      title: DiscoverySourceUpsert
+      description: Connect / update a Discovery source (one per source_type per org).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

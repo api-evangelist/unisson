@@ -1,0 +1,294 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals internal-auth-sessions API
+  version: 1.0.0
+tags:
+- name: internal-auth-sessions
+paths:
+  /api/v1/internal/auth-sessions/{token}/bootstrap:
+    get:
+      tags:
+      - internal-auth-sessions
+      summary: Bootstrap Auth Session
+      description: 'Return the Kernel handoff payload so the page can mount KernelManagedAuth.
+
+
+        410 once the session has been finalized or has expired — the page should
+
+        show an "expired/already done" view in that case.'
+      operationId: bootstrap_auth_session_api_v1_internal_auth_sessions__token__bootstrap_get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BootstrapResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/internal/auth-sessions/{token}/finalize:
+    post:
+      tags:
+      - internal-auth-sessions
+      summary: Finalize Auth Session
+      description: 'Called by the page once the React component reports success / error.
+
+
+        On success: flips the linked run from authentication_required → pending
+
+        and enqueues the same background execution /external/runs would have
+
+        enqueued on a happy-path call. Idempotent: a second call returns 409.'
+      operationId: finalize_auth_session_api_v1_internal_auth_sessions__token__finalize_post
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinalizeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinalizeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/internal/auth-sessions/{token}/connection-status:
+    get:
+      tags:
+      - internal-auth-sessions
+      summary: Get Connection Status
+      description: 'Token-authenticated mirror of ``/managed-auth/connect/{id}/status``.
+
+
+        Used by the raw-liveview UI on ``/auth/m/{token}`` to detect login
+
+        completion. Token is the credential — same model as ``/bootstrap`` and
+
+        ``/finalize``.
+
+
+        Deliberately does NOT call ``record_authenticated_domain`` like the
+
+        Clerk-authed sibling does: the run''s auth-pause resume in
+
+        ``browser_agent_runner`` already records the domain after ``/finalize``
+
+        flips the run to ``pending`` and ``enqueue_run_execution`` runs.
+
+
+        Mostly a read endpoint, but when Kernel reports the connection no
+
+        longer exists we eagerly fail the session + linked run rather than
+
+        leak it to the periodic sweeper — otherwise the run would sit in
+
+        ``authentication_required`` until ``expires_at``, with the polling
+
+        client stopped and unable to recover.'
+      operationId: get_connection_status_api_v1_internal_auth_sessions__token__connection_status_get
+      parameters:
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    FinalizeResponse:
+      properties:
+        redirect_url:
+          type: string
+          title: Redirect Url
+      type: object
+      required:
+      - redirect_url
+      title: FinalizeResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FinalizeRequest:
+      properties:
+        outcome:
+          type: string
+          enum:
+          - success
+          - error
+          title: Outcome
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+      type: object
+      required:
+      - outcome
+      title: FinalizeRequest
+    ConnectionStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        flow_step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Step
+        flow_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Status
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        live_view_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live View Url
+      type: object
+      required:
+      - status
+      title: ConnectionStatusResponse
+    BootstrapResponse:
+      properties:
+        connection_id:
+          type: string
+          title: Connection Id
+        handoff_code:
+          type: string
+          title: Handoff Code
+        on_success_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: On Success Url
+        on_error_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: On Error Url
+        expires_at:
+          type: string
+          format: date-time
+          title: Expires At
+        sandbox_outcome:
+          anyOf:
+          - type: string
+            enum:
+            - success
+            - error
+          - type: 'null'
+          title: Sandbox Outcome
+        flow_ui:
+          type: string
+          enum:
+          - managed_auth
+          - raw_liveview
+          title: Flow Ui
+          default: managed_auth
+        live_view_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live View Url
+        redirect_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Redirect Url
+      type: object
+      required:
+      - connection_id
+      - handoff_code
+      - on_success_url
+      - on_error_url
+      - expires_at
+      title: BootstrapResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

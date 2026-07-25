@@ -1,0 +1,1734 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals organizations API
+  version: 1.0.0
+tags:
+- name: organizations
+paths:
+  /api/v1/organizations/me:
+    get:
+      tags:
+      - organizations
+      summary: Get My Organization
+      description: Get current user's organization
+      operationId: get_my_organization_api_v1_organizations_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/OrganizationResponse'
+                - type: 'null'
+                title: Response Get My Organization Api V1 Organizations Me Get
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/members:
+    get:
+      tags:
+      - organizations
+      summary: List Organization Members
+      description: 'List all members of the current user''s organization.
+
+
+        A guest is an external, customer-scoped user, so the org-wide member
+
+        directory (everyone''s email/role) is not theirs to see — they get only
+
+        their own row. This keeps callers that map over the list (owner/assignee
+
+        name resolution on a guest''s customer pages) working without leaking the
+
+        roster; names of other members simply don''t resolve for a guest.
+
+
+        Dedupes by lowercased email so a user that exists twice in the
+
+        `users` table (because Clerk mints a new ``clerk_user_id`` after
+
+        re-onboarding via a different provider / password reset / etc.,
+
+        and ``users.email`` isn''t uniquely constrained) only shows up
+
+        once in pickers. Among duplicates we keep the *newest* row —
+
+        that''s the row whose ``clerk_user_id`` matches the active
+
+        sign-in session. Picking the oldest would silently route
+
+        assignments to a dead Clerk identity, so anything keyed by
+
+        ``user_id`` (Samsara assignments, customer owners, mentions)
+
+        would be invisible to chat. The newest row stays consistent
+
+        with what every other ``Depends(get_current_user)`` path
+
+        resolves to.'
+      operationId: list_organization_members_api_v1_organizations_me_members_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/access-control:
+    get:
+      tags:
+      - organizations
+      summary: Get Access Control
+      description: Return the permission catalog, Member defaults, and member overrides.
+      operationId: get_access_control_api_v1_organizations_me_access_control_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessControlResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/access-control/defaults:
+    put:
+      tags:
+      - organizations
+      summary: Update Member Permission Defaults
+      operationId: update_member_permission_defaults_api_v1_organizations_me_access_control_defaults_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberDefaultsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessControlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/access-control/members/{user_id}:
+    put:
+      tags:
+      - organizations
+      summary: Update Member Permission Overrides
+      operationId: update_member_permission_overrides_api_v1_organizations_me_access_control_members__user_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemberOverridesRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessControlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - organizations
+      summary: Reset Member Permission Overrides
+      operationId: reset_member_permission_overrides_api_v1_organizations_me_access_control_members__user_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessControlResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organizations/me/browser-context-settings:
+    patch:
+      tags:
+      - organizations
+      summary: Update Browser Context Settings
+      description: Update organization's browser context persistence settings
+      operationId: update_browser_context_settings_api_v1_organizations_me_browser_context_settings_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBrowserContextSettingsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/default-start-url:
+    patch:
+      tags:
+      - organizations
+      summary: Update Default Start Url
+      description: Update organization's default start URL for browser sessions
+      operationId: update_default_start_url_api_v1_organizations_me_default_start_url_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDefaultStartUrlRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/allowed-domains:
+    patch:
+      tags:
+      - organizations
+      summary: Update Allowed Domains
+      description: Update organization's allowed domains for browser navigation
+      operationId: update_allowed_domains_api_v1_organizations_me_allowed_domains_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAllowedDomainsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/slack-notification-level:
+    patch:
+      tags:
+      - organizations
+      summary: Update Slack Notification Level
+      description: Update organization's Slack notification verbosity level
+      operationId: update_slack_notification_level_api_v1_organizations_me_slack_notification_level_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSlackNotificationLevelRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/proxy:
+    patch:
+      tags:
+      - organizations
+      summary: Update Proxy Settings
+      description: Update organization's proxy settings for VPN/corporate network routing
+      operationId: update_proxy_settings_api_v1_organizations_me_proxy_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProxySettingsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/residential-proxy:
+    patch:
+      tags:
+      - organizations
+      summary: Update Residential Proxy
+      description: Update organization's residential proxy setting for anti-detection
+      operationId: update_residential_proxy_api_v1_organizations_me_residential_proxy_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResidentialProxyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/residential-proxy-geolocation:
+    patch:
+      tags:
+      - organizations
+      summary: Update Residential Proxy Geolocation
+      description: Update organization's residential proxy geolocation setting
+      operationId: update_residential_proxy_geolocation_api_v1_organizations_me_residential_proxy_geolocation_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResidentialProxyGeolocationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/language:
+    patch:
+      tags:
+      - organizations
+      summary: Update Language
+      description: Update organization's language setting for LLM responses
+      operationId: update_language_api_v1_organizations_me_language_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLanguageRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/flash-mode:
+    patch:
+      tags:
+      - organizations
+      summary: Update Flash Mode
+      description: Update organization's flash mode setting for faster/lighter agent execution
+      operationId: update_flash_mode_api_v1_organizations_me_flash_mode_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlashModeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/raw-liveview-auth:
+    patch:
+      tags:
+      - organizations
+      summary: Update Raw Liveview Auth Enabled
+      description: Toggle the raw-liveview Managed Auth surface for /auth/m/{token}.
+      operationId: update_raw_liveview_auth_enabled_api_v1_organizations_me_raw_liveview_auth_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRawLiveviewAuthRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/network-recording:
+    patch:
+      tags:
+      - organizations
+      summary: Update Network Recording Enabled
+      description: Update organization's network recording setting
+      operationId: update_network_recording_enabled_api_v1_organizations_me_network_recording_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNetworkRecordingEnabledRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/auto-create-api:
+    patch:
+      tags:
+      - organizations
+      summary: Update Auto Generate Api
+      description: Update organization's auto-create API setting for automatic API generation from HAR recordings
+      operationId: update_auto_generate_api_api_v1_organizations_me_auto_create_api_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAutoCreateApiRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/require-action-confirmation:
+    patch:
+      tags:
+      - organizations
+      summary: Update Require Action Confirmation
+      description: 'Update organization''s require action confirmation setting.
+
+
+        When enabled, users must confirm before meaningful actions are executed.
+
+        This applies to both API executions (showing extracted parameters) and
+
+        CUA browser actions (like submitting forms, deleting data, etc.).'
+      operationId: update_require_action_confirmation_api_v1_organizations_me_require_action_confirmation_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequireActionConfirmationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/execution-settings:
+    get:
+      tags:
+      - organizations
+      summary: Get Execution Settings
+      description: Get organization's run-execution settings.
+      operationId: get_execution_settings_api_v1_organizations_me_execution_settings_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionSettingsResponse'
+      security:
+      - HTTPBearer: []
+    patch:
+      tags:
+      - organizations
+      summary: Update Execution Settings
+      description: "Update organization's run-execution settings.\n\n- kernel_headless_mode: When enabled, runs browsers headless (no LiveView,\n  no replays) and disables BrowserUse agent vision.\n- max_concurrent_browsers: Maximum number of concurrent parallel browser\n  sessions."
+      operationId: update_execution_settings_api_v1_organizations_me_execution_settings_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateExecutionSettingsRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionSettingsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/proxy/test:
+    post:
+      tags:
+      - organizations
+      summary: Test Proxy Connection
+      description: 'Test a proxy configuration before saving it.
+
+
+        This endpoint creates a temporary Kernel browser session with the provided proxy
+
+        settings to verify the proxy is reachable and properly configured.'
+      operationId: test_proxy_connection_api_v1_organizations_proxy_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestProxyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestProxyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/api-keys:
+    post:
+      tags:
+      - organizations
+      summary: Create Api Key
+      description: 'Create a new API key for the organization.
+
+
+        Only organization admins can create API keys.
+
+
+        IMPORTANT: The full API key is only returned once. Save it securely as it
+
+        will never be shown again.'
+      operationId: create_api_key_api_v1_organizations_me_api_keys_post
+      security:
+      - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - organizations
+      summary: List Api Keys
+      description: 'List all API keys for the organization.
+
+
+        The full key is never returned - only the key prefix for identification.'
+      operationId: list_api_keys_api_v1_organizations_me_api_keys_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: include_revoked
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Revoked
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organizations/me/api-keys/{key_id}:
+    get:
+      tags:
+      - organizations
+      summary: Get Api Key
+      description: Get details of a specific API key.
+      operationId: get_api_key_api_v1_organizations_me_api_keys__key_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - organizations
+      summary: Update Api Key
+      description: 'Update an API key''s configuration.
+
+
+        Only organization admins can update API keys.'
+      operationId: update_api_key_api_v1_organizations_me_api_keys__key_id__patch
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - organizations
+      summary: Revoke Api Key
+      description: 'Revoke an API key.
+
+
+        Only organization admins can revoke API keys.
+
+        Revoked keys cannot be used and cannot be restored.'
+      operationId: revoke_api_key_api_v1_organizations_me_api_keys__key_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organizations/me/api-keys/{key_id}/generate-identity-secret:
+    post:
+      tags:
+      - organizations
+      summary: Generate Identity Secret
+      description: 'Generate (or regenerate) an identity verification secret for an API key.
+
+
+        The secret is used by customers to compute HMAC-SHA256(secret, user_email)
+
+        for verifying widget and external API user identity.
+
+
+        IMPORTANT: The plaintext secret is only returned once. Save it securely.
+
+        Regenerating replaces the old secret and invalidates existing integrations.'
+      operationId: generate_identity_secret_api_v1_organizations_me_api_keys__key_id__generate_identity_secret_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Key Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitySecretResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/organizations/me/load-google-docs-in-context:
+    patch:
+      tags:
+      - organizations
+      summary: Update Load Google Docs In Context
+      description: Update whether Google Doc content is loaded into agent context or passed as URL references.
+      operationId: update_load_google_docs_in_context_api_v1_organizations_me_load_google_docs_in_context_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoadGoogleDocsInContextRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/organizations/me/members/invite:
+    post:
+      tags:
+      - organizations
+      summary: Invite Organization Members
+      description: 'Invite one or more people as full members of the current organization.
+
+
+        Mirrors Clerk''s built-in ``<OrganizationProfile>`` invite, but goes through
+
+        our backend so we can attach a ``redirect_url`` — Clerk''s frontend invite
+
+        (``organization.inviteMember``) can''t. The redirect lands invitees on our
+
+        own ``/sign-up`` page (which consumes the ``__clerk_ticket``) instead of
+
+        falling back to the Account Portal / primary-domain root.
+
+
+        Unlike a customer-guest invite, no ``is_guest`` metadata is set, so the
+
+        invitee joins as a full member on accept.'
+      operationId: invite_organization_members_api_v1_organizations_me_members_invite_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberInviteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberInviteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    UpdateBrowserContextSettingsRequest:
+      properties:
+        browser_context_enabled:
+          type: boolean
+          title: Browser Context Enabled
+      type: object
+      required:
+      - browser_context_enabled
+      title: UpdateBrowserContextSettingsRequest
+    UpdateAutoCreateApiRequest:
+      properties:
+        auto_generate_api:
+          type: boolean
+          title: Auto Generate Api
+      type: object
+      required:
+      - auto_generate_api
+      title: UpdateAutoCreateApiRequest
+    ExecutionSettingsResponse:
+      properties:
+        kernel_headless_mode:
+          type: boolean
+          title: Kernel Headless Mode
+        max_concurrent_browsers:
+          type: integer
+          title: Max Concurrent Browsers
+      type: object
+      required:
+      - kernel_headless_mode
+      - max_concurrent_browsers
+      title: ExecutionSettingsResponse
+      description: Response model for run-execution settings.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UpdateAllowedDomainsRequest:
+      properties:
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          title: Allowed Domains
+      type: object
+      required:
+      - allowed_domains
+      title: UpdateAllowedDomainsRequest
+    UpdateMemberOverridesRequest:
+      properties:
+        overrides:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Overrides
+      type: object
+      required:
+      - overrides
+      title: UpdateMemberOverridesRequest
+    ApiKeyResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        key_prefix:
+          type: string
+          title: Key Prefix
+          description: First 12 characters of the key for display
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_events:
+          items:
+            type: string
+          type: array
+          title: Webhook Events
+          default: []
+        is_active:
+          type: boolean
+          title: Is Active
+        last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used At
+        request_count:
+          type: integer
+          title: Request Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        revoked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Revoked At
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+        has_identity_secret:
+          type: boolean
+          title: Has Identity Secret
+          default: false
+        is_sandbox:
+          type: boolean
+          title: Is Sandbox
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - key_prefix
+      - scopes
+      - is_active
+      - created_at
+      title: ApiKeyResponse
+      description: Response for an API key (without the full key).
+    UpdateLanguageRequest:
+      properties:
+        language:
+          type: string
+          pattern: ^(en|fr)$
+          title: Language
+      type: object
+      required:
+      - language
+      title: UpdateLanguageRequest
+    UpdateRawLiveviewAuthRequest:
+      properties:
+        raw_liveview_auth_enabled:
+          type: boolean
+          title: Raw Liveview Auth Enabled
+      type: object
+      required:
+      - raw_liveview_auth_enabled
+      title: UpdateRawLiveviewAuthRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TestProxyResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        details:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Details
+      type: object
+      required:
+      - success
+      - message
+      title: TestProxyResponse
+    UpdateDefaultStartUrlRequest:
+      properties:
+        default_start_url:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Default Start Url
+      type: object
+      required:
+      - default_start_url
+      title: UpdateDefaultStartUrlRequest
+    MemberInviteResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/MemberInviteResult'
+          type: array
+          title: Results
+      type: object
+      required:
+      - results
+      title: MemberInviteResponse
+    OrganizationResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+        browser_context_enabled:
+          type: boolean
+          title: Browser Context Enabled
+          default: true
+        default_start_url:
+          type: string
+          title: Default Start Url
+          default: https://www.google.com
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+        slack_notification_level:
+          type: string
+          title: Slack Notification Level
+          default: essential
+        proxy_enabled:
+          type: boolean
+          title: Proxy Enabled
+          default: false
+        proxy_server:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proxy Server
+        proxy_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proxy Username
+        proxy_password_set:
+          type: boolean
+          title: Proxy Password Set
+          default: false
+        residential_proxy_enabled:
+          type: boolean
+          title: Residential Proxy Enabled
+          default: false
+        residential_proxy_geolocation:
+          type: boolean
+          title: Residential Proxy Geolocation
+          default: false
+        flash_mode:
+          type: boolean
+          title: Flash Mode
+          default: false
+        network_recording_enabled:
+          type: boolean
+          title: Network Recording Enabled
+          default: false
+        auto_generate_api:
+          type: boolean
+          title: Auto Generate Api
+          default: false
+        require_action_confirmation:
+          type: boolean
+          title: Require Action Confirmation
+          default: false
+        kernel_headless_mode:
+          type: boolean
+          title: Kernel Headless Mode
+          default: false
+        max_concurrent_browsers:
+          type: integer
+          title: Max Concurrent Browsers
+          default: 20
+        raw_liveview_auth_enabled:
+          type: boolean
+          title: Raw Liveview Auth Enabled
+          default: false
+        load_google_docs_in_context:
+          type: boolean
+          title: Load Google Docs In Context
+          default: false
+        language:
+          type: string
+          title: Language
+          default: en
+        created_at:
+          type: string
+          title: Created At
+        onboarding_completed:
+          type: boolean
+          title: Onboarding Completed
+          default: false
+      type: object
+      required:
+      - id
+      - name
+      - created_at
+      title: OrganizationResponse
+    PermissionDefinitionResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        group:
+          type: string
+          title: Group
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - key
+      - group
+      - label
+      - description
+      title: PermissionDefinitionResponse
+    UpdateResidentialProxyGeolocationRequest:
+      properties:
+        residential_proxy_geolocation:
+          type: boolean
+          title: Residential Proxy Geolocation
+      type: object
+      required:
+      - residential_proxy_geolocation
+      title: UpdateResidentialProxyGeolocationRequest
+    IdentitySecretResponse:
+      properties:
+        identity_secret:
+          type: string
+          title: Identity Secret
+          description: The identity verification secret - SAVE THIS NOW as it will never be shown again. Use this to compute HMAC-SHA256(secret, user_email) for identity verification.
+      type: object
+      required:
+      - identity_secret
+      title: IdentitySecretResponse
+      description: Response when generating an identity verification secret.
+    MemberAccessResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        clerk_user_id:
+          type: string
+          title: Clerk User Id
+        role:
+          type: string
+          title: Role
+        is_guest:
+          type: boolean
+          title: Is Guest
+        overrides:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Overrides
+        effective_permissions:
+          items:
+            type: string
+          type: array
+          title: Effective Permissions
+      type: object
+      required:
+      - user_id
+      - clerk_user_id
+      - role
+      - is_guest
+      - overrides
+      - effective_permissions
+      title: MemberAccessResponse
+    ApiKeyCreateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        key_prefix:
+          type: string
+          title: Key Prefix
+          description: First 12 characters of the key for display
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_events:
+          items:
+            type: string
+          type: array
+          title: Webhook Events
+          default: []
+        is_active:
+          type: boolean
+          title: Is Active
+        last_used_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Used At
+        request_count:
+          type: integer
+          title: Request Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        revoked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Revoked At
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+        has_identity_secret:
+          type: boolean
+          title: Has Identity Secret
+          default: false
+        is_sandbox:
+          type: boolean
+          title: Is Sandbox
+          default: false
+        full_key:
+          type: string
+          title: Full Key
+          description: The full API key - SAVE THIS NOW as it will never be shown again
+        webhook_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Secret
+          description: The webhook signing secret - SAVE THIS NOW as it will never be shown again. Use this to verify webhook signatures.
+      type: object
+      required:
+      - id
+      - name
+      - key_prefix
+      - scopes
+      - is_active
+      - created_at
+      - full_key
+      title: ApiKeyCreateResponse
+      description: Response when creating an API key (includes the full key once).
+    UpdateSlackNotificationLevelRequest:
+      properties:
+        slack_notification_level:
+          type: string
+          pattern: ^(essential|detailed)$
+          title: Slack Notification Level
+      type: object
+      required:
+      - slack_notification_level
+      title: UpdateSlackNotificationLevelRequest
+    UpdateLoadGoogleDocsInContextRequest:
+      properties:
+        load_google_docs_in_context:
+          type: boolean
+          title: Load Google Docs In Context
+      type: object
+      required:
+      - load_google_docs_in_context
+      title: UpdateLoadGoogleDocsInContextRequest
+    UpdateProxySettingsRequest:
+      properties:
+        proxy_enabled:
+          type: boolean
+          title: Proxy Enabled
+        proxy_server:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Proxy Server
+        proxy_username:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Proxy Username
+        proxy_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proxy Password
+      type: object
+      required:
+      - proxy_enabled
+      title: UpdateProxySettingsRequest
+    ApiKeyCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          description: Human-readable name for the key
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+          description: Permission scopes (defaults to ['runs:create', 'runs:read'])
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Webhook Url
+          description: URL to send webhook notifications to
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: Events to send webhooks for (e.g., ['run.authentication_required', 'run.completed', 'run.failed'])
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+          description: Optional expiration date for the key
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+          description: Widget configuration (branding, behavior, allowed_origins). Set to enable embeddable widget for this key.
+        is_sandbox:
+          type: boolean
+          title: Is Sandbox
+          description: Enable sandbox mode. Sandbox keys simulate the full run lifecycle with hardcoded data instead of spinning up real browser sessions.
+          default: false
+      type: object
+      required:
+      - name
+      title: ApiKeyCreateRequest
+      description: Request to create an API key.
+    UpdateRequireActionConfirmationRequest:
+      properties:
+        require_action_confirmation:
+          type: boolean
+          title: Require Action Confirmation
+      type: object
+      required:
+      - require_action_confirmation
+      title: UpdateRequireActionConfirmationRequest
+    MemberInviteResult:
+      properties:
+        email:
+          type: string
+          title: Email
+        status:
+          type: string
+          title: Status
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - email
+      - status
+      title: MemberInviteResult
+    UpdateResidentialProxyRequest:
+      properties:
+        residential_proxy_enabled:
+          type: boolean
+          title: Residential Proxy Enabled
+      type: object
+      required:
+      - residential_proxy_enabled
+      title: UpdateResidentialProxyRequest
+    ApiKeyUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+          description: New name for the key
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Webhook Url
+          description: New webhook URL (empty string to remove webhook)
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: New list of webhook events
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+          description: New permission scopes
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+          description: Widget configuration. Set to {} or null to disable widget.
+        is_sandbox:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Sandbox
+          description: Enable or disable sandbox mode.
+      type: object
+      title: ApiKeyUpdateRequest
+      description: Request to update an API key.
+    UpdateFlashModeRequest:
+      properties:
+        flash_mode:
+          type: boolean
+          title: Flash Mode
+      type: object
+      required:
+      - flash_mode
+      title: UpdateFlashModeRequest
+    UpdateNetworkRecordingEnabledRequest:
+      properties:
+        network_recording_enabled:
+          type: boolean
+          title: Network Recording Enabled
+      type: object
+      required:
+      - network_recording_enabled
+      title: UpdateNetworkRecordingEnabledRequest
+    AccessControlResponse:
+      properties:
+        permissions:
+          items:
+            $ref: '#/components/schemas/PermissionDefinitionResponse'
+          type: array
+          title: Permissions
+        member_defaults:
+          items:
+            type: string
+          type: array
+          title: Member Defaults
+        members:
+          items:
+            $ref: '#/components/schemas/MemberAccessResponse'
+          type: array
+          title: Members
+      type: object
+      required:
+      - permissions
+      - member_defaults
+      - members
+      title: AccessControlResponse
+    UpdateMemberDefaultsRequest:
+      properties:
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+      type: object
+      required:
+      - permissions
+      title: UpdateMemberDefaultsRequest
+    TestProxyRequest:
+      properties:
+        proxy_server:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Proxy Server
+        proxy_username:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Proxy Username
+        proxy_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proxy Password
+      type: object
+      required:
+      - proxy_server
+      title: TestProxyRequest
+    MemberInviteRequest:
+      properties:
+        emails:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Emails
+        role:
+          type: string
+          title: Role
+          default: org:member
+      type: object
+      required:
+      - emails
+      title: MemberInviteRequest
+    ApiKeyListResponse:
+      properties:
+        api_keys:
+          items:
+            $ref: '#/components/schemas/ApiKeyResponse'
+          type: array
+          title: Api Keys
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - api_keys
+      - total
+      title: ApiKeyListResponse
+      description: Response for listing API keys.
+    UpdateExecutionSettingsRequest:
+      properties:
+        kernel_headless_mode:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kernel Headless Mode
+          description: Run browsers headless (no LiveView, no replays); also disables agent vision
+        max_concurrent_browsers:
+          anyOf:
+          - type: integer
+            maximum: 2000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Max Concurrent Browsers
+          description: Maximum number of concurrent parallel browser sessions
+      type: object
+      title: UpdateExecutionSettingsRequest
+      description: Request model for updating run-execution settings.
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

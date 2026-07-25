@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals auth API
+  version: 1.0.0
+tags:
+- name: auth
+paths:
+  /api/v1/auth/me:
+    get:
+      tags:
+      - auth
+      summary: Get Current User Info
+      description: Get current user info from Clerk session
+      operationId: get_current_user_info_api_v1_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+      - HTTPBearer: []
+components:
+  schemas:
+    User:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Organization Id
+        clerk_user_id:
+          type: string
+          title: Clerk User Id
+        role:
+          type: string
+          title: Role
+        is_guest:
+          type: boolean
+          title: Is Guest
+          default: false
+        effective_permissions:
+          items:
+            type: string
+          type: array
+          title: Effective Permissions
+        slack_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack User Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - email
+      - id
+      - organization_id
+      - clerk_user_id
+      - role
+      - slack_user_id
+      - created_at
+      title: User
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

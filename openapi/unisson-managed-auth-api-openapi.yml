@@ -1,0 +1,201 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals managed-auth API
+  version: 1.0.0
+tags:
+- name: managed-auth
+paths:
+  /api/v1/managed-auth/connect:
+    post:
+      tags:
+      - managed-auth
+      summary: Create Connection
+      description: 'Create a Kernel Managed Auth connection and start the login flow.
+
+
+        Returns a hosted URL where the user can authenticate.'
+      operationId: create_connection_api_v1_managed_auth_connect_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/app__api__v1__managed_auth__ConnectResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/managed-auth/connect/{connection_id}/status:
+    get:
+      tags:
+      - managed-auth
+      summary: Get Connection Status
+      description: 'Poll the status of a Kernel Managed Auth connection.
+
+
+        When status is AUTHENTICATED, the domain is automatically recorded in the DB.'
+      operationId: get_connection_status_api_v1_managed_auth_connect__connection_id__status_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: connection_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connection Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/managed-auth/connect/{connection_id}:
+    delete:
+      tags:
+      - managed-auth
+      summary: Cancel Connection
+      description: Cancel an in-progress Kernel Managed Auth login flow.
+      operationId: cancel_connection_api_v1_managed_auth_connect__connection_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: connection_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connection Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    app__api__v1__managed_auth__ConnectResponse:
+      properties:
+        connection_id:
+          type: string
+          title: Connection Id
+        hosted_url:
+          type: string
+          title: Hosted Url
+        domain:
+          type: string
+          title: Domain
+      type: object
+      required:
+      - connection_id
+      - hosted_url
+      - domain
+      title: ConnectResponse
+    ConnectRequest:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        login_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Login Url
+      type: object
+      required:
+      - domain
+      title: ConnectRequest
+    ConnectionStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        flow_step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Step
+        flow_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Status
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        live_view_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live View Url
+      type: object
+      required:
+      - status
+      title: ConnectionStatusResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,1657 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals runs API
+  version: 1.0.0
+tags:
+- name: runs
+paths:
+  /api/v1/runs/trigger:
+    post:
+      tags:
+      - runs
+      summary: Trigger Run
+      description: 'Trigger a new run (from web UI or API) - Rate limited: 30/min per IP
+
+
+        For Slack-triggered runs, use the /integrations/slack/events endpoint instead'
+      operationId: trigger_run_api_v1_runs_trigger_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunTriggerRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/runs:
+    get:
+      tags:
+      - runs
+      summary: List Runs
+      description: List all runs for the organization
+      operationId: list_runs_api_v1_runs_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Page Size
+      - name: status_filter
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by status. Accepts a single value (e.g. 'running') or a comma-separated list (e.g. 'running,coordinating') for tab-style grouping in the dashboard.
+          title: Status Filter
+        description: Filter by status. Accepts a single value (e.g. 'running') or a comma-separated list (e.g. 'running,coordinating') for tab-style grouping in the dashboard.
+      - name: triggered_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by trigger source
+          title: Triggered From
+        description: Filter by trigger source
+      - name: run_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by run type (task, exploration)
+          title: Run Type
+        description: Filter by run type (task, exploration)
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search request text
+          title: Search
+        description: Search request text
+      - name: triggered_by_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search by triggered-by user name
+          title: Triggered By Name
+        description: Search by triggered-by user name
+      - name: created_after
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter runs created after this datetime
+          title: Created After
+        description: Filter runs created after this datetime
+      - name: created_before
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter runs created before this datetime
+          title: Created Before
+        description: Filter runs created before this datetime
+      - name: chat_conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs spawned from a specific chat conversation.
+          title: Chat Conversation Id
+        description: Filter to runs spawned from a specific chat conversation.
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs scoped to a specific agent.
+          title: Agent Id
+        description: Filter to runs scoped to a specific agent.
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs associated with a specific customer.
+          title: Customer Id
+        description: Filter to runs associated with a specific customer.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/attention-counts:
+    get:
+      tags:
+      - runs
+      summary: Get Attention Counts
+      description: 'Get counts of runs needing attention (for sidebar badges).
+
+
+        Returns counts of runs with ''authentication_required'' or ''waiting_for_input'' status,
+
+        grouped by run type (task vs exploration).
+
+
+        Note: Scouts have is_exploration=False but exploration_id IS NOT NULL,
+
+        so we use exploration_id to determine if a run belongs to an exploration.'
+      operationId: get_attention_counts_api_v1_runs_attention_counts_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+      - HTTPBearer: []
+  /api/v1/runs/status-counts:
+    get:
+      tags:
+      - runs
+      summary: Get Status Counts
+      description: 'Counts of runs grouped by status, for the same filter scope as /runs.
+
+
+        Mirrors /runs''s filter set except `status_filter` (which would defeat the
+
+        purpose). Used by the Runs dashboard''s tab counters so each tab''s count
+
+        reflects all runs in the current timeframe + filters, not just the
+
+        currently-selected status. Counts always include every value in
+
+        `_RUN_STATUS_KEYS`, defaulting to 0 — frontends can sum into groups
+
+        without conditional logic.'
+      operationId: get_status_counts_api_v1_runs_status_counts_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: triggered_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by trigger source
+          title: Triggered From
+        description: Filter by trigger source
+      - name: run_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by run type (task, exploration)
+          title: Run Type
+        description: Filter by run type (task, exploration)
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search request text
+          title: Search
+        description: Search request text
+      - name: triggered_by_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search by triggered-by user name
+          title: Triggered By Name
+        description: Search by triggered-by user name
+      - name: created_after
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter runs created after this datetime
+          title: Created After
+        description: Filter runs created after this datetime
+      - name: created_before
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Filter runs created before this datetime
+          title: Created Before
+        description: Filter runs created before this datetime
+      - name: chat_conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs spawned from a specific chat conversation.
+          title: Chat Conversation Id
+        description: Filter to runs spawned from a specific chat conversation.
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs scoped to a specific agent.
+          title: Agent Id
+        description: Filter to runs scoped to a specific agent.
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs associated with a specific customer.
+          title: Customer Id
+        description: Filter to runs associated with a specific customer.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/activity:
+    get:
+      tags:
+      - runs
+      summary: Get Run Activity
+      description: 'Daily run counts within the window plus the previous-period total.
+
+
+        Powers the Runs dashboard hero card''s sparkline + trend % indicator.
+
+        Mirrors the filter scope of /runs and /runs/status-counts (status filter
+
+        intentionally omitted — the hero card aggregates across statuses).
+
+
+        `previous_total` is the count of runs in the window of equal duration
+
+        immediately preceding [created_after, created_before]. Returned as
+
+        `null` when no `created_after` is provided (the "all time" case has no
+
+        prior period to compare against).'
+      operationId: get_run_activity_api_v1_runs_activity_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: triggered_from
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by trigger source
+          title: Triggered From
+        description: Filter by trigger source
+      - name: run_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by run type (task, exploration)
+          title: Run Type
+        description: Filter by run type (task, exploration)
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search request text
+          title: Search
+        description: Search request text
+      - name: triggered_by_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search by triggered-by user name
+          title: Triggered By Name
+        description: Search by triggered-by user name
+      - name: created_after
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Window start (defaults to earliest run for the org)
+          title: Created After
+        description: Window start (defaults to earliest run for the org)
+      - name: created_before
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Window end (defaults to now)
+          title: Created Before
+        description: Window end (defaults to now)
+      - name: chat_conversation_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs spawned from a specific chat conversation.
+          title: Chat Conversation Id
+        description: Filter to runs spawned from a specific chat conversation.
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs scoped to a specific agent.
+          title: Agent Id
+        description: Filter to runs scoped to a specific agent.
+      - name: customer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: Filter to runs associated with a specific customer.
+          title: Customer Id
+        description: Filter to runs associated with a specific customer.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}:
+    get:
+      tags:
+      - runs
+      summary: Get Run
+      description: Get detailed information about a specific run
+      operationId: get_run_api_v1_runs__run_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      - name: include_child_steps
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Child Steps
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunDetailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - runs
+      summary: Delete Run
+      description: Soft delete a run and its child runs/scouts.
+      operationId: delete_run_api_v1_runs__run_id__delete
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/resume:
+    post:
+      tags:
+      - runs
+      summary: Resume Run
+      description: 'Resume a run after user has completed authentication or answered a clarifying question.
+
+
+        For authentication: Just call this endpoint without a body.
+
+        For clarifying questions: Include {"answer": "user''s answer"} in the body.'
+      operationId: resume_run_api_v1_runs__run_id__resume_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunResumeRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/liveview:
+    get:
+      tags:
+      - runs
+      summary: Get Run Liveview Url
+      description: Get the LiveView URL for a run's browser session (for secure authentication)
+      operationId: get_run_liveview_url_api_v1_runs__run_id__liveview_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/recording:
+    get:
+      tags:
+      - runs
+      summary: Get Run Recording
+      description: 'Get video recording URL for a completed run.
+
+
+        Returns: { "run_id": ..., "url": <presigned_url> }'
+      operationId: get_run_recording_api_v1_runs__run_id__recording_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/result-screenshots:
+    get:
+      tags:
+      - runs
+      summary: Get Run Result Screenshots
+      description: 'Get presigned URLs for result screenshots saved by the agent.
+
+
+        Returns: [{ "url": <presigned_url>, "caption": str, "step_number": int }, ...]'
+      operationId: get_run_result_screenshots_api_v1_runs__run_id__result_screenshots_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/children:
+    get:
+      tags:
+      - runs
+      summary: Get Child Runs
+      description: Return scouts for an exploration coordinator (empty for task runs).
+      operationId: get_child_runs_api_v1_runs__run_id__children_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RunResponse'
+                title: Response Get Child Runs Api V1 Runs  Run Id  Children Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/cancel:
+    post:
+      tags:
+      - runs
+      summary: Cancel Run
+      description: Cancel a running execution (cascades to child runs)
+      operationId: cancel_run_api_v1_runs__run_id__cancel_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/steps:
+    get:
+      tags:
+      - runs
+      summary: Get Run Steps
+      description: Get all steps for a run (for real-time updates)
+      operationId: get_run_steps_api_v1_runs__run_id__steps_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+                title: Response Get Run Steps Api V1 Runs  Run Id  Steps Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/runs/{run_id}/report-issue:
+    post:
+      tags:
+      - runs
+      summary: Report Issue
+      description: Report an issue with a run
+      operationId: report_issue_api_v1_runs__run_id__report_issue_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Run Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportIssueRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportIssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    RunResumeRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
+      type: object
+      title: RunResumeRequest
+      description: Request to resume a paused run, optionally with an answer to a clarifying question
+    RunDetailResponse:
+      properties:
+        request_text:
+          type: string
+          title: Request Text
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        triggered_by:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Triggered By
+        triggered_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Name
+        triggered_by_clerk_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Clerk Id
+        triggered_from:
+          type: string
+          title: Triggered From
+        run_type:
+          type: string
+          title: Run Type
+          default: task
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        slack_thread_ts:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Thread Ts
+        slack_channel_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Channel Id
+        status:
+          type: string
+          title: Status
+        response_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Text
+        structured_output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Structured Output
+        context_metadata:
+          additionalProperties: true
+          type: object
+          title: Context Metadata
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        error_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Category
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        cua_prompt_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Prompt Tokens
+        cua_completion_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Completion Tokens
+        cua_total_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Total Tokens
+        cua_prompt_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Prompt Cost
+        cua_completion_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Completion Cost
+        cua_total_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Total Cost
+        has_recording:
+          type: boolean
+          title: Has Recording
+          default: false
+        training_data_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Training Data Url
+        child_count:
+          type: integer
+          title: Child Count
+          default: 0
+        exploration_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Exploration Id
+        is_exploration:
+          type: boolean
+          title: Is Exploration
+          default: false
+        agent_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        customer_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Icon
+        customer_gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Gradient
+        relevant_features:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Features
+        relevant_company_knowledge:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Company Knowledge
+        relevant_agent_insights:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Agent Insights
+        created_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Created Workflow
+        updated_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Updated Workflow
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
+        steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Steps
+          default: []
+        current_step:
+          anyOf:
+          - $ref: '#/components/schemas/RunStepResponse'
+          - type: 'null'
+        last_steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Last Steps
+          default: []
+        scout_summary:
+          items:
+            $ref: '#/components/schemas/ScoutSummary'
+          type: array
+          title: Scout Summary
+          default: []
+        child_runs:
+          items:
+            $ref: '#/components/schemas/RunResponse'
+          type: array
+          title: Child Runs
+          default: []
+        browser_telemetry_events:
+          items:
+            $ref: '#/components/schemas/BrowserTelemetryEventResponse'
+          type: array
+          title: Browser Telemetry Events
+          default: []
+      type: object
+      required:
+      - request_text
+      - id
+      - organization_id
+      - triggered_by
+      - triggered_from
+      - slack_thread_ts
+      - slack_channel_id
+      - status
+      - response_text
+      - context_metadata
+      - started_at
+      - completed_at
+      - created_at
+      - error_message
+      title: RunDetailResponse
+      description: Full run details including steps
+    RunResponse:
+      properties:
+        request_text:
+          type: string
+          title: Request Text
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        triggered_by:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Triggered By
+        triggered_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Name
+        triggered_by_clerk_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Clerk Id
+        triggered_from:
+          type: string
+          title: Triggered From
+        run_type:
+          type: string
+          title: Run Type
+          default: task
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        slack_thread_ts:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Thread Ts
+        slack_channel_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Channel Id
+        status:
+          type: string
+          title: Status
+        response_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Text
+        structured_output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Structured Output
+        context_metadata:
+          additionalProperties: true
+          type: object
+          title: Context Metadata
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        error_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Category
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        cua_prompt_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Prompt Tokens
+        cua_completion_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Completion Tokens
+        cua_total_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Total Tokens
+        cua_prompt_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Prompt Cost
+        cua_completion_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Completion Cost
+        cua_total_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Total Cost
+        has_recording:
+          type: boolean
+          title: Has Recording
+          default: false
+        training_data_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Training Data Url
+        child_count:
+          type: integer
+          title: Child Count
+          default: 0
+        exploration_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Exploration Id
+        is_exploration:
+          type: boolean
+          title: Is Exploration
+          default: false
+        agent_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        customer_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Icon
+        customer_gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Gradient
+        relevant_features:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Features
+        relevant_company_knowledge:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Company Knowledge
+        relevant_agent_insights:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Agent Insights
+        created_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Created Workflow
+        updated_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Updated Workflow
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
+        steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Steps
+          default: []
+        current_step:
+          anyOf:
+          - $ref: '#/components/schemas/RunStepResponse'
+          - type: 'null'
+        last_steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Last Steps
+          default: []
+        scout_summary:
+          items:
+            $ref: '#/components/schemas/ScoutSummary'
+          type: array
+          title: Scout Summary
+          default: []
+      type: object
+      required:
+      - request_text
+      - id
+      - organization_id
+      - triggered_by
+      - triggered_from
+      - slack_thread_ts
+      - slack_channel_id
+      - status
+      - response_text
+      - context_metadata
+      - started_at
+      - completed_at
+      - created_at
+      - error_message
+      title: RunResponse
+    ReportIssueRequest:
+      properties:
+        reason:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Reason
+        details:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Details
+      type: object
+      required:
+      - reason
+      title: ReportIssueRequest
+      description: Request to report an issue with a run
+    BrowserTelemetryEventResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        kernel_browser_id:
+          type: string
+          title: Kernel Browser Id
+        sequence:
+          type: integer
+          title: Sequence
+        occurred_at:
+          type: string
+          format: date-time
+          title: Occurred At
+        category:
+          type: string
+          title: Category
+        event_type:
+          type: string
+          title: Event Type
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - id
+      - kernel_browser_id
+      - sequence
+      - occurred_at
+      - category
+      - event_type
+      - payload
+      title: BrowserTelemetryEventResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    RunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/RunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total
+      - page
+      - page_size
+      title: RunListResponse
+      description: Paginated list of runs
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ScoutSummary:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        request_text:
+          type: string
+          title: Request Text
+        latest_step_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Step Action
+        latest_step_reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Step Reasoning
+        latest_step_number:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latest Step Number
+      type: object
+      required:
+      - id
+      - status
+      - request_text
+      title: ScoutSummary
+      description: 'Compact per-scout summary used by the Home Live cards to render an
+
+        exploration coordinator''s ticker (one row per scout with its latest activity).'
+    RunStepResponse:
+      properties:
+        step_number:
+          type: integer
+          title: Step Number
+        action_type:
+          type: string
+          title: Action Type
+        action_details:
+          additionalProperties: true
+          type: object
+          title: Action Details
+        reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reasoning
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        screenshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Screenshot Url
+        status:
+          type: string
+          title: Status
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        executed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Executed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - step_number
+      - action_type
+      - action_details
+      - id
+      - run_id
+      - status
+      - created_at
+      title: RunStepResponse
+    RunTriggerRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        triggered_from:
+          type: string
+          pattern: ^(web|api|chat|widget|slack|webhook)$
+          title: Triggered From
+          default: web
+        run_type:
+          type: string
+          pattern: ^(task|exploration)$
+          title: Run Type
+          default: task
+      type: object
+      required:
+      - request_text
+      title: RunTriggerRequest
+      description: Request to trigger a new run (with validation)
+    ReportIssueResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        issue_id:
+          type: string
+          title: Issue Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - issue_id
+      - message
+      title: ReportIssueResponse
+      description: Response after reporting an issue
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

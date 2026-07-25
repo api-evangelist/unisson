@@ -1,0 +1,431 @@
+openapi: 3.1.0
+info:
+  title: Unisson agent-evals memory API
+  version: 1.0.0
+tags:
+- name: memory
+paths:
+  /api/v1/memory:
+    get:
+      tags:
+      - memory
+      summary: List Memory Files
+      description: 'List all memory files: the account file, then every member''s file.'
+      operationId: list_memory_files_api_v1_memory_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MemoryFileResponse'
+                type: array
+                title: Response List Memory Files Api V1 Memory Get
+      security:
+      - HTTPBearer: []
+  /api/v1/memory/account:
+    get:
+      tags:
+      - memory
+      summary: Get Account Memory
+      description: The org's account-level memory file (get-or-create).
+      operationId: get_account_memory_api_v1_memory_account_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+      security:
+      - HTTPBearer: []
+    put:
+      tags:
+      - memory
+      summary: Update Account Memory
+      description: Edit the account file (members only; versioned as ``manual``).
+      operationId: update_account_memory_api_v1_memory_account_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryFileUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/memory/me:
+    get:
+      tags:
+      - memory
+      summary: Get My Memory
+      description: The caller's own memory file (get-or-create).
+      operationId: get_my_memory_api_v1_memory_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+      security:
+      - HTTPBearer: []
+  /api/v1/memory/users/{user_id}:
+    get:
+      tags:
+      - memory
+      summary: Get User Memory
+      description: A member's memory file (get-or-create). Any member may view any file.
+      operationId: get_user_memory_api_v1_memory_users__user_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+      - memory
+      summary: Update User Memory
+      description: 'Edit a member''s memory file (any member may edit any file; versioned as
+
+        ``manual``).'
+      operationId: update_user_memory_api_v1_memory_users__user_id__put
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryFileUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/memory/{memory_file_id}/versions:
+    get:
+      tags:
+      - memory
+      summary: List Memory Versions
+      description: A memory file's content version history, newest first.
+      operationId: list_memory_versions_api_v1_memory__memory_file_id__versions_get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: memory_file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Memory File Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemoryFileVersionResponse'
+                title: Response List Memory Versions Api V1 Memory  Memory File Id  Versions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/memory/{memory_file_id}/versions/{version_id}:
+    get:
+      tags:
+      - memory
+      summary: Get Memory Version
+      description: A single content version (full text).
+      operationId: get_memory_version_api_v1_memory__memory_file_id__versions__version_id__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: memory_file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Memory File Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileVersionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/memory/{memory_file_id}/versions/{version_id}/revert:
+    post:
+      tags:
+      - memory
+      summary: Revert Memory Version
+      description: 'Restore a memory file to a prior version (members only). Appends a new
+
+        ``revert`` version — history is never rewritten.'
+      operationId: revert_memory_version_api_v1_memory__memory_file_id__versions__version_id__revert_post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: memory_file_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Memory File Id
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Version Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoryFileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    MemoryFileVersionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        memory_file_id:
+          type: string
+          format: uuid
+          title: Memory File Id
+        version_number:
+          type: integer
+          title: Version Number
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - memory_file_id
+      - version_number
+      - source
+      - created_at
+      title: MemoryFileVersionResponse
+      description: One immutable snapshot in a memory file's content history.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MemoryFileResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Id
+        is_account:
+          type: boolean
+          title: Is Account
+        content:
+          type: string
+          title: Content
+        updated_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Updated By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Name
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+      type: object
+      required:
+      - id
+      - organization_id
+      - is_account
+      - content
+      - created_at
+      - updated_at
+      title: MemoryFileResponse
+    MemoryFileUpdate:
+      properties:
+        content:
+          type: string
+          maxLength: 100000
+          title: Content
+      type: object
+      required:
+      - content
+      title: MemoryFileUpdate
+      description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

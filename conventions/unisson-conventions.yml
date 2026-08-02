@@ -1,0 +1,45 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json + unisson.ai site survey
+authentication:
+  style: http-bearer
+  header: "Authorization: Bearer <token>"
+  api_keys: organization API keys managed at /api/v1/organizations/me/api-keys
+  see: ../authentication/unisson-authentication.yml
+idempotency:
+  supported: false
+  notes: no Idempotency-Key header or idempotency contract in the OpenAPI or on the site
+pagination:
+  documented: in-spec
+  style: page-based
+  params:
+  - page
+  - page_size
+  - limit
+  notes: >-
+    derived from the OpenAPI - 10 list operations take page/page_size and 9
+    take limit query parameters; no cursor pagination and no public docs
+    page describing the contract
+versioning:
+  scheme: uri-path
+  current: v1
+  see: ../lifecycle/unisson-lifecycle.yml
+errors:
+  envelope: FastAPI HTTPValidationError (422) with detail[].loc/msg/type
+  see: ../errors/unisson-problem-types.yml
+request_tracing:
+  documented: false
+rate_limits:
+  documented: false
+  notes: no rate-limit documentation or response-header contract published
+streaming:
+  supported: true
+  notes: >-
+    chat surface exposes streaming endpoints (resume_message_stream,
+    stream_durable_turn) for durable conversation turns
+external_api:
+  notes: >-
+    the external Runner API (POST /api/v1/external/runs, GET
+    /api/v1/external/runs/{run_id}, PUT /api/v1/external/webhook) is the
+    supported third-party integration surface, with webhook callbacks for
+    run events

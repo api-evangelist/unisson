@@ -1,22 +1,547 @@
 aid: unisson
 name: Unisson
-description: Unisson is a company surfaced as a portfolio company of y-combinator and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Unisson (YC W26) builds AI agents that act as subject-matter experts for B2B
+  software implementation and customer-facing teams. Its Runner agent executes
+  complex deployment, onboarding, and administration tasks directly inside a
+  product, while Explorer maintains an always up-to-date knowledge base of how
+  the product works. Agents are reachable over Slack, Microsoft Teams,
+  WhatsApp, email, and an embeddable widget, and the platform exposes a
+  bearer-token REST API (api.unisson.ai) covering agents, runs, scheduled
+  runs, skills, knowledge base, integrations, customers, meetings, and an
+  external Runner API for triggering runs and receiving webhook callbacks
+  from your own tools.
 url: https://raw.githubusercontent.com/api-evangelist/unisson/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-productions.s3.amazonaws.com/apis-json-icon.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: live-openapi-harvested
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Artificial Intelligence
+- AI Agents
+- Customer Success
+- B2B Software
+- Implementation
+- Automation
+- Agents
+apis:
+- aid: unisson:unisson-agent-evals-api
+  name: Unisson agent-evals API
+  description: The agent-evals API from Unisson — 5 operation(s) for agent-evals.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - agent-evals
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-agent-evals-api-openapi.yml
+- aid: unisson:unisson-agent-integrations-api
+  name: Unisson agent-integrations API
+  description: The agent-integrations API from Unisson — 6 operation(s) for agent-integrations.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - agent-integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-agent-integrations-api-openapi.yml
+- aid: unisson:unisson-agent-triggers-api
+  name: Unisson agent-triggers API
+  description: The agent-triggers API from Unisson — 4 operation(s) for agent-triggers.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - agent-triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-agent-triggers-api-openapi.yml
+- aid: unisson:unisson-agents-api
+  name: Unisson agents API
+  description: The agents API from Unisson — 11 operation(s) for agents.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - agents
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-agents-api-openapi.yml
+- aid: unisson:unisson-analytics-api
+  name: Unisson analytics API
+  description: The analytics API from Unisson — 1 operation(s) for analytics.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-analytics-api-openapi.yml
+- aid: unisson:unisson-apis-api
+  name: Unisson apis API
+  description: The apis API from Unisson — 12 operation(s) for apis.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - apis
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-apis-api-openapi.yml
+- aid: unisson:unisson-appdb-api
+  name: Unisson appdb API
+  description: The appdb API from Unisson — 7 operation(s) for appdb.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - appdb
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-appdb-api-openapi.yml
+- aid: unisson:unisson-apps-api
+  name: Unisson apps API
+  description: The apps API from Unisson — 7 operation(s) for apps.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - apps
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-apps-api-openapi.yml
+- aid: unisson:unisson-auth-api
+  name: Unisson auth API
+  description: The auth API from Unisson — 1 operation(s) for auth.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-auth-api-openapi.yml
+- aid: unisson:unisson-browser-contexts-api
+  name: Unisson browser-contexts API
+  description: The browser-contexts API from Unisson — 2 operation(s) for browser-contexts.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - browser-contexts
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-browser-contexts-api-openapi.yml
+- aid: unisson:unisson-chat-api
+  name: Unisson chat API
+  description: The chat API from Unisson — 18 operation(s) for chat.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - chat
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-chat-api-openapi.yml
+- aid: unisson:unisson-code-map-api
+  name: Unisson code-map API
+  description: The code-map API from Unisson — 4 operation(s) for code-map.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - code-map
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-code-map-api-openapi.yml
+- aid: unisson:unisson-customer-files-api
+  name: Unisson customer-files API
+  description: The customer-files API from Unisson — 3 operation(s) for customer-files.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - customer-files
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-customer-files-api-openapi.yml
+- aid: unisson:unisson-customers-api
+  name: Unisson customers API
+  description: The customers API from Unisson — 47 operation(s) for customers.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - customers
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-customers-api-openapi.yml
+- aid: unisson:unisson-debrief-api
+  name: Unisson debrief API
+  description: The debrief API from Unisson — 4 operation(s) for debrief.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - debrief
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-debrief-api-openapi.yml
+- aid: unisson:unisson-discovery-api
+  name: Unisson discovery API
+  description: The discovery API from Unisson — 6 operation(s) for discovery.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-discovery-api-openapi.yml
+- aid: unisson:unisson-documents-api
+  name: Unisson documents API
+  description: The documents API from Unisson — 5 operation(s) for documents.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - documents
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-documents-api-openapi.yml
+- aid: unisson:unisson-email-drafts-api
+  name: Unisson email-drafts API
+  description: The email-drafts API from Unisson — 2 operation(s) for email-drafts.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - email-drafts
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-email-drafts-api-openapi.yml
+- aid: unisson:unisson-emails-api
+  name: Unisson emails API
+  description: The emails API from Unisson — 7 operation(s) for emails.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - emails
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-emails-api-openapi.yml
+- aid: unisson:unisson-external-api-api
+  name: Unisson external-api API
+  description: The external-api API from Unisson — 5 operation(s) for external-api.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - external-api
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-external-api-api-openapi.yml
+- aid: unisson:unisson-google-push-api
+  name: Unisson google-push API
+  description: The google-push API from Unisson — 2 operation(s) for google-push.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - google-push
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-google-push-api-openapi.yml
+- aid: unisson:unisson-health-api
+  name: Unisson Health API
+  description: The Health API from Unisson — 1 operation(s) for health.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-health-api-openapi.yml
+- aid: unisson:unisson-imported-databases-api
+  name: Unisson imported-databases API
+  description: The imported-databases API from Unisson — 6 operation(s) for imported-databases.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - imported-databases
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-imported-databases-api-openapi.yml
+- aid: unisson:unisson-integrations-api
+  name: Unisson integrations API
+  description: The integrations API from Unisson — 101 operation(s) for integrations.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-integrations-api-openapi.yml
+- aid: unisson:unisson-internal-auth-sessions-api
+  name: Unisson internal-auth-sessions API
+  description: The internal-auth-sessions API from Unisson — 3 operation(s) for internal-auth-sessions.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - internal-auth-sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-internal-auth-sessions-api-openapi.yml
+- aid: unisson:unisson-knowledge-base-api
+  name: Unisson knowledge-base API
+  description: The knowledge-base API from Unisson — 15 operation(s) for knowledge-base.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - knowledge-base
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-knowledge-base-api-openapi.yml
+- aid: unisson:unisson-live-map-api
+  name: Unisson live-map API
+  description: The live-map API from Unisson — 3 operation(s) for live-map.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - live-map
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-live-map-api-openapi.yml
+- aid: unisson:unisson-managed-auth-api
+  name: Unisson managed-auth API
+  description: The managed-auth API from Unisson — 3 operation(s) for managed-auth.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - managed-auth
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-managed-auth-api-openapi.yml
+- aid: unisson:unisson-meetings-api
+  name: Unisson meetings API
+  description: The meetings API from Unisson — 8 operation(s) for meetings.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - meetings
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-meetings-api-openapi.yml
+- aid: unisson:unisson-memory-api
+  name: Unisson memory API
+  description: The memory API from Unisson — 7 operation(s) for memory.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - memory
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-memory-api-openapi.yml
+- aid: unisson:unisson-notifications-api
+  name: Unisson notifications API
+  description: The notifications API from Unisson — 4 operation(s) for notifications.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - notifications
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-notifications-api-openapi.yml
+- aid: unisson:unisson-onboarding-api
+  name: Unisson onboarding API
+  description: The onboarding API from Unisson — 2 operation(s) for onboarding.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - onboarding
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-onboarding-api-openapi.yml
+- aid: unisson:unisson-organizations-api
+  name: Unisson organizations API
+  description: The organizations API from Unisson — 25 operation(s) for organizations.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-organizations-api-openapi.yml
+- aid: unisson:unisson-products-api
+  name: Unisson products API
+  description: The products API from Unisson — 2 operation(s) for products.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - products
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-products-api-openapi.yml
+- aid: unisson:unisson-readyz-api
+  name: Unisson Readyz API
+  description: The Readyz API from Unisson — 1 operation(s) for readyz.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - Readyz
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-readyz-api-openapi.yml
+- aid: unisson:unisson-runs-api
+  name: Unisson runs API
+  description: The runs API from Unisson — 14 operation(s) for runs.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - runs
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-runs-api-openapi.yml
+- aid: unisson:unisson-scheduled-runs-api
+  name: Unisson scheduled-runs API
+  description: The scheduled-runs API from Unisson — 4 operation(s) for scheduled-runs.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - scheduled-runs
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-scheduled-runs-api-openapi.yml
+- aid: unisson:unisson-skills-api
+  name: Unisson skills API
+  description: The skills API from Unisson — 7 operation(s) for skills.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - skills
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-skills-api-openapi.yml
+- aid: unisson:unisson-superadmin-api
+  name: Unisson superadmin API
+  description: The superadmin API from Unisson — 3 operation(s) for superadmin.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - superadmin
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-superadmin-api-openapi.yml
+- aid: unisson:unisson-task-types-api
+  name: Unisson task-types API
+  description: The task-types API from Unisson — 1 operation(s) for task-types.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - task-types
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-task-types-api-openapi.yml
+- aid: unisson:unisson-tasks-api
+  name: Unisson tasks API
+  description: The tasks API from Unisson — 4 operation(s) for tasks.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-tasks-api-openapi.yml
+- aid: unisson:unisson-unisson-api
+  name: Unisson Unisson API
+  description: The Unisson API from Unisson — 1 operation(s) for unisson.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - Unisson
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-unisson-api-openapi.yml
+- aid: unisson:unisson-usage-api
+  name: Unisson usage API
+  description: The usage API from Unisson — 1 operation(s) for usage.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - usage
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-usage-api-openapi.yml
+- aid: unisson:unisson-webhooks-api
+  name: Unisson webhooks API
+  description: The webhooks API from Unisson — 3 operation(s) for webhooks.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-webhooks-api-openapi.yml
+- aid: unisson:unisson-widget-api
+  name: Unisson widget API
+  description: The widget API from Unisson — 10 operation(s) for widget.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - widget
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-widget-api-openapi.yml
+common:
+- type: DomainSecurity
+  url: security/unisson-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/unisson-agentic-access.yml
+- type: Authentication
+  url: authentication/unisson-authentication.yml
+- type: Website
+  url: https://www.unisson.ai/
+- type: Login
+  url: https://app.unisson.ai/sign-in
+- type: Support
+  url: https://www.unisson.ai/support
+- type: TermsOfService
+  url: https://www.unisson.ai/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.unisson.ai/privacy-policy
+- type: TrustCenter
+  url: https://trust.unisson.ai/
+- type: Compliance
+  url: https://trust.unisson.ai/
+- type: MCPServer
+  url: mcp/unisson-mcp.yml
+- type: LLMsTxt
+  url: llms/unisson-llms.txt
+- type: Conformance
+  url: conformance/unisson-conformance.yml
+- type: ErrorCatalog
+  url: errors/unisson-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/unisson-lifecycle.yml
+- type: Conventions
+  url: conventions/unisson-conventions.yml
+- type: Webhooks
+  url: asyncapi/unisson-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Components
+  url: components/unisson-components.yml
+- type: DataModel
+  url: data-model/unisson-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+probe: true
+url: https://trust.unisson.ai/
+certifications:
+- SOC 2
+evidence:
+- source: https://www.unisson.ai/
+  quote: >-
+    "SOC2 Compliant - All data is encrypted at rest and in transit. We use
+    industry-standard encryption and security practices." (enterprise
+    section); also "Trust and safety by design - built-in safeguards to help
+    protect against prompt injection and misuse, including allowed domains"
+- source: https://trust.unisson.ai/
+  note: >-
+    dedicated trust-center subdomain is live (HTTP 200, titled "Trust
+    center") but is a client-rendered SPA with no crawlable certification
+    detail at probe time
+notes: >-
+  SOC 2 claim comes from the company's own homepage; the trust center page
+  itself does not yet expose auditable detail. Re-verify report type (Type
+  I/II) when the trust center is populated.

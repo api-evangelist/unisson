@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json + unisson.ai site survey
+versioning:
+  scheme: uri-path
+  current: v1
+  evidence: all business paths namespaced under /api/v1/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: no published deprecation policy found; company founded 2026 (YC W26)
+sla:
+  url: null
+status_page: null
+status_page_notes: status.unisson.ai does not resolve; no status page linked from the site
+deprecated_operations: []

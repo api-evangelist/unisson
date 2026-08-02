@@ -1,0 +1,66 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json (path structure + response schemas)
+entities:
+- Organization
+- Member
+- ApiKey
+- Agent
+- Trigger
+- TestCase
+- EvalRun
+- InstructionVersion
+- AgentFile
+- Run
+- RunStep
+- ScheduledRun
+- Skill
+- Conversation
+- Turn
+- Product
+- KBFeature
+- KBWorkflow
+- KBDraftWorkflow
+- KBCompanyKnowledge
+- KBAgentInsight
+- Customer
+- Document
+- Email
+- EmailDraft
+- Meeting
+- MemoryFile
+- Task
+- Notification
+- Integration
+- App
+- AppVersion
+- Recording
+- ImportedDatabase
+- WidgetSession
+relationships:
+- {from: Organization, to: Member, type: has_many, via: "/api/v1/organizations/me/members"}
+- {from: Organization, to: ApiKey, type: has_many, via: "/api/v1/organizations/me/api-keys"}
+- {from: Organization, to: Agent, type: has_many, via: "/api/v1/agents"}
+- {from: Agent, to: Trigger, type: has_many, via: "/api/v1/agents/{agent_id}/triggers"}
+- {from: Agent, to: TestCase, type: has_many, via: "/api/v1/agents/{agent_id}/test-cases"}
+- {from: Agent, to: EvalRun, type: has_many, via: "/api/v1/agents/{agent_id}/eval-runs"}
+- {from: Agent, to: InstructionVersion, type: has_many, via: "/api/v1/agents/{agent_id}/instruction-versions"}
+- {from: Agent, to: AgentFile, type: has_many, via: "/api/v1/agents/{agent_id}/files"}
+- {from: Run, to: RunStep, type: has_many, via: "/api/v1/runs/{run_id}/steps"}
+- {from: Run, to: Run, type: has_many, via: "/api/v1/runs/{run_id}/children"}
+- {from: Agent, to: Run, type: has_many, via: "/api/v1/runs/trigger (agent-scoped runs)"}
+- {from: Organization, to: ScheduledRun, type: has_many, via: "/api/v1/scheduled-runs"}
+- {from: Skill, to: InstructionVersion, type: has_many, via: "/api/v1/skills/{skill_id}/instruction-versions"}
+- {from: Conversation, to: Turn, type: has_many, via: "/api/v1/chat/conversations/{conversation_id}/turns"}
+- {from: Customer, to: Document, type: has_many, via: "/api/v1/customers/{customer_id}/documents"}
+- {from: Customer, to: Email, type: has_many, via: "/api/v1/emails/{email_id}/assign"}
+- {from: Customer, to: EmailSyncConfig, type: has_one, via: "/api/v1/emails/config/{customer_id}"}
+- {from: Meeting, to: Recording, type: has_one, via: "/api/v1/meetings/{meeting_id}/recording"}
+- {from: App, to: AppVersion, type: has_many, via: "/api/v1/apps/{app_id}/versions"}
+- {from: Recording, to: Api, type: has_many, via: "/api/v1/apis/recordings/{recording_id}/generate"}
+- {from: MemoryFile, to: MemoryVersion, type: has_many, via: "/api/v1/memory/{memory_file_id}/versions"}
+- {from: ApiKey, to: WidgetSession, type: has_many, via: "/api/v1/widget/sessions/api/{api_key_id}/{end_user_email}"}
+notes: >-
+  Derived from the REST path hierarchy and schema names of the harvested
+  OpenAPI; the provider publishes no object-reference documentation or ID
+  prefix scheme yet.

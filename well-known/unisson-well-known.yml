@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+source: live HTTP probes of unisson.ai hosts
+host: https://www.unisson.ai
+documents:
+- path: /.well-known/security.txt
+  status: 404
+- path: /.well-known/openid-configuration
+  status: 404
+- path: /.well-known/oauth-authorization-server
+  status: 404
+- path: /.well-known/api-catalog
+  status: 404
+- path: /.well-known/ai-plugin.json
+  status: 404
+- path: /llms.txt
+  status: 404
+- path: /robots.txt
+  status: 200
+- path: /sitemap.xml
+  status: 200
+api_host: https://api.unisson.ai
+api_documents:
+- path: /.well-known/security.txt
+  status: 404
+- path: /llms.txt
+  status: 404
+- path: /openapi.json
+  status: 200
+  file: ../openapi/unisson-openapi-original.json
+notes: >-
+  No RFC 9116 security.txt, OIDC discovery, OAuth authorization-server
+  metadata, api-catalog, or ai-plugin manifest published on either host as of
+  probe date. The API host serves its OpenAPI 3.1 document at /openapi.json.

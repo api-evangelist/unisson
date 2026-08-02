@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json
+type: Webhooks
+spec_type: null
+description: >-
+  Unisson publishes no AsyncAPI document, but the platform has a real
+  two-way webhook surface derived from the harvested OpenAPI. Outbound: API
+  consumers register a callback URL for external run events via PUT
+  /api/v1/external/webhook (configure_webhook_api_v1_external_webhook_put)
+  and receive run status callbacks for runs created through the external
+  Runner API. Inbound: agent triggers mint webhook tokens so third-party
+  systems can start runs by POSTing to
+  /api/v1/triggers/webhook/{webhook_token}
+  (handle_webhook_api_v1_triggers_webhook__webhook_token__post).
+outbound:
+- name: external-run-events
+  configure_operation: configure_webhook_api_v1_external_webhook_put
+  configure_path: PUT /api/v1/external/webhook
+  events: run lifecycle callbacks for externally created runs (schema not published)
+inbound:
+- name: agent-trigger-webhook
+  path: POST /api/v1/triggers/webhook/{webhook_token}
+  operation: handle_webhook_api_v1_triggers_webhook__webhook_token__post
+  purpose: start an agent run from an external system using a per-trigger token
+- name: integration-receivers
+  purpose: >-
+    provider-side receivers for partner platforms (Slack events, WhatsApp,
+    Pylon, Grafana, Gmail, Google Calendar, Pipedream, Clerk, Recall) - not
+    a consumer-facing surface
+notes: no published event catalog or payload schemas; re-check when developer docs ship.

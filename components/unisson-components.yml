@@ -1,0 +1,21 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json
+families:
+- family: Embeddable widget
+  description: >-
+    An embeddable end-user widget surface derived from the OpenAPI "widget"
+    tag (11 operations): widget sessions are created per end-user email
+    against a widget API key (WidgetSessionCreateRequest /
+    WidgetSessionResponse), messages and task executions run through
+    WidgetMessageRequest / WidgetExecuteTaskRequest, and WidgetConfigResponse
+    carries the embed configuration. No public embed documentation or loader
+    script reference was found on unisson.ai.
+  operations:
+  - tag: widget
+    count: 11
+    example_path: DELETE /api/v1/widget/sessions/api/{api_key_id}/{end_user_email}
+notes: >-
+  Captured from the spec only - no docs page for the widget exists yet.
+  Distinct from server-side SDKs (none published; see
+  ../packages/unisson-packages.yml).

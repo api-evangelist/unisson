@@ -1,0 +1,35 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/unisson-openapi-original.json
+skills:
+- file: unisson-trigger-external-run.md
+  name: Trigger and monitor a Unisson agent run from your own tool
+  api: openapi/unisson-openapi-original.json
+  operations:
+  - external_status_api_v1_external_status_get
+  - configure_webhook_api_v1_external_webhook_put
+  - create_external_run_api_v1_external_runs_post
+  - get_external_run_api_v1_external_runs__run_id__get
+  - resume_external_run_api_v1_external_runs__run_id__resume_post
+- file: unisson-build-and-run-agent.md
+  name: Build a Unisson agent and run it
+  api: openapi/unisson-openapi-original.json
+  operations:
+  - generate_agent_from_description_api_v1_agents_generate_from_description_post
+  - create_agent_api_v1_agents_post
+  - list_agents_api_v1_agents_get
+  - trigger_run_api_v1_runs_trigger_post
+  - get_run_api_v1_runs__run_id__get
+  - get_run_steps_api_v1_runs__run_id__steps_get
+  - cancel_run_api_v1_runs__run_id__cancel_post
+- file: unisson-query-knowledge-base.md
+  name: Query the Unisson product knowledge base
+  api: openapi/unisson-openapi-original.json
+  operations:
+  - get_summary_api_v1_knowledge_base_summary_get
+  - list_features_api_v1_knowledge_base_features_get
+  - get_feature_api_v1_knowledge_base_features__feature_id__get
+  - list_workflows_api_v1_knowledge_base_workflows_get
+  - get_workflow_api_v1_knowledge_base_workflows__workflow_id__get
+  - list_company_knowledge_api_v1_knowledge_base_company_knowledge_get
+  - list_agent_insights_api_v1_knowledge_base_agent_insights_get

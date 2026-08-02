@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/unisson-openapi-original.json
+format: fastapi-validation
+envelope: >-
+  FastAPI HTTPValidationError - {"detail": [{"loc": [...], "msg": "...",
+  "type": "..."}]}. Not RFC 9457 application/problem+json.
+problems:
+- status: 422
+  title: Validation Error
+  schema: HTTPValidationError
+  occurrences: 372
+  remediation: >-
+    Correct the request body/query/path parameters; detail[].loc identifies
+    the offending field, detail[].msg the reason.
+- status: 200
+  title: Success
+  occurrences: 414
+- status: 201
+  title: Created
+  occurrences: 25
+- status: 204
+  title: No Content
+  occurrences: 37
+- status: 202
+  title: Accepted
+  occurrences: 2
+notes: >-
+  The published OpenAPI declares only 422 as an error response; 401/403/404
+  behaviors of the bearer-auth endpoints are not documented in the spec and
+  no public error reference page was found on unisson.ai.

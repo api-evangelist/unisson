@@ -1,0 +1,62 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/unisson-openapi-original.json
+description: >-
+  No official hosted MCP server was found for Unisson (mcp.unisson.ai does
+  not resolve; no registry listing). Candidate tool list derived from the
+  external Runner API operations plus the highest-value platform operations
+  in the harvested OpenAPI — the surface Unisson itself markets as "connect
+  your agents" via the Runner API.
+server:
+  name: unisson
+  transport: http
+tools:
+- name: create_external_run
+  description: Trigger a Unisson agent run from an external tool or agent
+  source_operation: openapi/unisson-openapi-original.json#create_external_run_api_v1_external_runs_post
+- name: get_external_run
+  description: Get the status and result of an externally triggered run
+  source_operation: openapi/unisson-openapi-original.json#get_external_run_api_v1_external_runs__run_id__get
+- name: resume_external_run
+  description: Resume a paused externally triggered run
+  source_operation: openapi/unisson-openapi-original.json#resume_external_run_api_v1_external_runs__run_id__resume_post
+- name: configure_webhook
+  description: Configure the webhook callback URL for external run events
+  source_operation: openapi/unisson-openapi-original.json#configure_webhook_api_v1_external_webhook_put
+- name: external_status
+  description: Check external API status for the organization
+  source_operation: openapi/unisson-openapi-original.json#external_status_api_v1_external_status_get
+- name: list_agents
+  description: List the organization's Unisson agents
+  source_operation: openapi/unisson-openapi-original.json#list_agents_api_v1_agents_get
+- name: create_agent
+  description: Create a new Unisson agent
+  source_operation: openapi/unisson-openapi-original.json#create_agent_api_v1_agents_post
+- name: generate_agent_from_description
+  description: Generate an agent from a natural-language description
+  source_operation: openapi/unisson-openapi-original.json#generate_agent_from_description_api_v1_agents_generate_from_description_post
+- name: trigger_run
+  description: Trigger an agent run
+  source_operation: openapi/unisson-openapi-original.json#trigger_run_api_v1_runs_trigger_post
+- name: list_runs
+  description: List agent runs
+  source_operation: openapi/unisson-openapi-original.json#list_runs_api_v1_runs_get
+- name: get_run
+  description: Get a run with its status and output
+  source_operation: openapi/unisson-openapi-original.json#get_run_api_v1_runs__run_id__get
+- name: cancel_run
+  description: Cancel an in-flight run
+  source_operation: openapi/unisson-openapi-original.json#cancel_run_api_v1_runs__run_id__cancel_post
+- name: list_skills
+  description: List reusable skills available to agents
+  source_operation: openapi/unisson-openapi-original.json#list_skills_api_v1_skills_get
+- name: get_knowledge_base_summary
+  description: Get a summary of the product knowledge base
+  source_operation: openapi/unisson-openapi-original.json#get_summary_api_v1_knowledge_base_summary_get
+- name: list_workflows
+  description: List documented product workflows in the knowledge base
+  source_operation: openapi/unisson-openapi-original.json#list_workflows_api_v1_knowledge_base_workflows_get
+- name: list_customers
+  description: List customers tracked by the organization
+  source_operation: openapi/unisson-openapi-original.json#list_customers_api_v1_customers_get

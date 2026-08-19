@@ -1,0 +1,601 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals organizations API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get My Organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get current user's organization"
+        },
+        {
+          "info": {
+            "name": "List Organization Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me/members",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all members of the current user's organization.\n\nA guest is an external, customer-scoped user, so the org-wide member\ndirectory (everyone's email/role) is not theirs to see — they get only\ntheir own row. This keeps callers that map over the list (owner/assignee\nname resolution on a guest's customer pages) working without leaking the\nroster; names of other members simply don't resolve for a guest.\n\nDedupes by lowercased email so a user that exists twice in the\n`users` table (because Clerk mi"
+        },
+        {
+          "info": {
+            "name": "Get Access Control",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me/access-control",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the permission catalog, Member defaults, and member overrides."
+        },
+        {
+          "info": {
+            "name": "Update Member Permission Defaults",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/organizations/me/access-control/defaults",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Member Permission Defaults"
+        },
+        {
+          "info": {
+            "name": "Update Member Permission Overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/organizations/me/access-control/members/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Member Permission Overrides"
+        },
+        {
+          "info": {
+            "name": "Reset Member Permission Overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/organizations/me/access-control/members/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reset Member Permission Overrides"
+        },
+        {
+          "info": {
+            "name": "Update Browser Context Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/browser-context-settings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's browser context persistence settings"
+        },
+        {
+          "info": {
+            "name": "Update Default Start Url",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/default-start-url",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's default start URL for browser sessions"
+        },
+        {
+          "info": {
+            "name": "Update Allowed Domains",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/allowed-domains",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's allowed domains for browser navigation"
+        },
+        {
+          "info": {
+            "name": "Update Slack Notification Level",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/slack-notification-level",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's Slack notification verbosity level"
+        },
+        {
+          "info": {
+            "name": "Update Proxy Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/proxy",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's proxy settings for VPN/corporate network routing"
+        },
+        {
+          "info": {
+            "name": "Update Residential Proxy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/residential-proxy",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's residential proxy setting for anti-detection"
+        },
+        {
+          "info": {
+            "name": "Update Residential Proxy Geolocation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/residential-proxy-geolocation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's residential proxy geolocation setting"
+        },
+        {
+          "info": {
+            "name": "Update Language",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/language",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's language setting for LLM responses"
+        },
+        {
+          "info": {
+            "name": "Update Flash Mode",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/flash-mode",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's flash mode setting for faster/lighter agent execution"
+        },
+        {
+          "info": {
+            "name": "Update Raw Liveview Auth Enabled",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/raw-liveview-auth",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Toggle the raw-liveview Managed Auth surface for /auth/m/{token}."
+        },
+        {
+          "info": {
+            "name": "Update Network Recording Enabled",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/network-recording",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's network recording setting"
+        },
+        {
+          "info": {
+            "name": "Update Auto Generate Api",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/auto-create-api",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's auto-create API setting for automatic API generation from HAR recordings"
+        },
+        {
+          "info": {
+            "name": "Update Require Action Confirmation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/require-action-confirmation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's require action confirmation setting.\n\nWhen enabled, users must confirm before meaningful actions are executed.\nThis applies to both API executions (showing extracted parameters) and\nCUA browser actions (like submitting forms, deleting data, etc.)."
+        },
+        {
+          "info": {
+            "name": "Get Execution Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me/execution-settings",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get organization's run-execution settings."
+        },
+        {
+          "info": {
+            "name": "Update Execution Settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/execution-settings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update organization's run-execution settings.\n\n- kernel_headless_mode: When enabled, runs browsers headless (no LiveView,\n  no replays) and disables BrowserUse agent vision.\n- max_concurrent_browsers: Maximum number of concurrent parallel browser\n  sessions."
+        },
+        {
+          "info": {
+            "name": "Test Proxy Connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/organizations/proxy/test",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Test a proxy configuration before saving it.\n\nThis endpoint creates a temporary Kernel browser session with the provided proxy\nsettings to verify the proxy is reachable and properly configured."
+        },
+        {
+          "info": {
+            "name": "List Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys",
+            "params": [
+              {
+                "name": "include_revoked",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all API keys for the organization.\n\nThe full key is never returned - only the key prefix for identification."
+        },
+        {
+          "info": {
+            "name": "Create Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new API key for the organization.\n\nOnly organization admins can create API keys.\n\nIMPORTANT: The full API key is only returned once. Save it securely as it\nwill never be shown again."
+        },
+        {
+          "info": {
+            "name": "Get Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get details of a specific API key."
+        },
+        {
+          "info": {
+            "name": "Update Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an API key's configuration.\n\nOnly organization admins can update API keys."
+        },
+        {
+          "info": {
+            "name": "Revoke Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke an API key.\n\nOnly organization admins can revoke API keys.\nRevoked keys cannot be used and cannot be restored."
+        },
+        {
+          "info": {
+            "name": "Generate Identity Secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/organizations/me/api-keys/:key_id/generate-identity-secret",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate (or regenerate) an identity verification secret for an API key.\n\nThe secret is used by customers to compute HMAC-SHA256(secret, user_email)\nfor verifying widget and external API user identity.\n\nIMPORTANT: The plaintext secret is only returned once. Save it securely.\nRegenerating replaces the old secret and invalidates existing integrations."
+        },
+        {
+          "info": {
+            "name": "Update Load Google Docs In Context",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/organizations/me/load-google-docs-in-context",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update whether Google Doc content is loaded into agent context or passed as URL references."
+        },
+        {
+          "info": {
+            "name": "Invite Organization Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/organizations/me/members/invite",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Invite one or more people as full members of the current organization.\n\nMirrors Clerk's built-in ``<OrganizationProfile>`` invite, but goes through\nour backend so we can attach a ``redirect_url`` — Clerk's frontend invite\n(``organization.inviteMember``) can't. The redirect lands invitees on our\nown ``/sign-up`` page (which consumes the ``__clerk_ticket``) instead of\nfalling back to the Account Portal / primary-domain root.\n\nUnlike a customer-guest invite, no ``is_guest`` metadata is set, so the\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

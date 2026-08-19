@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals task-types API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "task-types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Registered Task Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/task-types/",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return all registered task_types.\n\nOrgs not on the API-exposure allowlist (see\n``app.core.task_types.API_EXPOSURE_ORG_SLUGS``) get an empty list,\nwhich the workflow editor reads as \"feature disabled\" and hides the\n\"API exposure\" section entirely."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

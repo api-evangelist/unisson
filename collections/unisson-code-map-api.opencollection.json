@@ -1,0 +1,109 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals code-map API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "code-map",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Code Map",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/code-map",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the code map for the organization (if one exists)."
+        },
+        {
+          "info": {
+            "name": "Delete Code Map",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/code-map",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the code map for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Analysis Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/code-map/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current analysis status."
+        },
+        {
+          "info": {
+            "name": "Start Analysis",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/code-map/analyze",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start analyzing a GitHub repository to build a code map."
+        },
+        {
+          "info": {
+            "name": "Get Repository Branches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/code-map/branches/:repo_owner/:repo_name",
+            "params": [
+              {
+                "name": "repo_owner",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "repo_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of branches for a repository."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

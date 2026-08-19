@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals customer-files API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "customer-files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Customer Files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/files",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the generated workspace files linked to this customer, newest first.\n\nEach file carries a presigned download URL plus source attribution (the\nconversation that produced it and, for agent-workspace files, the owning\nagent). Metadata comes straight from the provenance row — no per-file S3\nHEAD — so this stays a pure DB read + URL signing (cf. documents.py)."
+        },
+        {
+          "info": {
+            "name": "Get Customer File Content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/files/:file_id/content",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stream a customer file's bytes through the backend for the in-app viewer.\n\nGoing through the backend (instead of the presigned URL) sidesteps S3 CORS\nand serves the guessed mime type so the previewer renders inline rather\nthan forcing the attachment download the presigned URL carries."
+        },
+        {
+          "info": {
+            "name": "Delete Customer File",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/files/:file_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a generated file from the customer.\n\nMembers only — the guest write guard blocks this DELETE (it is not in\n``deps.py::_GUEST_WRITE_ALLOWLIST``). The provenance row keys the single\nphysical object, so deleting here also removes it from the originating\nagent/conversation workspace."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

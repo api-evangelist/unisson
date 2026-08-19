@@ -1,0 +1,2422 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals integrations API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Debug Slack Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/debug-users",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Debug endpoint to check Slack user mappings (admin only)"
+        },
+        {
+          "info": {
+            "name": "Get Integration Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get status of all integrations for current organization"
+        },
+        {
+          "info": {
+            "name": "Get Granola Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/granola/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Granola Credential"
+        },
+        {
+          "info": {
+            "name": "Import Granola Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/granola/credential",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Validate and store the org's Granola workspace API key."
+        },
+        {
+          "info": {
+            "name": "Disconnect Granola Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/granola/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Granola Credential"
+        },
+        {
+          "info": {
+            "name": "List Granola Folders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/granola/folders",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Granola Folders"
+        },
+        {
+          "info": {
+            "name": "List Connected Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/:provider/connected-members",
+            "params": [
+              {
+                "name": "provider",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List org members that have connected the given (per-user) provider.\n\nUsed by the customer IntegrationsTab to render a \"Synced by …\" list\nfor per-user integrations (gmail, google_calendar, …) so admins can\nsee whose mailbox/calendar contributes to customer sync.\n\nOrg-scoped providers always return at most one row (the admin who\nconnected). Per-user providers return one row per connected member."
+        },
+        {
+          "info": {
+            "name": "Connect Github",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/github/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get GitHub OAuth URL to start connection (admin only)"
+        },
+        {
+          "info": {
+            "name": "Github Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/github/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle GitHub OAuth callback"
+        },
+        {
+          "info": {
+            "name": "List Github Repositories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/github/repositories",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List accessible GitHub repositories"
+        },
+        {
+          "info": {
+            "name": "Disconnect Github",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/github/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect GitHub integration"
+        },
+        {
+          "info": {
+            "name": "Connect Google Drive",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_drive/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Google OAuth URL to start a Drive-only connection (admin only)."
+        },
+        {
+          "info": {
+            "name": "Google Drive Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_drive/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle Google Drive OAuth callback."
+        },
+        {
+          "info": {
+            "name": "Search Drive Files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_drive/search",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "exclude_folders",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search files in Google Drive. Empty query returns the most-\nrecently-modified ``limit`` files (search_files orders by\nmodifiedTime desc). Pass ``exclude_folders=true`` to skip\n``application/vnd.google-apps.folder`` rows — used by the customer\ndocument picker, where folders aren't linkable as documents."
+        },
+        {
+          "info": {
+            "name": "Disconnect Google Drive",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/google_drive/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Google Drive integration."
+        },
+        {
+          "info": {
+            "name": "Connect Slack",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Slack OAuth URL to start connection (admin only)"
+        },
+        {
+          "info": {
+            "name": "Slack Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle Slack OAuth callback"
+        },
+        {
+          "info": {
+            "name": "Disconnect Slack",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Slack integration"
+        },
+        {
+          "info": {
+            "name": "Get Slack Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return whether Slack is connected for the org + workspace display info.\n\nHydrates ``team_name`` / ``team_icon`` lazily into\n``IntegrationToken.provider_metadata`` so subsequent pageloads don't\neach round-trip Slack for display data."
+        },
+        {
+          "info": {
+            "name": "List Slack Notification Configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/notifications",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the org's saved Slack notification configs."
+        },
+        {
+          "info": {
+            "name": "Upsert Slack Notification Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/notifications/:notification_type",
+            "params": [
+              {
+                "name": "notification_type",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upsert Slack Notification Config"
+        },
+        {
+          "info": {
+            "name": "Delete Slack Notification Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/notifications/:notification_type",
+            "params": [
+              {
+                "name": "notification_type",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete Slack Notification Config"
+        },
+        {
+          "info": {
+            "name": "Send Slack Notification Test",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/notifications/:notification_type/test",
+            "params": [
+              {
+                "name": "notification_type",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send Slack Notification Test"
+        },
+        {
+          "info": {
+            "name": "Slack Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/events",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Slack Events API + interactivity endpoint (handled by Bolt).\n\nBolt owns signature verification, the ``url_verification`` challenge,\nper-workspace token resolution (via the custom ``authorize`` that\nbridges to ``IntegrationToken``), and dispatch to the event / action\n/ assistant listeners registered in ``app.integrations.slack_bolt_app``.\nPoint both the Slack *Events* and *Interactivity* Request URLs here."
+        },
+        {
+          "info": {
+            "name": "Teams Messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/teams/messages",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Inbound Bot Framework endpoint (Activities). JWT auth + dispatch.\n\nThe adapter validates the Bot-Framework JWT (the Teams analog of Slack's\nsignature check) inside ``process_activity``; we just deserialize the\nActivity and hand it to the bot's ``on_turn``."
+        },
+        {
+          "info": {
+            "name": "Connect Teams",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/teams/connect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start the Teams connection: returns a pairing code (admin only).\n\nThe admin installs the Unisson Teams app, then messages the bot\n``/connect <code>``; the bot claims the code and stores the tenant link."
+        },
+        {
+          "info": {
+            "name": "Teams Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/teams/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Teams Status"
+        },
+        {
+          "info": {
+            "name": "Disconnect Teams",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/teams/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Teams"
+        },
+        {
+          "info": {
+            "name": "Whatsapp Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/whatsapp/webhook",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Inbound Twilio WhatsApp webhook (form-encoded). Acks immediately.\n\nVerifies ``X-Twilio-Signature``, dedups on ``MessageSid``, then either\ncompletes a pending verification (the member echoed their code) or routes the\nmessage to the bound member's org. Twilio retries on a slow response, so the\nheavy turn runs in a background task."
+        },
+        {
+          "info": {
+            "name": "Email Inbound",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/email/inbound",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Inbound Postmark email webhook (JSON). Acks immediately.\n\nVerifies the shared secret, enforces DMARC, dedups on ``Message-ID``, then\neither completes a pending verification or routes the mail to the bound\nmember's org. Threads by the email's root ``Message-ID``."
+        },
+        {
+          "info": {
+            "name": "Messaging Channels Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/messaging-channels/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Whether the server is configured for each channel + this org's paired count.\n\n\"Configured\" is derived from the credentials actually needed to operate —\nthere's no separate enable flag; each provider is always registered and\nsimply no-ops without these (like Slack without a token)."
+        },
+        {
+          "info": {
+            "name": "Messaging Channels Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/messaging-channels/members",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Org members joined to their WhatsApp / Email bindings (admin view)."
+        },
+        {
+          "info": {
+            "name": "Pair Messaging Channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/messaging-channels/pair",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Pair a member's phone/email; returns the verify code + instructions.\n\nThe member must confirm by sending the code from that phone/email (so we know\nthey control it) before routing activates."
+        },
+        {
+          "info": {
+            "name": "Unpair Messaging Channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/messaging-channels/:binding_id",
+            "params": [
+              {
+                "name": "binding_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unpair Messaging Channel"
+        },
+        {
+          "info": {
+            "name": "Connect Pylon",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/pylon/connect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Connect Pylon integration using API token (admin only).\n\nReturns the webhook URL that the customer must configure in their\nPylon Trigger settings."
+        },
+        {
+          "info": {
+            "name": "Disconnect Pylon",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/pylon/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Pylon integration."
+        },
+        {
+          "info": {
+            "name": "Pylon Webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/pylon/webhooks/:org_slug",
+            "params": [
+              {
+                "name": "org_slug",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle Pylon webhook events.\n\nNo auth required — verified via webhook signature.\nThe org_slug in the URL identifies the organization."
+        },
+        {
+          "info": {
+            "name": "Connect Hubspot",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/hubspot/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get HubSpot OAuth URL to start connection (admin only)."
+        },
+        {
+          "info": {
+            "name": "Hubspot Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/hubspot/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle HubSpot OAuth callback."
+        },
+        {
+          "info": {
+            "name": "Disconnect Hubspot",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/hubspot/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect HubSpot integration and remove all customer configs."
+        },
+        {
+          "info": {
+            "name": "Import Samsara Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Samsara API keys (admin only).\n\nFor each key the backend calls Samsara's ``GET /me`` to learn the\ncustomer's ``samsara_org_id`` + name, upserts ``samsara_accounts``,\nand stores the encrypted key. Returns a per-key result so the UI\ncan show the success/failure for each line of the textarea\nindependently."
+        },
+        {
+          "info": {
+            "name": "List Samsara Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every known Samsara customer org for this workspace, with\nkey + assignment counts (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Samsara Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch one account + all its keys + all assignments (admin only)."
+        },
+        {
+          "info": {
+            "name": "Update Samsara Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reassign the Unisson customer this Samsara account is linked to\n(admin only). The new customer must already exist.\n\nReturns 409 if the target customer is already linked to a\ndifferent Samsara account — the\n``uq_samsara_accounts_org_customer`` constraint enforces a 1:1\nmapping."
+        },
+        {
+          "info": {
+            "name": "Rename Samsara Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Samsara API key (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Samsara Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Samsara API key (admin only). Cascades to any\n``samsara_user_keys`` rows that pointed at this key."
+        },
+        {
+          "info": {
+            "name": "Assign Samsara User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id/assignments",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one specific key for one account. Upserts on\n(user_id, account_id) — picking a new key for the same pair just\nswaps the api_key reference, no duplicate row (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Samsara User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/accounts/:account_id/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user from one account. The underlying key row is\nleft intact (other users may still hold it). Admin only."
+        },
+        {
+          "info": {
+            "name": "List My Samsara Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/samsara/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Samsara assignments.\n\nNon-admins use this to see what they have access to — they can't\nsee assignments belonging to other workspace members, can't import\nkeys, can't reassign themselves. Admins see the same thing for\nthemselves but use ``/samsara/accounts`` for the full picture."
+        },
+        {
+          "info": {
+            "name": "Import Snyk Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Snyk API tokens (admin only).\n\nFor each token the backend calls Snyk's ``GET /self`` to validate it\nand learn the identity (``snyk_user_id`` + name), upserts\n``snyk_accounts``, and stores the encrypted token. Returns a per-token\nresult so the UI can show success/failure for each line of the\ntextarea independently."
+        },
+        {
+          "info": {
+            "name": "List Snyk Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every known Snyk token identity for this workspace, with key\n+ assignment counts (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Snyk Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch one account + all its tokens + all assignments (admin only)."
+        },
+        {
+          "info": {
+            "name": "Rename Snyk Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Snyk API token (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Snyk Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Snyk API token (admin only). Cascades to any\n``snyk_user_keys`` rows that pointed at this token."
+        },
+        {
+          "info": {
+            "name": "Assign Snyk User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts/:account_id/assignments",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one specific token for one account. Upserts on\n(user_id, account_id) — picking a new token for the same pair just\nswaps the api_key reference, no duplicate row (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Snyk User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/accounts/:account_id/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user from one account. The underlying token row is\nleft intact (other users may still hold it). Admin only."
+        },
+        {
+          "info": {
+            "name": "List My Snyk Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/snyk/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Snyk assignments.\n\nNon-admins use this to see what they have access to — they can't see\nassignments belonging to other workspace members, can't import tokens,\ncan't reassign themselves."
+        },
+        {
+          "info": {
+            "name": "Import Checkout Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Checkout.com secret API keys (admin only).\n\nFor each key the backend parses its prefix to derive\n``(environment, checkout_entity_id)`` — there's no ``/me``\nequivalent on Checkout's API. Returns a per-key result so the\nUI can show success/failure for each line of the textarea\nindependently."
+        },
+        {
+          "info": {
+            "name": "List Checkout Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every known Checkout.com merchant entity for this workspace,\nwith key + assignment counts (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Checkout Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch one Checkout account + all its keys + all assignments (admin only)."
+        },
+        {
+          "info": {
+            "name": "Update Checkout Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reassign the Unisson customer this Checkout account is linked to\n(admin only). The new customer must already exist.\n\nReturns 409 if the target customer is already linked to a\ndifferent Checkout account — the\n``uq_checkout_accounts_org_customer`` constraint enforces a 1:1\nmapping."
+        },
+        {
+          "info": {
+            "name": "Rename Checkout Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Checkout API key (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Checkout Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Checkout API key (admin only). Cascades to any\n``checkout_user_keys`` rows that pointed at this key."
+        },
+        {
+          "info": {
+            "name": "Assign Checkout User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id/assignments",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one specific key for one Checkout account.\nUpserts on (user_id, account_id) — picking a new key for the same\npair just swaps the api_key reference, no duplicate row (admin\nonly)."
+        },
+        {
+          "info": {
+            "name": "Revoke Checkout User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/accounts/:account_id/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user from one Checkout account. The underlying key\nrow is left intact (other users may still hold it). Admin only."
+        },
+        {
+          "info": {
+            "name": "List My Checkout Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/checkout/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Checkout.com assignments."
+        },
+        {
+          "info": {
+            "name": "Import Razorpay Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Razorpay API key pairs (admin only).\n\nBody shape:\n    {\n      \"items\": [\n        {\"key_id\": \"rzp_test_…\", \"key_secret\": \"…\",\n         \"display_name\": \"Acme India PG\", \"label\": \"primary\"},\n        ...\n      ]\n    }\n\nEach key's environment is derived from the ``key_id`` prefix and\neach pair is probed via ``GET /v1/payments?count=1`` to confirm\nvalidity. The admin-supplied ``display_name`` is the dedup key —\nre-importing under the same name attaches the new pair to the\nsame accou"
+        },
+        {
+          "info": {
+            "name": "List Razorpay Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every known Razorpay merchant account for this workspace,\nwith key + assignment counts (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Razorpay Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch one Razorpay account + all its keys + all assignments (admin only)."
+        },
+        {
+          "info": {
+            "name": "Update Razorpay Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Reassign the Unisson customer this Razorpay account is linked to\n(admin only). The new customer must already exist.\n\nReturns 409 if the target customer is already linked to a\ndifferent Razorpay account — the\n``uq_razorpay_accounts_org_customer`` constraint enforces a 1:1\nmapping."
+        },
+        {
+          "info": {
+            "name": "Rename Razorpay Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Razorpay API key (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Razorpay Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id/keys/:key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Razorpay API key (admin only). Cascades to any\n``razorpay_user_keys`` rows that pointed at this key."
+        },
+        {
+          "info": {
+            "name": "Assign Razorpay User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id/assignments",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one specific key for one Razorpay account.\nUpserts on (user_id, account_id) — picking a new key for the same\npair just swaps the api_key reference, no duplicate row (admin\nonly)."
+        },
+        {
+          "info": {
+            "name": "Revoke Razorpay User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/accounts/:account_id/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user from one Razorpay account. The underlying key\nrow is left intact (other users may still hold it). Admin only."
+        },
+        {
+          "info": {
+            "name": "List My Razorpay Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/razorpay/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Razorpay assignments."
+        },
+        {
+          "info": {
+            "name": "Connect Grafana",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/grafana/connect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Connect Grafana integration using URL + API key (admin only)."
+        },
+        {
+          "info": {
+            "name": "Disconnect Grafana",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/grafana/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect Grafana integration and remove all customer configs."
+        },
+        {
+          "info": {
+            "name": "List Grafana Dashboards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/grafana/dashboards",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List available Grafana dashboards."
+        },
+        {
+          "info": {
+            "name": "List Grafana Alert Rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/grafana/alert-rules",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List available Grafana alert rules."
+        },
+        {
+          "info": {
+            "name": "List Google Drive Folders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_drive/drive-folders",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List/search Google Drive folders for the org's `google_drive` token.\n\nReturns at most 25 folders matching the query (or the most-\nrecently-modified 25 when q is empty). Used by the per-customer\nDrive folder picker."
+        },
+        {
+          "info": {
+            "name": "List Notion Pages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/notion/pages",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List/search Notion pages the integration can access."
+        },
+        {
+          "info": {
+            "name": "List Slack Channels Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/slack/channels",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Slack channels the org's bot can see."
+        },
+        {
+          "info": {
+            "name": "Grafana Webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/grafana/webhooks/:org_slug",
+            "params": [
+              {
+                "name": "org_slug",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle Grafana alert webhook events. Bearer token auth."
+        },
+        {
+          "info": {
+            "name": "Connect Gmail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/gmail/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Google OAuth URL for per-user Gmail consent.\n\n``redirect_url`` is an optional same-origin path (must start with ``/``\nand not ``//``) that the callback will return to after the flow\ncompletes. Invalid values are silently dropped so we always fall back to\n``/platform/connectors``."
+        },
+        {
+          "info": {
+            "name": "Gmail Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/gmail/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Gmail Callback"
+        },
+        {
+          "info": {
+            "name": "Disconnect Gmail",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/gmail/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke the current user's native Gmail token.\n\nWe stop the mailbox's push watch, attempt to revoke the token at Google\n(best-effort), and then delete the local record."
+        },
+        {
+          "info": {
+            "name": "Connect Google Tag Manager",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_tag_manager/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Google OAuth URL for per-user Tag Manager consent.\n\n``redirect_url`` is an optional same-origin path the callback returns\nto after the flow completes; invalid values are silently dropped."
+        },
+        {
+          "info": {
+            "name": "Google Tag Manager Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_tag_manager/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Google Tag Manager Callback"
+        },
+        {
+          "info": {
+            "name": "Disconnect Google Tag Manager",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/google_tag_manager/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke the current user's native Google Tag Manager token.\n\nWe attempt to revoke the token at Google (best-effort) and then\ndelete the local record."
+        },
+        {
+          "info": {
+            "name": "Connect Google Calendar",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_calendar/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Google OAuth URL for per-user Calendar consent."
+        },
+        {
+          "info": {
+            "name": "Google Calendar Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/google_calendar/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Google Calendar Callback"
+        },
+        {
+          "info": {
+            "name": "Disconnect Google Calendar",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/google_calendar/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke the current user's native Google Calendar token."
+        },
+        {
+          "info": {
+            "name": "Connect Notion",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/notion/connect",
+            "params": [
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin-only: start Notion OAuth for the whole org.\n\n``redirect_url`` is an optional same-origin path (must start with ``/``\nand not ``//``) that the callback will return to after the flow\ncompletes. Invalid values are silently dropped so we always fall back to\n``/platform/connectors``."
+        },
+        {
+          "info": {
+            "name": "Notion Callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/notion/callback",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Notion Callback"
+        },
+        {
+          "info": {
+            "name": "Disconnect Notion",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/notion/disconnect",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin-only: remove the org's Notion token."
+        },
+        {
+          "info": {
+            "name": "Get Adobe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/adobe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the org's Adobe credential summary (admin only); no secret."
+        },
+        {
+          "info": {
+            "name": "Import Adobe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/adobe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import the org's Adobe Reactor credential (admin only).\n\nValidates the OAuth Server-to-Server credential by minting an IMS token and\nreading GET /profile, then stores it (one per org)."
+        },
+        {
+          "info": {
+            "name": "Disconnect Adobe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/adobe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the org's Adobe credential (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Scribe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/scribe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the org's Scribe credential summary (admin only); no secret."
+        },
+        {
+          "info": {
+            "name": "Import Scribe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/scribe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import the org's Scribe API key (admin only).\n\nValidates the key by calling GET /v1/teams/ (learning the accessible teams\nfor a display name), then stores it (one per org)."
+        },
+        {
+          "info": {
+            "name": "Disconnect Scribe Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/scribe/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the org's Scribe credential (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Tealium Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/tealium/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the org's Tealium credential summary (admin only); no key."
+        },
+        {
+          "info": {
+            "name": "Import Tealium Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/tealium/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import the org's Tealium iQ credential (admin only).\n\nValidates by performing the two-step auth (learns the region host), then\nstores it (one per org)."
+        },
+        {
+          "info": {
+            "name": "Disconnect Tealium Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/tealium/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the org's Tealium credential (admin only)."
+        },
+        {
+          "info": {
+            "name": "Get Shopify Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/shopify/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the org's Shopify credential summary (admin only); no token."
+        },
+        {
+          "info": {
+            "name": "Import Shopify Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/shopify/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import the org's Shopify credential (admin only).\n\nValidates by reading ``shop { name }`` with the token, then stores it (one\nshop per org)."
+        },
+        {
+          "info": {
+            "name": "Disconnect Shopify Credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/shopify/credential",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the org's Shopify credential (admin only)."
+        },
+        {
+          "info": {
+            "name": "Import Productboard Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Productboard Public API tokens (admin only).\n\nEach token is validated by calling Productboard's GET /products with it,\nthen stored encrypted in the org-level pool. There's no identity to\nresolve (the Public API exposes none) and no per-token account — admins\nassign tokens to users separately. Returns a per-token result so the UI\ncan show success/failure for each line of the textarea independently."
+        },
+        {
+          "info": {
+            "name": "List Productboard Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/api-keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the org's Productboard token pool (admin only). No secrets — only\nthe last 4 plaintext chars so the UI can mask the rest."
+        },
+        {
+          "info": {
+            "name": "Rename Productboard Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Productboard API token (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Productboard Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Productboard API token (admin only). Cascades to any\n``productboard_user_keys`` rows that pointed at this token."
+        },
+        {
+          "info": {
+            "name": "List Productboard Assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/assignments",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every per-user token assignment in the org (admin only). Feeds the\nmember → token dropdowns in the management UI."
+        },
+        {
+          "info": {
+            "name": "Assign Productboard User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/assignments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one token (admin only). Upserts on user_id — picking a\nnew token for the same user just swaps the api_key reference, no duplicate\nrow."
+        },
+        {
+          "info": {
+            "name": "Revoke Productboard User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user (admin only). The underlying token row is left intact\n(other users may still hold it)."
+        },
+        {
+          "info": {
+            "name": "List My Productboard Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/productboard/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Productboard assignment.\n\nNon-admins use this to see what they have access to — they can't see\nother members' assignments, can't import tokens, can't reassign themselves."
+        },
+        {
+          "info": {
+            "name": "Import Mirakl Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/api-keys/import",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import one or many Mirakl API keys (admin only).\n\nBody shape:\n    {\n      \"items\": [\n        {\"instance_url\": \"https://acme.mirakl.net\", \"persona\": \"operator\",\n         \"api_key\": \"…\", \"label\": \"Acme operator\"},\n        ...\n      ]\n    }\n\nEach key is validated against its instance URL with a persona-appropriate,\nparam-less GET, then stored encrypted in the org-level pool. There's no\nper-key account — admins assign keys to users separately. Returns a per-item\nresult so the UI can show success/fai"
+        },
+        {
+          "info": {
+            "name": "List Mirakl Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/api-keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the org's Mirakl key pool (admin only). No secrets — only the last 4\nplaintext chars so the UI can mask the rest."
+        },
+        {
+          "info": {
+            "name": "Rename Mirakl Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a Mirakl API key (admin only)."
+        },
+        {
+          "info": {
+            "name": "Revoke Mirakl Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/api-keys/:key_id",
+            "params": [
+              {
+                "name": "key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a Mirakl API key (admin only). Cascades to any ``mirakl_user_keys``\nrows that pointed at this key."
+        },
+        {
+          "info": {
+            "name": "List Mirakl Assignments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/assignments",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List every per-user key assignment in the org (admin only). Feeds the\nmember → key dropdowns in the management UI."
+        },
+        {
+          "info": {
+            "name": "Assign Mirakl User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/assignments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a user to one key (admin only). Upserts on user_id — picking a new\nkey for the same user just swaps the api_key reference, no duplicate row."
+        },
+        {
+          "info": {
+            "name": "Revoke Mirakl User Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/assignments/:user_key_id",
+            "params": [
+              {
+                "name": "user_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unassign one user (admin only). The underlying key row is left intact\n(other users may still hold it)."
+        },
+        {
+          "info": {
+            "name": "List My Mirakl Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/integrations/mirakl/users/me/keys",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the requesting user's own Mirakl assignment.\n\nNon-admins use this to see what they have access to — they can't see other\nmembers' assignments, can't import keys, can't reassign themselves."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

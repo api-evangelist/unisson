@@ -1,0 +1,242 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals meetings API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "meetings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Upcoming Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meetings/upcoming-events",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "days_ahead",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Live upcoming Calendar events for one customer (no DB persistence).\n\nSame data source and matching rules as the customer Overview Upcoming\npanel (``/customers/{id}/calendar-events``) — both routes call\n``calendar_events_service.aggregate_upcoming_events`` so the two\nsurfaces never drift. ``customer_id`` is required because every\nsurface that uses this endpoint is rendered in a customer context."
+        },
+        {
+          "info": {
+            "name": "List Meetings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meetings",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "provider_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all meetings for the organization with pagination and filters."
+        },
+        {
+          "info": {
+            "name": "Get Meeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meetings/:meeting_id",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific meeting by ID."
+        },
+        {
+          "info": {
+            "name": "Delete Meeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/meetings/:meeting_id",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a meeting."
+        },
+        {
+          "info": {
+            "name": "Get Meeting Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/meetings/:meeting_id/recording",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "On-demand Recall playback data for a bot-recorded meeting: a freshly\npresigned video URL (short-lived — fetched live, never stored) plus a\nstructured transcript. Returns empties (never errors) when the meeting\nwasn't bot-recorded or its 7-day recording retention has lapsed, so the\nmodal degrades gracefully to the persisted transcript."
+        },
+        {
+          "info": {
+            "name": "Reprocess Meeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/meetings/:meeting_id/reprocess",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Re-run LLM analysis on an existing meeting transcript."
+        },
+        {
+          "info": {
+            "name": "Import Meeting Transcript",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/meetings/import",
+            "params": [
+              {
+                "name": "title",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import a meeting transcript from a file as a brand-new\n``provider='manual'`` meeting. Used when the user wants to upload\na transcript without a corresponding Calendar event."
+        },
+        {
+          "info": {
+            "name": "Attach Meeting Transcript",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/meetings/:meeting_id/transcript",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Attach an uploaded transcript to an EXISTING meeting and run\nLLM analysis. Replaces any prior transcript on that row — useful\nwhen Gemini notes weren't ready or when the user has a better\ncapture from elsewhere."
+        },
+        {
+          "info": {
+            "name": "Sync Google Meet",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/meetings/sync/google_meet",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Sync Google Calendar meetings across all enabled customers."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

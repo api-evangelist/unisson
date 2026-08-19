@@ -1,0 +1,302 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals apis API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "apis",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Apis And Recordings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/apis/",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List generated APIs and network recordings for the organization.\n\nOptionally filter by workflow_id."
+        },
+        {
+          "info": {
+            "name": "List Recordings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List network recordings for the organization.\n\nOptionally filter by workflow_id."
+        },
+        {
+          "info": {
+            "name": "Get Recording Har",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/:recording_id/har",
+            "params": [
+              {
+                "name": "recording_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the HAR data for a single network recording."
+        },
+        {
+          "info": {
+            "name": "Generate Api From Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/:recording_id/generate",
+            "params": [
+              {
+                "name": "recording_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate an API from a network recording.\n\nStarts LLM analysis in the background using the shared API generation service.\nUse WebSocket updates to monitor progress."
+        },
+        {
+          "info": {
+            "name": "Delete Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/:recording_id",
+            "params": [
+              {
+                "name": "recording_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a network recording (soft delete)."
+        },
+        {
+          "info": {
+            "name": "Start Manual Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/manual/start",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start a new manual recording session.\n\nOpens a Kernel browser window and starts recording network traffic.\nReturns a LiveView URL for the user to interact with the browser."
+        },
+        {
+          "info": {
+            "name": "Stop Manual Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/manual/:session_id/stop",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stop a manual recording session and save the captured data.\n\nCreates a workflow and network recording from the captured traffic."
+        },
+        {
+          "info": {
+            "name": "Cancel Manual Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/manual/:session_id/cancel",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel a manual recording session without saving."
+        },
+        {
+          "info": {
+            "name": "Send Copilot Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/manual/:session_id/copilot/message",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a user message to the copilot observer during a recording session."
+        },
+        {
+          "info": {
+            "name": "Get Active Manual Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/apis/recordings/manual/active",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check if the current user has an active manual recording session."
+        },
+        {
+          "info": {
+            "name": "Get Api",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/apis/:api_id",
+            "params": [
+              {
+                "name": "api_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific generated API by ID."
+        },
+        {
+          "info": {
+            "name": "Delete Api",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/apis/:api_id",
+            "params": [
+              {
+                "name": "api_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a generated API (soft delete)."
+        },
+        {
+          "info": {
+            "name": "Execute Api",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/apis/:api_id/execute",
+            "params": [
+              {
+                "name": "api_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Execute a generated API with provided auth tokens and parameters.\n\nThe client should extract cookies/localStorage from the browser\nand pass them here for authentication."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

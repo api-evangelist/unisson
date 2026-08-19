@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals google-push API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "google-push",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Google Calendar Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/google_calendar/webhook"
+          },
+          "docs": "Calendar change notification. Google echoes our channel token in\n``X-Goog-Channel-Token`` and identifies the channel via ``X-Goog-Channel-ID``;\nthe body is empty (a \"something changed\" ping)."
+        },
+        {
+          "info": {
+            "name": "Gmail Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/integrations/gmail/webhook"
+          },
+          "docs": "Gmail change notification delivered via a Pub/Sub push subscription. The\nbase64 ``message.data`` decodes to ``{emailAddress, historyId}``."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

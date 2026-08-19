@@ -1,0 +1,1184 @@
+{
+  "item": [
+    {
+      "id": "5158cf51-8021-42b8-9f42-5b849473aa2e",
+      "name": "tasks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5aefa5f1-e16f-43c7-842f-61b420da4508",
+          "name": "Get Task Analytics",
+          "request": {
+            "name": "Get Task Analytics",
+            "description": {
+              "content": "Get analytics data for the organization's tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "analytics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "df3b53e1-5dc7-47d3-8001-56c9243eb4c5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    "analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_tasks\": 66,\n  \"open_tasks\": 9415,\n  \"resolved_tasks\": 5168,\n  \"resolved_by_agents\": 7970,\n  \"resolution_rate\": 4913.2394910968405,\n  \"by_status\": [\n    {\n      \"status\": \"string\",\n      \"count\": 8342\n    },\n    {\n      \"status\": \"string\",\n      \"count\": 9315\n    }\n  ],\n  \"by_severity\": [\n    {\n      \"severity\": \"string\",\n      \"count\": 3611\n    },\n    {\n      \"severity\": \"string\",\n      \"count\": 4711\n    }\n  ],\n  \"monthly_trend\": [\n    {\n      \"month\": \"string\",\n      \"count\": 3953\n    },\n    {\n      \"month\": \"string\",\n      \"count\": 3859\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "832dee2f-81ec-4f65-8065-f33d4869b75f",
+          "name": "List Tasks",
+          "request": {
+            "name": "List Tasks",
+            "description": {
+              "content": "List all tasks for the organization with pagination and filters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20"
+                },
+                {
+                  "disabled": false,
+                  "key": "status_filter",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "severity_filter",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "can_resolve_filter",
+                  "value": "<boolean>"
+                },
+                {
+                  "disabled": false,
+                  "key": "customer_id",
+                  "value": "<uuid>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "857d294b-7835-4709-b02c-2c5fe02d4204",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status_filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "severity_filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "can_resolve_filter",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "customer_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tasks\": [\n    {\n      \"id\": \"ca7bd172-64d8-1cc0-54bb-7286a8c90329\",\n      \"organization_id\": \"ffc893cb-7cf4-6b7b-201d-eefbe71ab710\",\n      \"title\": \"string\",\n      \"status\": \"string\",\n      \"severity\": \"string\",\n      \"created_at\": \"1960-12-14T19:05:42.448Z\",\n      \"description\": \"string\",\n      \"can_resolve\": false,\n      \"assignee_id\": \"0a50f08b-7870-9f74-6de1-07e54ee7baf6\",\n      \"assignee_name\": \"string\",\n      \"created_by_id\": \"70f0e0d8-9b69-f353-dbf5-105060b81116\",\n      \"created_by_name\": \"string\",\n      \"target_date\": \"1952-06-08\",\n      \"suggested_task\": \"string\",\n      \"plan_steps\": [\n        {\n          \"id\": \"string\",\n          \"label\": \"string\",\n          \"status\": \"pending\",\n          \"agent_id\": \"string\",\n          \"run_id\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"label\": \"string\",\n          \"status\": \"pending\",\n          \"agent_id\": \"string\",\n          \"run_id\": \"string\"\n        }\n      ],\n      \"agent_ids\": [\n        \"b71f5414-784e-590f-4445-e175815b2d35\",\n        \"addc9f9e-59f0-bbfd-217f-f585195567fb\"\n      ],\n      \"agents\": [\n        {\n          \"id\": \"3baf02d7-d993-f5e3-a853-69be17667a91\",\n          \"name\": \"string\",\n          \"icon\": \"string\",\n          \"gradient\": \"string\"\n        },\n        {\n          \"id\": \"693c522a-ad35-ace2-941b-d31b808e1d5e\",\n          \"name\": \"string\",\n          \"icon\": \"string\",\n          \"gradient\": \"string\"\n        }\n      ],\n      \"linked_run_id\": \"a96f4845-fd04-ea55-e1a5-572f09c8893a\",\n      \"linked_run_status\": \"string\",\n      \"linked_conversation_id\": \"684f2a66-e55a-d54f-302e-2c16bdf7ff97\",\n      \"execution_started\": false,\n      \"meeting_id\": \"1ebc7727-a2af-c85f-d093-be42a50f70b9\",\n      \"customer_id\": \"3c0f0e9c-e52b-5cd4-6b46-9943ee17d61d\",\n      \"updated_at\": \"1964-02-04T17:23:19.054Z\"\n    },\n    {\n      \"id\": \"c0985ec1-031b-e0ad-726d-5c9cb1b88a42\",\n      \"organization_id\": \"00915efb-1c1f-9309-806a-4b3027b9a36e\",\n      \"title\": \"string\",\n      \"status\": \"string\",\n      \"severity\": \"string\",\n      \"created_at\": \"1984-11-08T11:19:11.134Z\",\n      \"description\": \"string\",\n      \"can_resolve\": true,\n      \"assignee_id\": \"54510468-5408-4d49-1049-d163e1fdca21\",\n      \"assignee_name\": \"string\",\n      \"created_by_id\": \"24426095-e935-9bcc-3c2a-ec393f47dd47\",\n      \"created_by_name\": \"string\",\n      \"target_date\": \"2022-04-20\",\n      \"suggested_task\": \"string\",\n      \"plan_steps\": [\n        {\n          \"id\": \"string\",\n          \"label\": \"string\",\n          \"status\": \"pending\",\n          \"agent_id\": \"string\",\n          \"run_id\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"label\": \"string\",\n          \"status\": \"pending\",\n          \"agent_id\": \"string\",\n          \"run_id\": \"string\"\n        }\n      ],\n      \"agent_ids\": [\n        \"4bc40d7e-7b27-04c9-157f-4cef2cef8c94\",\n        \"937bf35f-4f90-cbed-2af3-5c66d5670479\"\n      ],\n      \"agents\": [\n        {\n          \"id\": \"6a6b923b-363c-12f4-3138-cb8ee631c4df\",\n          \"name\": \"string\",\n          \"icon\": \"string\",\n          \"gradient\": \"string\"\n        },\n        {\n          \"id\": \"eb59d41b-3159-f756-d7d4-31ef8735d2ba\",\n          \"name\": \"string\",\n          \"icon\": \"string\",\n          \"gradient\": \"string\"\n        }\n      ],\n      \"linked_run_id\": \"101cda3d-8701-eb77-9bd6-cedde816791a\",\n      \"linked_run_status\": \"string\",\n      \"linked_conversation_id\": \"6c928668-a4ba-f437-8983-5241f7cd7d97\",\n      \"execution_started\": false,\n      \"meeting_id\": \"572ebc87-6707-ef0f-ae64-d63a1a4c259a\",\n      \"customer_id\": \"ae3eeb50-8288-ec64-aa47-1764a61fa79f\",\n      \"updated_at\": \"2012-12-09T14:14:04.160Z\"\n    }\n  ],\n  \"total\": 665,\n  \"page\": 1751,\n  \"page_size\": 3793\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "35e6e235-57ad-4887-b8aa-bbcb4007062b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status_filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "severity_filter",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "can_resolve_filter",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "customer_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bd22acb7-b78a-4d7f-82b8-22ed2d70c063",
+          "name": "Create Task",
+          "request": {
+            "name": "Create Task",
+            "description": {
+              "content": "Create a new task. The chat agent drafts an execution plan in the\nbackground (in the conversation that will later execute it), which sets\ncan_resolve + plan_steps and links the conversation for approval.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"severity\": \"medium\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\",\n  \"customer_id\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2d83bc2b-ac74-4e9b-aa2b-6933e1c5a6f2",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"severity\": \"medium\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\",\n  \"customer_id\": \"<uuid>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"307d8705-714b-c5ab-d89a-938797672b7f\",\n  \"organization_id\": \"609609d5-2de6-ecdd-ddaf-5dd92624f43d\",\n  \"title\": \"string\",\n  \"status\": \"string\",\n  \"severity\": \"string\",\n  \"created_at\": \"2008-06-05T17:40:25.877Z\",\n  \"description\": \"string\",\n  \"can_resolve\": true,\n  \"assignee_id\": \"a999b631-da15-20f2-261f-84537cf080a2\",\n  \"assignee_name\": \"string\",\n  \"created_by_id\": \"b742e691-5ef3-7f25-c91d-72b4a1dcb8ce\",\n  \"created_by_name\": \"string\",\n  \"target_date\": \"2003-09-03\",\n  \"suggested_task\": \"string\",\n  \"plan_steps\": [\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    }\n  ],\n  \"agent_ids\": [\n    \"d3d49a7d-4632-503c-1690-3a48f3d39230\",\n    \"ff83c6f5-8501-8b69-cd24-8275689167fd\"\n  ],\n  \"agents\": [\n    {\n      \"id\": \"c47921ff-0d81-978f-3d17-5ca926caddc0\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    },\n    {\n      \"id\": \"654898cd-9bb1-715b-0042-0c031d8d40e8\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    }\n  ],\n  \"linked_run_id\": \"52af6b6b-0cbb-ee61-6565-aec5736231f2\",\n  \"linked_run_status\": \"string\",\n  \"linked_conversation_id\": \"e4629aa8-9e81-0972-da30-9f5f2382311c\",\n  \"execution_started\": false,\n  \"meeting_id\": \"e2fbeae3-7adb-1e8b-0d33-f615896c9f66\",\n  \"customer_id\": \"a6d00123-ba55-3774-8a7e-0b9066b25878\",\n  \"updated_at\": \"1946-11-20T20:19:26.036Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14480d53-a0bf-4b3c-a258-8b17836981e7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"severity\": \"medium\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\",\n  \"customer_id\": \"<uuid>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9800918b-d9c9-4b38-bdc1-47348378a070",
+          "name": "Get Task",
+          "request": {
+            "name": "Get Task",
+            "description": {
+              "content": "Get a specific task by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c33b123f-64e2-401e-b9d3-e90d072fcec5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"307d8705-714b-c5ab-d89a-938797672b7f\",\n  \"organization_id\": \"609609d5-2de6-ecdd-ddaf-5dd92624f43d\",\n  \"title\": \"string\",\n  \"status\": \"string\",\n  \"severity\": \"string\",\n  \"created_at\": \"2008-06-05T17:40:25.877Z\",\n  \"description\": \"string\",\n  \"can_resolve\": true,\n  \"assignee_id\": \"a999b631-da15-20f2-261f-84537cf080a2\",\n  \"assignee_name\": \"string\",\n  \"created_by_id\": \"b742e691-5ef3-7f25-c91d-72b4a1dcb8ce\",\n  \"created_by_name\": \"string\",\n  \"target_date\": \"2003-09-03\",\n  \"suggested_task\": \"string\",\n  \"plan_steps\": [\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    }\n  ],\n  \"agent_ids\": [\n    \"d3d49a7d-4632-503c-1690-3a48f3d39230\",\n    \"ff83c6f5-8501-8b69-cd24-8275689167fd\"\n  ],\n  \"agents\": [\n    {\n      \"id\": \"c47921ff-0d81-978f-3d17-5ca926caddc0\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    },\n    {\n      \"id\": \"654898cd-9bb1-715b-0042-0c031d8d40e8\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    }\n  ],\n  \"linked_run_id\": \"52af6b6b-0cbb-ee61-6565-aec5736231f2\",\n  \"linked_run_status\": \"string\",\n  \"linked_conversation_id\": \"e4629aa8-9e81-0972-da30-9f5f2382311c\",\n  \"execution_started\": false,\n  \"meeting_id\": \"e2fbeae3-7adb-1e8b-0d33-f615896c9f66\",\n  \"customer_id\": \"a6d00123-ba55-3774-8a7e-0b9066b25878\",\n  \"updated_at\": \"1946-11-20T20:19:26.036Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "db2fec0d-1f5d-4a81-b33a-947c97dea8e3",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7dbd2dd0-618a-4de3-b42e-77ec9d1e41fb",
+          "name": "Update Task",
+          "request": {
+            "name": "Update Task",
+            "description": {
+              "content": "Update a task. Manual status moves follow the transition policy in\n_MANUAL_MOVE_MESSAGES and notify the executing conversation so the agent\nreacts (stop / continue / wrap up) — the board and the chat stay in sync.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"severity\": \"<string>\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1d875c36-f61c-4a13-a549-4cfcdd2395cc",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"severity\": \"<string>\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"307d8705-714b-c5ab-d89a-938797672b7f\",\n  \"organization_id\": \"609609d5-2de6-ecdd-ddaf-5dd92624f43d\",\n  \"title\": \"string\",\n  \"status\": \"string\",\n  \"severity\": \"string\",\n  \"created_at\": \"2008-06-05T17:40:25.877Z\",\n  \"description\": \"string\",\n  \"can_resolve\": true,\n  \"assignee_id\": \"a999b631-da15-20f2-261f-84537cf080a2\",\n  \"assignee_name\": \"string\",\n  \"created_by_id\": \"b742e691-5ef3-7f25-c91d-72b4a1dcb8ce\",\n  \"created_by_name\": \"string\",\n  \"target_date\": \"2003-09-03\",\n  \"suggested_task\": \"string\",\n  \"plan_steps\": [\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"label\": \"string\",\n      \"status\": \"pending\",\n      \"agent_id\": \"string\",\n      \"run_id\": \"string\"\n    }\n  ],\n  \"agent_ids\": [\n    \"d3d49a7d-4632-503c-1690-3a48f3d39230\",\n    \"ff83c6f5-8501-8b69-cd24-8275689167fd\"\n  ],\n  \"agents\": [\n    {\n      \"id\": \"c47921ff-0d81-978f-3d17-5ca926caddc0\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    },\n    {\n      \"id\": \"654898cd-9bb1-715b-0042-0c031d8d40e8\",\n      \"name\": \"string\",\n      \"icon\": \"string\",\n      \"gradient\": \"string\"\n    }\n  ],\n  \"linked_run_id\": \"52af6b6b-0cbb-ee61-6565-aec5736231f2\",\n  \"linked_run_status\": \"string\",\n  \"linked_conversation_id\": \"e4629aa8-9e81-0972-da30-9f5f2382311c\",\n  \"execution_started\": false,\n  \"meeting_id\": \"e2fbeae3-7adb-1e8b-0d33-f615896c9f66\",\n  \"customer_id\": \"a6d00123-ba55-3774-8a7e-0b9066b25878\",\n  \"updated_at\": \"1946-11-20T20:19:26.036Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "58a24516-c748-4ea7-a940-a8951bc1d49f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"severity\": \"<string>\",\n  \"assignee_id\": \"<uuid>\",\n  \"target_date\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f91dc788-261d-49bf-9cb7-cb4b0e0ec881",
+          "name": "Delete Task",
+          "request": {
+            "name": "Delete Task",
+            "description": {
+              "content": "Soft-delete a task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "045797e4-c13c-4d51-9ee2-79087aaa0d51",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2d635c7b-d4ed-4541-ba8f-1abfa27291a4",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "01e40a4a-f9d9-4496-915f-3d49838daa7d",
+          "name": "Approve Task",
+          "request": {
+            "name": "Approve Task",
+            "description": {
+              "content": "Approve a scheduled task: create a conversation that autonomously executes\nits plan (scoped to the primary agent + the task's customer) and link it back.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                ":task_id",
+                "approve"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "efcb7427-77d0-45ef-a113-cf7daecedba9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id",
+                    "approve"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"conversation_id\": \"ba1053d5-43eb-f17a-1931-881940456d99\",\n  \"status\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e14fa6d9-0c26-4a48-98aa-4073066ac63f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "tasks",
+                    ":task_id",
+                    "approve"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d27d3b7b-5e04-4e6e-b11b-7a7a449605fa",
+    "name": "Unisson agent-evals tasks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,567 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals chat API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "chat",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Conversations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/conversations",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to conversations that tagged this agent. Omit to list the user's own conversations."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "scope",
+                "value": "",
+                "type": "query",
+                "description": "Sidebar filter: 'my_customers' keeps conversations linked to a customer the caller belongs to; 'personal' keeps conversations the caller started or wrote a message in."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List chat conversations, most recent first.\n\nScoping rules:\n  * ``agent_id`` set — tagging an agent makes the conversation visible\n    on that agent's page to the whole org, so we return every\n    conversation that tagged the agent regardless of who created it.\n  * ``agent_id`` unset — personal scope; only the caller's own\n    conversations are listed (URL-share is the only way teammates reach\n    someone else's personal thread).\n\n``scope`` then narrows the list (sidebar filter tabs):\n  * ``my_c"
+        },
+        {
+          "info": {
+            "name": "Create Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations",
+            "params": [
+              {
+                "name": "tagged_agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optionally tag an agent onto the new conversation (the agent detail page's 'New chat' button) — same additive mechanism as an @-mention, recorded in chat_conversation_agents."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new chat conversation. Agents join by being tagged —\n@-mentions in messages or the optional ``tagged_agent_id`` here."
+        },
+        {
+          "info": {
+            "name": "Get Or Create Builder Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/builder",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "The agent whose builder chat to open, or the literal 'new' to open the caller's lazy new-agent draft thread."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get-or-create the single Agent-Builder conversation for an agent.\n\nMembers-only surface. Exactly one persistent thread per agent\n(``builder_agent_id``), or one lazy draft per user (``is_new_agent_draft``)\nfor the \"New agent\" flow — the partial unique indexes make get-or-create\nrace-safe. Excluded from every conversation list."
+        },
+        {
+          "info": {
+            "name": "Get Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "before_message_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a conversation with a bounded window of messages.\n\nPagination is cursor-based walking backwards in conversation order:\n  - No cursor: return the newest ``limit`` messages.\n  - ``before_message_id``: return the ``limit`` messages immediately\n    older than the cursor.\nThe response's ``next_cursor`` + ``has_more`` let the client fetch the\nnext older page. Messages are returned in chronological order."
+        },
+        {
+          "info": {
+            "name": "Delete Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a conversation."
+        },
+        {
+          "info": {
+            "name": "Get Conversation Context",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/context",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "What is actually *in* this conversation's chat context: the connectors\nthe chat agent invoked, plus the customers and agents whose context the\nnext turn will load — derived through the same capped helpers the chat\nturn uses, so the panel never shows an agent/customer that contributes no\nprompt block.\n\nPowers the right-sidebar \"Context\" panel. Unlike ``get_conversation`` this\nscans **all** of the conversation's tool-call rows (not a paginated message\nwindow), so the integration list is complete h"
+        },
+        {
+          "info": {
+            "name": "List Chat Files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/files",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List VFS files visible in a chat, with presigned download URLs.\n\nExactly one of ``agent_id`` or ``conversation_id`` must be supplied:\n\n* ``agent_id`` — list the agent's persistent workspace (under its own\n  ``/agents/<slug>/``).\n* ``conversation_id`` — list one ``/agents/<slug>/`` per tagged agent plus\n  ``/chat/`` for the conversation itself.\n\nReturned ``path`` values are mount-prefixed (``/agents/<slug>/...`` or\n``/chat/...``) so identical filenames across scopes don't collide in the\nlisting o"
+        },
+        {
+          "info": {
+            "name": "Delete Chat File",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/chat/files",
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Mount-prefixed path returned by GET /chat/files."
+              },
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a file from the chat-visible workspace.\n\nThe path's leading mount (``/agents/<slug>/`` or ``/chat/``) selects the\nworkspace; the remaining segment is the workspace-relative key.\nRefuses paths nested under any hidden workspace subtree (see\n``HIDDEN_WORKSPACE_PREFIXES``) so the listing filter and the delete\nsurface stay consistent."
+        },
+        {
+          "info": {
+            "name": "Get Chat File Content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/files/content",
+            "params": [
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Mount-prefixed path returned by GET /chat/files."
+              },
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stream a workspace file's bytes through the backend.\n\nPowers the in-app file viewer. Going through the backend (instead of\nfetching the presigned download URL directly from the SPA) sidesteps S3\nCORS — the bucket needn't allow every dev/preview origin."
+        },
+        {
+          "info": {
+            "name": "Stop Conversation Stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/stop",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "User-initiated stop of the in-flight chat LLM stream.\n\nHalts the chat producer without cancelling spawned CUA runs — those\ncontinue to completion and the chat-run supervisor still drives an\nauto-turn when the run terminates. Idempotent: returns 204 even when\nno producer is running so the FE can fire-and-forget on Stop clicks.\nThe Postgres request is authoritative across workers; the legacy local\nregistry call remains as a rolling-deploy compatibility nudge."
+        },
+        {
+          "info": {
+            "name": "Resume Message Stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/stream",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Re-attach to an in-flight chat-stream producer.\n\nReplays the durable turn snapshot and then tails live events, regardless of\nwhich API worker accepted or executes the turn. Legacy process-local\nsessions remain as a rolling-deploy fallback."
+        },
+        {
+          "info": {
+            "name": "Stream Durable Turn",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/turns/:turn_id/stream",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "turn_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Replay and live-tail one explicit durable turn."
+        },
+        {
+          "info": {
+            "name": "Transcribe Audio",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/transcribe",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Transcribe a short voice recording from the chat composer.\n\nForwards the uploaded audio blob to OpenAI's transcription API and\nreturns the recognised text. The frontend records via MediaRecorder\n(webm/opus on Chromium, mp4 on Safari), so we accept the common\nbrowser audio MIMEs."
+        },
+        {
+          "info": {
+            "name": "Send Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/messages",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a user message and stream the assistant response via SSE.\n\nAccepts multipart/form-data with a text content field and optional image files.\nSaves the user message, then streams the LLM response as Server-Sent Events.\nThe final message_complete event contains the saved assistant message."
+        },
+        {
+          "info": {
+            "name": "Chat Executor Health",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/chat/executor-health",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Operational health of the durable chat execution pool.\n\nThis endpoint is intentionally separate from the API task's load-balancer\nreadiness: removing healthy API tasks cannot repair a missing executor.\nOperators get an explicit 503 while accepted turns remain safely queued."
+        },
+        {
+          "info": {
+            "name": "Accept Conversation Turn",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/turns",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Accept a turn durably; observation happens through its stream URL."
+        },
+        {
+          "info": {
+            "name": "Create Conversation With Turn",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/turns",
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Atomically create a conversation, its first message, and its turn."
+        },
+        {
+          "info": {
+            "name": "Execute Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/execute-task",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Execute a task from a chat conversation.\n\nCreates a Run and starts orchestrated execution in the background."
+        },
+        {
+          "info": {
+            "name": "Apply Kb Edits",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/apply-kb-edits",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Apply KB edits proposed in a kb_edit_proposal chat message."
+        },
+        {
+          "info": {
+            "name": "Accept Proposal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/proposals/:message_id/accept",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Accept an agent-builder proposal, apply it, and resume the builder turn."
+        },
+        {
+          "info": {
+            "name": "Refuse Proposal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/chat/conversations/:conversation_id/proposals/:message_id/refuse",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Refuse an agent-builder proposal and resume the builder turn so it can\nrevise (optionally informed by the user's comment)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

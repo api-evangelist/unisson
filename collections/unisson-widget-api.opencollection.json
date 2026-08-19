@@ -1,0 +1,296 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals widget API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "widget",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Widget Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/widget/config",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Return widget branding and behavior configuration.\n\nCalled once when the widget loads. Uses API key to look up config."
+        },
+        {
+          "info": {
+            "name": "List End User Sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/org",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all end-user sessions for the organization.\n\nCombines widget sessions and external API activity into a single list.\nAdmin-only endpoint. Supports pagination via limit/offset."
+        },
+        {
+          "info": {
+            "name": "Delete Widget Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/admin",
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a widget session and its linked conversation.\n\nAdmin-only. The CASCADE on conversation_id will also delete messages."
+        },
+        {
+          "info": {
+            "name": "Revoke Api Key User Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/api/:api_key_id/:end_user_email",
+            "params": [
+              {
+                "name": "api_key_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "end_user_email",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke an API-key end-user's Kernel profile + presence row.\n\nMirrors ``DELETE /browser-contexts/user/{user_id}`` for the\nuser-driven path: deletes the Kernel profile (server-side cookies\n+ browser state) AND the Unisson presence row, in that order so a\nfailure on the Kernel side leaves the row intact for retry."
+        },
+        {
+          "info": {
+            "name": "Revoke Slack User Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/slack/:end_user_email",
+            "params": [
+              {
+                "name": "end_user_email",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke an external Slack user's Kernel profile + presence row.\n\nSlack analog of :func:`revoke_api_key_user_session`. Keyed by\n``(org, email)`` since Slack profiles carry no api_key. Deletes the\nKernel profile first (so a Kernel failure leaves the row for retry),\nthen the presence row."
+        },
+        {
+          "info": {
+            "name": "Create Or Resume Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/widget/sessions",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new widget session or resume an existing one.\n\nIf session_id is provided and valid, returns the existing session.\nOtherwise creates a new ChatConversation and WidgetSession."
+        },
+        {
+          "info": {
+            "name": "Get Widget Messages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/messages",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return message history for a widget session."
+        },
+        {
+          "info": {
+            "name": "Send Widget Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/messages",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a message in a widget session and stream the response via SSE.\n\nReuses ChatService.process_message_stream() with API key auth\ninstead of Clerk auth, and without a user_id (anonymous widget user)."
+        },
+        {
+          "info": {
+            "name": "Execute Widget Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/execute-task",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute a task from a widget session (TaskSuggestionCard button click)."
+        },
+        {
+          "info": {
+            "name": "Resume Widget Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/runs/:run_id/resume",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resume a widget run after authentication or clarifying question."
+        },
+        {
+          "info": {
+            "name": "Get Widget Result Screenshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/widget/sessions/:session_id/runs/:run_id/result-screenshots",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get presigned URLs for result screenshots saved by the agent."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

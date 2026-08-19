@@ -1,0 +1,640 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals knowledge-base API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "knowledge-base",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Workflow Tools",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/workflow-tools",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the catalog of tools that can be assigned to workflows."
+        },
+        {
+          "info": {
+            "name": "List Features",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/features",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by product"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all extracted features for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/features/:feature_id",
+            "params": [
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific feature by ID."
+        },
+        {
+          "info": {
+            "name": "Update Feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/features/:feature_id",
+            "params": [
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a feature."
+        },
+        {
+          "info": {
+            "name": "Delete Feature",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/features/:feature_id",
+            "params": [
+              {
+                "name": "feature_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a specific feature (soft delete)."
+        },
+        {
+          "info": {
+            "name": "List Workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/workflows",
+            "params": [
+              {
+                "name": "search",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all extracted workflows for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/workflows/:workflow_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific workflow by ID."
+        },
+        {
+          "info": {
+            "name": "Update Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/workflows/:workflow_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a workflow (name, description, additional_info, inputs)."
+        },
+        {
+          "info": {
+            "name": "Delete Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/workflows/:workflow_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a specific workflow (soft delete).\n\nAlso soft-deletes associated GeneratedAPI and NetworkRecordings."
+        },
+        {
+          "info": {
+            "name": "Get Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/summary",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter counts by product"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a summary of the knowledge base."
+        },
+        {
+          "info": {
+            "name": "Generate Draft Workflow Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows/generate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a draft workflow from a user description using LLM."
+        },
+        {
+          "info": {
+            "name": "List Draft Workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all draft workflows for the organization."
+        },
+        {
+          "info": {
+            "name": "Create Draft Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new draft workflow.\n\nGenerates an LLM-based description automatically based on the workflow's\nname and blocks."
+        },
+        {
+          "info": {
+            "name": "Get Draft Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows/:draft_id",
+            "params": [
+              {
+                "name": "draft_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific draft workflow by ID."
+        },
+        {
+          "info": {
+            "name": "Update Draft Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows/:draft_id",
+            "params": [
+              {
+                "name": "draft_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a draft workflow.\n\nWhen name or blocks are updated, a new LLM-based description is generated\nautomatically to reflect the workflow's purpose."
+        },
+        {
+          "info": {
+            "name": "Delete Draft Workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/draft-workflows/:draft_id",
+            "params": [
+              {
+                "name": "draft_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a draft workflow (soft delete)."
+        },
+        {
+          "info": {
+            "name": "List Company Knowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by product"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all company knowledge entries for the organization."
+        },
+        {
+          "info": {
+            "name": "Create Company Knowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new company knowledge entry."
+        },
+        {
+          "info": {
+            "name": "Get Company Knowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge/:entry_id",
+            "params": [
+              {
+                "name": "entry_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific company knowledge entry by ID."
+        },
+        {
+          "info": {
+            "name": "Update Company Knowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge/:entry_id",
+            "params": [
+              {
+                "name": "entry_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a company knowledge entry (title, description)."
+        },
+        {
+          "info": {
+            "name": "Delete Company Knowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge/:entry_id",
+            "params": [
+              {
+                "name": "entry_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a company knowledge entry (soft delete)."
+        },
+        {
+          "info": {
+            "name": "Import Company Knowledge From File",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge/import/file",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Product to assign imported entries to"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import company knowledge entries by uploading a file.\n\nSupports .txt, .md, .pdf, .docx files. The file content is parsed\nthrough an LLM to extract company knowledge entries."
+        },
+        {
+          "info": {
+            "name": "Import Company Knowledge From Google Doc",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/company-knowledge/import/google-doc",
+            "params": [
+              {
+                "name": "file_id",
+                "value": "",
+                "type": "query",
+                "description": "Google Drive file ID"
+              },
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Product to assign imported entries to"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Import company knowledge entries from a Google Doc.\n\nFetches the document content from Google Drive and parses it\nthrough an LLM to extract company knowledge entries."
+        },
+        {
+          "info": {
+            "name": "List Agent Insights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/agent-insights",
+            "params": [
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by product"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all agent insights for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Agent Insight",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/agent-insights/:insight_id",
+            "params": [
+              {
+                "name": "insight_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific agent insight by ID."
+        },
+        {
+          "info": {
+            "name": "Update Agent Insight",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/agent-insights/:insight_id",
+            "params": [
+              {
+                "name": "insight_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update an agent insight (title, description, product_domain, category, is_pinned)."
+        },
+        {
+          "info": {
+            "name": "Delete Agent Insight",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/knowledge-base/agent-insights/:insight_id",
+            "params": [
+              {
+                "name": "insight_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete an agent insight (soft delete)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

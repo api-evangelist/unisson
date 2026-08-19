@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals scheduled-runs API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "scheduled-runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Scheduled Runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all scheduled runs for the organization (non-deleted, ordered by next_run_at)."
+        },
+        {
+          "info": {
+            "name": "Create Scheduled Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new scheduled run."
+        },
+        {
+          "info": {
+            "name": "Get Scheduled Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs/:scheduled_run_id",
+            "params": [
+              {
+                "name": "scheduled_run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific scheduled run."
+        },
+        {
+          "info": {
+            "name": "Cancel Scheduled Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs/:scheduled_run_id",
+            "params": [
+              {
+                "name": "scheduled_run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel and delete a scheduled run."
+        },
+        {
+          "info": {
+            "name": "Pause Scheduled Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs/:scheduled_run_id/pause",
+            "params": [
+              {
+                "name": "scheduled_run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Pause a recurring scheduled run."
+        },
+        {
+          "info": {
+            "name": "Resume Scheduled Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/scheduled-runs/:scheduled_run_id/resume",
+            "params": [
+              {
+                "name": "scheduled_run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Resume a paused scheduled run."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

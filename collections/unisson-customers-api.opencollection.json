@@ -1,0 +1,1524 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals customers API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "owner_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort_by",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List customers with pagination and filters."
+        },
+        {
+          "info": {
+            "name": "Create Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new customer."
+        },
+        {
+          "info": {
+            "name": "Get Customer Digest",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/digest",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a daily intelligence digest across all customers."
+        },
+        {
+          "info": {
+            "name": "Cross Customer Chat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/chat/cross-customer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Ask questions across all customers (portfolio-level insights).\n\nStreams response via SSE."
+        },
+        {
+          "info": {
+            "name": "List Playbook Templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/playbook-templates",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List playbook templates for the organization."
+        },
+        {
+          "info": {
+            "name": "Create Playbook Template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/playbook-templates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a playbook template with steps."
+        },
+        {
+          "info": {
+            "name": "Delete Playbook Template",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/playbook-templates/:template_id",
+            "params": [
+              {
+                "name": "template_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a playbook template."
+        },
+        {
+          "info": {
+            "name": "Get Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a single customer with details."
+        },
+        {
+          "info": {
+            "name": "Update Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a customer."
+        },
+        {
+          "info": {
+            "name": "Delete Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a customer."
+        },
+        {
+          "info": {
+            "name": "List Customer Meetings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/meetings",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List meetings for a customer."
+        },
+        {
+          "info": {
+            "name": "Get Customer Calendar Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/calendar-events",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "days_ahead",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get upcoming Google Calendar events relevant to a customer.\n\nSame source of truth as the Meetings page Upcoming bucket: a live\nfan-out across every per-user google_calendar token in the org,\ndeduped by Calendar event id, filtered by THIS customer's target\nemails/domains so the two views stay aligned."
+        },
+        {
+          "info": {
+            "name": "List Customer Tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/tasks",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List tasks for a customer."
+        },
+        {
+          "info": {
+            "name": "List Customer Conversations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/conversations",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Paginated list of chats that ever @-mentioned this customer.\n\nOrdering uses ``chat_conversation_customers.first_mentioned_at DESC``\nso the most recently introduced chat shows first. Response shape\nmatches ``GET /chat/conversations`` so the customer page can reuse\nthe home page's conversation card directly."
+        },
+        {
+          "info": {
+            "name": "Get Customer Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/summary",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "regenerate",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get AI-generated customer summary."
+        },
+        {
+          "info": {
+            "name": "Get Customer Timeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/timeline",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get customer timeline events."
+        },
+        {
+          "info": {
+            "name": "Get Customer Risks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/risks",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get active risks for a customer."
+        },
+        {
+          "info": {
+            "name": "Detect Customer Risks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/risks/detect",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Run risk detection for a customer."
+        },
+        {
+          "info": {
+            "name": "Generate Customer Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/generate-report",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate a stakeholder report for the customer and return as PDF."
+        },
+        {
+          "info": {
+            "name": "Generate Onboarding Brief",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/onboarding-brief",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate an onboarding brief for new team members joining this customer."
+        },
+        {
+          "info": {
+            "name": "Send Customer Report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/send-report",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send the customer report to stakeholders via email."
+        },
+        {
+          "info": {
+            "name": "List Playbooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List playbooks for a customer."
+        },
+        {
+          "info": {
+            "name": "Create Playbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new playbook with steps. Optionally clone from a template."
+        },
+        {
+          "info": {
+            "name": "Add Playbook Step",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks/:playbook_id/steps",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "playbook_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Add a step to a playbook."
+        },
+        {
+          "info": {
+            "name": "Toggle Playbook Step",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks/:playbook_id/steps/:step_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "playbook_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "step_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Toggle a playbook step's completion status."
+        },
+        {
+          "info": {
+            "name": "Delete Playbook Step",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks/:playbook_id/steps/:step_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "playbook_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "step_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a playbook step."
+        },
+        {
+          "info": {
+            "name": "Delete Playbook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/playbooks/:playbook_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "playbook_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Hard-delete a playbook. Cascades to its steps via the\n``ondelete='CASCADE'`` FK on ``playbook_steps.playbook_id``."
+        },
+        {
+          "info": {
+            "name": "Get Meeting Prep",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/meeting-prep",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "calendar_event_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the persisted prep for one upcoming meeting, or null if none yet."
+        },
+        {
+          "info": {
+            "name": "Generate Meeting Prep",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/meeting-prep",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Manually (re)generate prep for one upcoming meeting in this customer."
+        },
+        {
+          "info": {
+            "name": "Generate Meeting Followups",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/meetings/:meeting_id/follow-ups",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Generate follow-up action items from a meeting transcript as tasks."
+        },
+        {
+          "info": {
+            "name": "List Customer Integrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all integration configs for a customer."
+        },
+        {
+          "info": {
+            "name": "Link Grafana Dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/grafana",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Link a Grafana dashboard to a customer."
+        },
+        {
+          "info": {
+            "name": "Update Grafana Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/grafana",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Grafana integration config (alert rules)."
+        },
+        {
+          "info": {
+            "name": "Unlink Grafana Dashboard",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/grafana",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unlink Grafana dashboard from a customer."
+        },
+        {
+          "info": {
+            "name": "Get Grafana Embed Url",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/grafana/embed-url",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the iframe embed URL for the linked Grafana dashboard."
+        },
+        {
+          "info": {
+            "name": "Resync Grafana",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/grafana/sync",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Manually trigger a Grafana re-sync (check alerts)."
+        },
+        {
+          "info": {
+            "name": "Sync Customer Meeting Sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/meetings/sync",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Sync every configured meeting source with per-source outcomes."
+        },
+        {
+          "info": {
+            "name": "Configure Customer Granola",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/granola",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Configure Customer Granola"
+        },
+        {
+          "info": {
+            "name": "Disable Customer Granola",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/granola",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disable Customer Granola"
+        },
+        {
+          "info": {
+            "name": "Sync Customer Granola",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/granola/sync",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Sync Customer Granola"
+        },
+        {
+          "info": {
+            "name": "Link Customer Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/:provider",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Link a Drive folder / Notion page / Slack channel to a customer.\n\nOne link per (customer, provider) — re-linking replaces the prior\nselection in place rather than rejecting with a 409."
+        },
+        {
+          "info": {
+            "name": "Unlink Customer Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/:provider",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unlink a Drive folder / Notion page / Slack channel from a customer."
+        },
+        {
+          "info": {
+            "name": "Sync Customer Resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/:provider/sync",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Trigger a one-shot manual sync for a Drive/Notion/Slack link.\n\nNo background scheduler — returns synchronously with a small\nsummary so the UI can show \"12 synced\" / \"Nothing new\"."
+        },
+        {
+          "info": {
+            "name": "List Sync Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/sync-logs",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List sync logs for a customer's integrations."
+        },
+        {
+          "info": {
+            "name": "Get Customer Samsara Context",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/samsara",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the Samsara state for one customer — the linked customer\naccount, its keys, and the per-user assignments.\n\nUsed by the customer's Integrations tab to render the Samsara row.\nReturns ``{linked: false}`` when no Samsara account is mapped to\nthis customer — the row still renders in the UI but in the \"not\nyet linked\" state, prompting the admin to import a key via\n``/platform/connectors/samsara`` instead."
+        },
+        {
+          "info": {
+            "name": "Get Customer Checkout Context",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/checkout",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the Checkout.com state for one customer — the linked\nmerchant entity, its keys, and the per-user assignments.\n\nUsed by the customer's Integrations tab to render the Checkout row.\nReturns ``{linked: false}`` when no Checkout account is mapped to\nthis customer — the row stays hidden in the UI in that case (the\ncustomer Integrations tab uses ``customer-checkout`` connectionScope\nto suppress unlinked rows)."
+        },
+        {
+          "info": {
+            "name": "Get Customer Razorpay Context",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/integrations/razorpay",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return the Razorpay state for one customer — the linked\nmerchant account, its keys, and the per-user assignments.\n\nUsed by the customer's Integrations tab to render the Razorpay row.\nReturns ``{linked: false}`` when no Razorpay account is mapped to\nthis customer — the row stays hidden in the UI in that case (the\ncustomer Integrations tab uses ``customer-razorpay`` connectionScope\nto suppress unlinked rows)."
+        },
+        {
+          "info": {
+            "name": "Get Customer Browser Profiles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List a customer's browser profiles + member assignments (admin only).\n\nAdmin-gated to match the management surface — the only consumer is the\nadmin-only Browser Profiles card. Members are fetched client-side (org\nmembers plus customer guests); this returns the profiles (with their\nauthenticated domains) and the (user_id -> profile_id) assignments."
+        },
+        {
+          "info": {
+            "name": "Start Customer Browser Profile Auth",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/auth/start",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a profile (or pick an existing one) and start Managed Auth for a\nlogin URL. Returns the handoff payload the frontend feeds to the\n``KernelManagedAuth`` widget (admin only)."
+        },
+        {
+          "info": {
+            "name": "Finalize Customer Browser Profile Auth",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/:profile_id/auth/finalize",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "profile_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Record the authenticated domain after the widget reports success\n(admin only)."
+        },
+        {
+          "info": {
+            "name": "Cancel Customer Browser Profile Auth",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/:profile_id/auth/:connection_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "profile_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "connection_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cleanup_token",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel an in-progress profile login and stop its Kernel auth browser."
+        },
+        {
+          "info": {
+            "name": "Delete Customer Browser Profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/:profile_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "profile_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a profile + its Kernel state, assignments, and domains\n(admin only)."
+        },
+        {
+          "info": {
+            "name": "Assign Customer Browser Profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/:profile_id/assignments",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "profile_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Assign a member to a profile. Upserts on (customer, user) — one profile\nper user per customer (admin only)."
+        },
+        {
+          "info": {
+            "name": "Unassign Customer Browser Profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/browser-profiles/assignments/:user_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Remove a member's profile assignment in a customer (admin only)."
+        },
+        {
+          "info": {
+            "name": "List Customer Guests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/guests",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List accepted guests + pending invitations for a customer."
+        },
+        {
+          "info": {
+            "name": "Invite Customer Guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/guests/invite",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Invite an external user (by email) as a guest on this customer.\n\nA brand-new email gets a Clerk org invitation (Clerk emails them + handles\nsignup); on accept they become a guest scoped to this customer. An email\nthat already belongs to a *guest* of this org is granted access directly.\nAn email belonging to an existing non-guest Unisson user is rejected — a\nfull member can't be turned into a guest."
+        },
+        {
+          "info": {
+            "name": "Update Customer Guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/guests/:user_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Edit an accepted guest's agent allowlist and access expiry.\n\nReplaces both settings on the ``customer_guests`` grant. Setting a future\n``expires_at`` on an expired guest re-grants their access (the grant row is\nnever deleted on expiry — access is blocked at read time, so it simply\nbecomes live again)."
+        },
+        {
+          "info": {
+            "name": "Remove Customer Guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/guests/:user_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke an accepted guest's access to this customer.\n\nRemoves the customer grant. ``is_guest`` is never cleared (no path to a\nsilent privilege gain). When this was the guest's **last** grant in the org,\nwe also remove them from the org entirely — drop their Clerk membership and\nunlink them locally (``organization_id=None``) — so they can no longer sign\nin and use chat / their own connectors with no customer access. Their Clerk\naccount survives, so the same email can be re-invited later."
+        },
+        {
+          "info": {
+            "name": "Revoke Customer Guest Invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/customers/:customer_id/guests/invitations/:invitation_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "invitation_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke a pending guest invitation.\n\nAlso revokes the underlying Clerk invitation so the recipient can't accept\nit later and join the org as a full member (which would happen if no\npending guest invitation remained to flag them on join)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

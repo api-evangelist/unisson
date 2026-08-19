@@ -1,0 +1,95 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals email-drafts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "email-drafts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Email Drafts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/email-drafts",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "query",
+                "description": "Conversation to scope drafts to."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Optional filter — usually 'pending'."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List drafts for a conversation. Used by the FE on cold-load to\nrehydrate the inline cards after a refresh — without this, the card\nwould show the LLM's original args instead of the user's manual edits."
+        },
+        {
+          "info": {
+            "name": "Get Email Draft",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/email-drafts/:draft_id",
+            "params": [
+              {
+                "name": "draft_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Email Draft"
+        },
+        {
+          "info": {
+            "name": "Patch Email Draft",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/email-drafts/:draft_id",
+            "params": [
+              {
+                "name": "draft_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Apply a human edit to a pending draft.\n\nOnly the fields present in the body are written. 409 once the draft\nhas been sent or discarded — at that point its content is frozen. The\nnext LLM turn picks up the new state via context injection in\n``chat_service``; no LLM call happens here."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

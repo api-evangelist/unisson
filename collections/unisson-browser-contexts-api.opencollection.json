@@ -1,0 +1,61 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals browser-contexts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "browser-contexts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Org Sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/browser-contexts/org",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List users with saved browser sessions for the organization.\n\nEach user has ONE unified context that may contain auth for multiple domains.\nAdmins can see all users' sessions, members can only see their own."
+        },
+        {
+          "info": {
+            "name": "Delete User Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/browser-contexts/user/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "domain",
+                "value": "",
+                "type": "query",
+                "description": "Domain to revoke auth for. If not provided, clears ALL auth."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a user's saved authentication.\n\n- If domain is provided: Surgically removes auth for that specific domain\n  (starts a Kernel browser session to filter cookies, then persists)\n- If domain is not provided: Clears ALL auth by deleting the unified context\n\nUsers can delete their own session. Admins can delete any user's session."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,1367 @@
+{
+  "item": [
+    {
+      "id": "f30db8b1-fb9a-4b4b-85b0-750ffd698746",
+      "name": "agent-triggers",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4efcafd9-9274-48ec-9c26-ba949ea5d4e8",
+          "name": "Create Trigger",
+          "request": {
+            "name": "Create Trigger",
+            "description": {
+              "content": "Create a new trigger for an agent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trigger_type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": 558,\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ead1421b-6c91-4185-94fe-f8f7ccd68ca6",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger_type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": false,\n    \"key_1\": 9185.809127423005\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6152ed31-dd3a-135b-8fe7-3bf486f8eb70\",\n  \"agent_id\": \"be1ae3ed-a55b-016b-8ea7-8aa301f8c4eb\",\n  \"trigger_type\": \"webhook\",\n  \"name\": \"string\",\n  \"request_text_template\": \"string\",\n  \"is_enabled\": true,\n  \"last_triggered_at\": \"1977-10-18T16:32:44.763Z\",\n  \"trigger_count\": 5523,\n  \"created_at\": \"1959-04-27T02:52:41.441Z\",\n  \"updated_at\": \"1970-12-21T02:02:23.051Z\",\n  \"webhook_url\": \"string\",\n  \"webhook_token\": \"string\",\n  \"scheduled_run_id\": \"89a4331d-8b7b-1463-7c46-cdc1bd2ed52a\",\n  \"scheduled_at\": \"2019-06-25T08:38:02.876Z\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"weeks\",\n  \"recurrence_value\": 5288,\n  \"next_run_at\": \"1956-07-22T23:25:36.848Z\",\n  \"event_source\": \"string\",\n  \"event_config\": {\n    \"key_0\": \"string\",\n    \"key_1\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fabcf638-38d6-4e29-bdfa-a31195c53ee6",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger_type\": \"<string>\",\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": false,\n    \"key_1\": 9185.809127423005\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3971adc7-7557-4519-ab5c-76c0f7e1d4d0",
+          "name": "List Triggers",
+          "request": {
+            "name": "List Triggers",
+            "description": {
+              "content": "List all triggers for an agent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d8beb07b-7075-497e-9425-d6ae088c4403",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"7a7999d4-cf7d-d8e6-24cc-13b1f7519bc0\",\n    \"agent_id\": \"b9ecba6c-2f0e-1ce3-992a-5605b2d797d7\",\n    \"trigger_type\": \"event\",\n    \"name\": \"string\",\n    \"request_text_template\": \"string\",\n    \"is_enabled\": true,\n    \"last_triggered_at\": \"1972-09-15T02:22:11.551Z\",\n    \"trigger_count\": 4217,\n    \"created_at\": \"2015-09-18T21:19:02.921Z\",\n    \"updated_at\": \"1994-02-15T08:01:34.358Z\",\n    \"webhook_url\": \"string\",\n    \"webhook_token\": \"string\",\n    \"scheduled_run_id\": \"bf5676ba-46d4-4875-01d2-30e7827654a8\",\n    \"scheduled_at\": \"2026-07-24T17:34:42.029Z\",\n    \"is_recurring\": true,\n    \"recurrence_type\": \"hours\",\n    \"recurrence_value\": 2595,\n    \"next_run_at\": \"1998-11-18T19:16:27.352Z\",\n    \"event_source\": \"string\",\n    \"event_config\": {\n      \"key_0\": false\n    }\n  },\n  {\n    \"id\": \"6db936f0-1f16-acc3-8d64-9191bcf4aff7\",\n    \"agent_id\": \"6301b63a-f8ad-55c3-ca9a-5186afc6a92b\",\n    \"trigger_type\": \"schedule\",\n    \"name\": \"string\",\n    \"request_text_template\": \"string\",\n    \"is_enabled\": false,\n    \"last_triggered_at\": \"1986-11-09T19:12:29.840Z\",\n    \"trigger_count\": 5856,\n    \"created_at\": \"2022-03-25T09:28:29.609Z\",\n    \"updated_at\": \"2013-03-26T00:22:32.641Z\",\n    \"webhook_url\": \"string\",\n    \"webhook_token\": \"string\",\n    \"scheduled_run_id\": \"90a1b9de-6930-e681-b44b-c11ae0dc9115\",\n    \"scheduled_at\": \"1981-04-11T20:51:06.264Z\",\n    \"is_recurring\": true,\n    \"recurrence_type\": \"weeks\",\n    \"recurrence_value\": 9765,\n    \"next_run_at\": \"1976-12-29T02:26:40.536Z\",\n    \"event_source\": \"string\",\n    \"event_config\": {\n      \"key_0\": 3201\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77cc063f-3ced-4841-979d-7bdcda327c9f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2f7308a7-aaf7-4eef-b7b1-3c0f893a486b",
+          "name": "Get Trigger",
+          "request": {
+            "name": "Get Trigger",
+            "description": {
+              "content": "Get a specific trigger.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers",
+                ":trigger_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "trigger_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b0598264-c574-467e-bfdc-76d7d34ba899",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6152ed31-dd3a-135b-8fe7-3bf486f8eb70\",\n  \"agent_id\": \"be1ae3ed-a55b-016b-8ea7-8aa301f8c4eb\",\n  \"trigger_type\": \"webhook\",\n  \"name\": \"string\",\n  \"request_text_template\": \"string\",\n  \"is_enabled\": true,\n  \"last_triggered_at\": \"1977-10-18T16:32:44.763Z\",\n  \"trigger_count\": 5523,\n  \"created_at\": \"1959-04-27T02:52:41.441Z\",\n  \"updated_at\": \"1970-12-21T02:02:23.051Z\",\n  \"webhook_url\": \"string\",\n  \"webhook_token\": \"string\",\n  \"scheduled_run_id\": \"89a4331d-8b7b-1463-7c46-cdc1bd2ed52a\",\n  \"scheduled_at\": \"2019-06-25T08:38:02.876Z\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"weeks\",\n  \"recurrence_value\": 5288,\n  \"next_run_at\": \"1956-07-22T23:25:36.848Z\",\n  \"event_source\": \"string\",\n  \"event_config\": {\n    \"key_0\": \"string\",\n    \"key_1\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "885a6237-ea39-43ca-b0b1-71c589aa88eb",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c417a789-592f-4c4f-a75f-a3d5a8c9c4c7",
+          "name": "Update Trigger",
+          "request": {
+            "name": "Update Trigger",
+            "description": {
+              "content": "Update a trigger.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers",
+                ":trigger_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "trigger_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": \"<boolean>\",\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": \"string\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8d74f98b-5b3e-4a68-888a-3667d5cc3fc6",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": \"<boolean>\",\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": 8447\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6152ed31-dd3a-135b-8fe7-3bf486f8eb70\",\n  \"agent_id\": \"be1ae3ed-a55b-016b-8ea7-8aa301f8c4eb\",\n  \"trigger_type\": \"webhook\",\n  \"name\": \"string\",\n  \"request_text_template\": \"string\",\n  \"is_enabled\": true,\n  \"last_triggered_at\": \"1977-10-18T16:32:44.763Z\",\n  \"trigger_count\": 5523,\n  \"created_at\": \"1959-04-27T02:52:41.441Z\",\n  \"updated_at\": \"1970-12-21T02:02:23.051Z\",\n  \"webhook_url\": \"string\",\n  \"webhook_token\": \"string\",\n  \"scheduled_run_id\": \"89a4331d-8b7b-1463-7c46-cdc1bd2ed52a\",\n  \"scheduled_at\": \"2019-06-25T08:38:02.876Z\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"weeks\",\n  \"recurrence_value\": 5288,\n  \"next_run_at\": \"1956-07-22T23:25:36.848Z\",\n  \"event_source\": \"string\",\n  \"event_config\": {\n    \"key_0\": \"string\",\n    \"key_1\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f0902015-6818-440b-9df4-4210ffc47c8b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"request_text_template\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"is_recurring\": \"<boolean>\",\n  \"recurrence_type\": \"<string>\",\n  \"recurrence_value\": \"<integer>\",\n  \"event_source\": \"<string>\",\n  \"event_config\": {\n    \"key_0\": 8447\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6592158b-1278-4ae4-8c08-347e39bd9fc2",
+          "name": "Delete Trigger",
+          "request": {
+            "name": "Delete Trigger",
+            "description": {
+              "content": "Soft-delete a trigger.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers",
+                ":trigger_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "trigger_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "03861435-bd93-4d5a-9b8c-a29d1199ca0b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "86f4a1e3-778a-4975-ac1b-8c9344cfc02d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "da964241-6360-4d77-9e97-515386894ff2",
+          "name": "Enable Trigger",
+          "request": {
+            "name": "Enable Trigger",
+            "description": {
+              "content": "Enable a trigger.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers",
+                ":trigger_id",
+                "enable"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "trigger_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "af16b54b-a382-40a4-9d60-18dd496f1bec",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6152ed31-dd3a-135b-8fe7-3bf486f8eb70\",\n  \"agent_id\": \"be1ae3ed-a55b-016b-8ea7-8aa301f8c4eb\",\n  \"trigger_type\": \"webhook\",\n  \"name\": \"string\",\n  \"request_text_template\": \"string\",\n  \"is_enabled\": true,\n  \"last_triggered_at\": \"1977-10-18T16:32:44.763Z\",\n  \"trigger_count\": 5523,\n  \"created_at\": \"1959-04-27T02:52:41.441Z\",\n  \"updated_at\": \"1970-12-21T02:02:23.051Z\",\n  \"webhook_url\": \"string\",\n  \"webhook_token\": \"string\",\n  \"scheduled_run_id\": \"89a4331d-8b7b-1463-7c46-cdc1bd2ed52a\",\n  \"scheduled_at\": \"2019-06-25T08:38:02.876Z\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"weeks\",\n  \"recurrence_value\": 5288,\n  \"next_run_at\": \"1956-07-22T23:25:36.848Z\",\n  \"event_source\": \"string\",\n  \"event_config\": {\n    \"key_0\": \"string\",\n    \"key_1\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2e8dc2fd-43d0-46b9-9687-eb996594a69f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3f0de9fb-7324-4656-8330-217aee609209",
+          "name": "Disable Trigger",
+          "request": {
+            "name": "Disable Trigger",
+            "description": {
+              "content": "Disable a trigger.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "agents",
+                ":agent_id",
+                "triggers",
+                ":trigger_id",
+                "disable"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "trigger_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b48275d6-5fd6-4807-9606-160145ce27ad",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id",
+                    "disable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"6152ed31-dd3a-135b-8fe7-3bf486f8eb70\",\n  \"agent_id\": \"be1ae3ed-a55b-016b-8ea7-8aa301f8c4eb\",\n  \"trigger_type\": \"webhook\",\n  \"name\": \"string\",\n  \"request_text_template\": \"string\",\n  \"is_enabled\": true,\n  \"last_triggered_at\": \"1977-10-18T16:32:44.763Z\",\n  \"trigger_count\": 5523,\n  \"created_at\": \"1959-04-27T02:52:41.441Z\",\n  \"updated_at\": \"1970-12-21T02:02:23.051Z\",\n  \"webhook_url\": \"string\",\n  \"webhook_token\": \"string\",\n  \"scheduled_run_id\": \"89a4331d-8b7b-1463-7c46-cdc1bd2ed52a\",\n  \"scheduled_at\": \"2019-06-25T08:38:02.876Z\",\n  \"is_recurring\": false,\n  \"recurrence_type\": \"weeks\",\n  \"recurrence_value\": 5288,\n  \"next_run_at\": \"1956-07-22T23:25:36.848Z\",\n  \"event_source\": \"string\",\n  \"event_config\": {\n    \"key_0\": \"string\",\n    \"key_1\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2470a94f-e2c1-4f04-ad3c-6acc8020fb37",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "agents",
+                    ":agent_id",
+                    "triggers",
+                    ":trigger_id",
+                    "disable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "trigger_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "4052cb84-2ca1-4ac1-8d8c-1d78dea03fb8",
+    "name": "Unisson agent-evals agent-triggers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

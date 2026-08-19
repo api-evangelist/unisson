@@ -1,0 +1,82 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals live-map API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "live-map",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Live Map",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/live-map",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the live map for the organization (if one exists)."
+        },
+        {
+          "info": {
+            "name": "Delete Live Map",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/live-map",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the live map for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Analysis Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/live-map/status",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the current analysis status."
+        },
+        {
+          "info": {
+            "name": "Start Analysis",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/live-map/analyze",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Start crawling a live website to build a navigation map.\n\nThe crawler will:\n- Start from start_url and discover all linked pages\n- Stay within organization's allowed_domains (defaults to start_url's domain if not configured)\n- Add external links as nodes but not explore them\n- Use Kernel browser session for authenticated access (if available)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

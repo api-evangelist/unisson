@@ -1,0 +1,514 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals runs API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Trigger Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/runs/trigger",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Trigger a new run (from web UI or API) - Rate limited: 30/min per IP\n\nFor Slack-triggered runs, use the /integrations/slack/events endpoint instead"
+        },
+        {
+          "info": {
+            "name": "List Runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status_filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status. Accepts a single value (e.g. 'running') or a comma-separated list (e.g. 'running,coordinating') for tab-style grouping in the dashboard."
+              },
+              {
+                "name": "triggered_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by trigger source"
+              },
+              {
+                "name": "run_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by run type (task, exploration)"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search request text"
+              },
+              {
+                "name": "triggered_by_name",
+                "value": "",
+                "type": "query",
+                "description": "Search by triggered-by user name"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs created after this datetime"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs created before this datetime"
+              },
+              {
+                "name": "chat_conversation_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs spawned from a specific chat conversation."
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs scoped to a specific agent."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs associated with a specific customer."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List all runs for the organization"
+        },
+        {
+          "info": {
+            "name": "Get Attention Counts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/attention-counts",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get counts of runs needing attention (for sidebar badges).\n\nReturns counts of runs with 'authentication_required' or 'waiting_for_input' status,\ngrouped by run type (task vs exploration).\n\nNote: Scouts have is_exploration=False but exploration_id IS NOT NULL,\nso we use exploration_id to determine if a run belongs to an exploration."
+        },
+        {
+          "info": {
+            "name": "Get Status Counts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/status-counts",
+            "params": [
+              {
+                "name": "triggered_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by trigger source"
+              },
+              {
+                "name": "run_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by run type (task, exploration)"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search request text"
+              },
+              {
+                "name": "triggered_by_name",
+                "value": "",
+                "type": "query",
+                "description": "Search by triggered-by user name"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs created after this datetime"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs created before this datetime"
+              },
+              {
+                "name": "chat_conversation_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs spawned from a specific chat conversation."
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs scoped to a specific agent."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs associated with a specific customer."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Counts of runs grouped by status, for the same filter scope as /runs.\n\nMirrors /runs's filter set except `status_filter` (which would defeat the\npurpose). Used by the Runs dashboard's tab counters so each tab's count\nreflects all runs in the current timeframe + filters, not just the\ncurrently-selected status. Counts always include every value in\n`_RUN_STATUS_KEYS`, defaulting to 0 — frontends can sum into groups\nwithout conditional logic."
+        },
+        {
+          "info": {
+            "name": "Get Run Activity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/activity",
+            "params": [
+              {
+                "name": "triggered_from",
+                "value": "",
+                "type": "query",
+                "description": "Filter by trigger source"
+              },
+              {
+                "name": "run_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by run type (task, exploration)"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Search request text"
+              },
+              {
+                "name": "triggered_by_name",
+                "value": "",
+                "type": "query",
+                "description": "Search by triggered-by user name"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query",
+                "description": "Window start (defaults to earliest run for the org)"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query",
+                "description": "Window end (defaults to now)"
+              },
+              {
+                "name": "chat_conversation_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs spawned from a specific chat conversation."
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs scoped to a specific agent."
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to runs associated with a specific customer."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Daily run counts within the window plus the previous-period total.\n\nPowers the Runs dashboard hero card's sparkline + trend % indicator.\nMirrors the filter scope of /runs and /runs/status-counts (status filter\nintentionally omitted — the hero card aggregates across statuses).\n\n`previous_total` is the count of runs in the window of equal duration\nimmediately preceding [created_after, created_before]. Returned as\n`null` when no `created_after` is provided (the \"all time\" case has no\nprior period t"
+        },
+        {
+          "info": {
+            "name": "Get Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "include_child_steps",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get detailed information about a specific run"
+        },
+        {
+          "info": {
+            "name": "Delete Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft delete a run and its child runs/scouts."
+        },
+        {
+          "info": {
+            "name": "Resume Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/resume",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Resume a run after user has completed authentication or answered a clarifying question.\n\nFor authentication: Just call this endpoint without a body.\nFor clarifying questions: Include {\"answer\": \"user's answer\"} in the body."
+        },
+        {
+          "info": {
+            "name": "Get Run Liveview Url",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/liveview",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the LiveView URL for a run's browser session (for secure authentication)"
+        },
+        {
+          "info": {
+            "name": "Get Run Recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/recording",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get video recording URL for a completed run.\n\nReturns: { \"run_id\": ..., \"url\": <presigned_url> }"
+        },
+        {
+          "info": {
+            "name": "Get Run Result Screenshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/result-screenshots",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get presigned URLs for result screenshots saved by the agent.\n\nReturns: [{ \"url\": <presigned_url>, \"caption\": str, \"step_number\": int }, ...]"
+        },
+        {
+          "info": {
+            "name": "Get Child Runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/children",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Return scouts for an exploration coordinator (empty for task runs)."
+        },
+        {
+          "info": {
+            "name": "Cancel Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/cancel",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Cancel a running execution (cascades to child runs)"
+        },
+        {
+          "info": {
+            "name": "Get Run Steps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/steps",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all steps for a run (for real-time updates)"
+        },
+        {
+          "info": {
+            "name": "Report Issue",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/runs/:run_id/report-issue",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Report an issue with a run"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,516 @@
+{
+  "item": [
+    {
+      "id": "415af8ec-9034-4584-a300-a12cc4abeb4a",
+      "name": "superadmin",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6bee1814-9fef-4517-a03d-f9d3c1e20f00",
+          "name": "Check Superadmin",
+          "request": {
+            "name": "Check Superadmin",
+            "description": {
+              "content": "Check if the current organization has superadmin access.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "superadmin",
+                "check"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ba646c75-9edf-488a-8281-5b0f1c76e7df",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "superadmin",
+                    "check"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c2e8805-54c0-48f8-871c-4e76eab9cd4b",
+          "name": "Get Costs",
+          "request": {
+            "name": "Get Costs",
+            "description": {
+              "content": "Get cost data across all organizations (superadmin only).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "superadmin",
+                "costs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "granularity",
+                  "value": "daily"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<date>",
+                  "description": "Start date YYYY-MM-DD"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<date>",
+                  "description": "End date YYYY-MM-DD"
+                },
+                {
+                  "disabled": false,
+                  "key": "org_id",
+                  "value": "<uuid>",
+                  "description": "Filter to a specific org"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "392708aa-d892-453c-ba2f-934759673b66",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "superadmin",
+                    "costs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "granularity",
+                      "value": "daily"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "org_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"org_summaries\": [\n    {\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"total_runs\": 3473,\n      \"total_duration_seconds\": 2439,\n      \"total_llm_cost\": 1182.3313626213849,\n      \"total_kernel_cost\": 9841.133490332657,\n      \"total_cost\": 2987.7851088893826,\n      \"total_llm_tokens\": 2352\n    },\n    {\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"total_runs\": 3701,\n      \"total_duration_seconds\": 5639,\n      \"total_llm_cost\": 6992.149913606598,\n      \"total_kernel_cost\": 7032.961924262888,\n      \"total_cost\": 2832.014502704211,\n      \"total_llm_tokens\": 3082\n    }\n  ],\n  \"time_series\": [\n    {\n      \"period\": \"string\",\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"llm_cost\": 8206.791455668907,\n      \"kernel_cost\": 8791.598852495643,\n      \"total_cost\": 9613.444630444514,\n      \"run_count\": 7341\n    },\n    {\n      \"period\": \"string\",\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"llm_cost\": 4220.469690282494,\n      \"kernel_cost\": 8926.223063445655,\n      \"total_cost\": 6262.486888850356,\n      \"run_count\": 6933\n    }\n  ],\n  \"grand_total_cost\": 5664.234823427615,\n  \"grand_total_llm_cost\": 2187.70523531979,\n  \"grand_total_kernel_cost\": 1079.6411729569877,\n  \"grand_total_runs\": 6475,\n  \"kernel_cost_per_second\": 2458.117369465023,\n  \"cost_by_category\": [\n    {\n      \"category\": \"string\",\n      \"cost\": 6659.7998399449025,\n      \"input_tokens\": 9944,\n      \"output_tokens\": 2687\n    },\n    {\n      \"category\": \"string\",\n      \"cost\": 3883.8665537494967,\n      \"input_tokens\": 7944,\n      \"output_tokens\": 6943\n    }\n  ],\n  \"cost_by_model\": [\n    {\n      \"model\": \"string\",\n      \"cost\": 4519.311617895521,\n      \"input_tokens\": 5943,\n      \"output_tokens\": 9004,\n      \"call_count\": 4931\n    },\n    {\n      \"model\": \"string\",\n      \"cost\": 2116.272875609356,\n      \"input_tokens\": 9098,\n      \"output_tokens\": 5238,\n      \"call_count\": 3786\n    }\n  ],\n  \"category_time_series\": [\n    {\n      \"period\": \"string\",\n      \"category\": \"string\",\n      \"cost\": 8299.017559235741,\n      \"call_count\": 7839\n    },\n    {\n      \"period\": \"string\",\n      \"category\": \"string\",\n      \"cost\": 3498.7360312703163,\n      \"call_count\": 1364\n    }\n  ],\n  \"category_model_breakdown\": [\n    {\n      \"category\": \"string\",\n      \"model\": \"string\",\n      \"cost\": 9216.618560458694,\n      \"input_tokens\": 5654,\n      \"output_tokens\": 2671,\n      \"call_count\": 9035\n    },\n    {\n      \"category\": \"string\",\n      \"model\": \"string\",\n      \"cost\": 8468.99523182084,\n      \"input_tokens\": 123,\n      \"output_tokens\": 5941,\n      \"call_count\": 5262\n    }\n  ],\n  \"configured_models\": [\n    {\n      \"role\": \"string\",\n      \"model\": \"string\",\n      \"used_by\": \"string\"\n    },\n    {\n      \"role\": \"string\",\n      \"model\": \"string\",\n      \"used_by\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4eee9d39-654c-46db-82e5-16d187652267",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "superadmin",
+                    "costs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "granularity",
+                      "value": "daily"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "org_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a2d44e72-4cee-4517-95b3-cd1c2a6930c0",
+          "name": "Get Error Analytics",
+          "request": {
+            "name": "Get Error Analytics",
+            "description": {
+              "content": "Get error analytics across all organizations (superadmin only).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "superadmin",
+                "error-analytics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "granularity",
+                  "value": "daily"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<date>",
+                  "description": "Start date YYYY-MM-DD"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<date>",
+                  "description": "End date YYYY-MM-DD"
+                },
+                {
+                  "disabled": false,
+                  "key": "org_id",
+                  "value": "<uuid>",
+                  "description": "Filter to a specific org"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7399ef18-1239-40fb-beae-9afa5f7f26a7",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "superadmin",
+                    "error-analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "granularity",
+                      "value": "daily"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "org_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_failed_runs\": 8609,\n  \"total_runs\": 232,\n  \"failure_rate\": 3399.4824767274536,\n  \"error_by_category\": [\n    {\n      \"category\": \"string\",\n      \"count\": 3389,\n      \"percentage\": 927.4189174738224\n    },\n    {\n      \"category\": \"string\",\n      \"count\": 9492,\n      \"percentage\": 7592.457107778593\n    }\n  ],\n  \"error_by_org\": [\n    {\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"total_failed\": 9011,\n      \"error_breakdown\": [\n        {\n          \"category\": \"string\",\n          \"count\": 7331,\n          \"percentage\": 5868.785925885066\n        },\n        {\n          \"category\": \"string\",\n          \"count\": 1932,\n          \"percentage\": 3969.3514459485036\n        }\n      ]\n    },\n    {\n      \"org_id\": \"string\",\n      \"org_name\": \"string\",\n      \"total_failed\": 1285,\n      \"error_breakdown\": [\n        {\n          \"category\": \"string\",\n          \"count\": 6570,\n          \"percentage\": 7375.330011523782\n        },\n        {\n          \"category\": \"string\",\n          \"count\": 5265,\n          \"percentage\": 8062.1677286182\n        }\n      ]\n    }\n  ],\n  \"error_time_series\": [\n    {\n      \"period\": \"string\",\n      \"category\": \"string\",\n      \"count\": 7060\n    },\n    {\n      \"period\": \"string\",\n      \"category\": \"string\",\n      \"count\": 8584\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebbdf476-b6be-40b2-a90e-af1994b479ca",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "superadmin",
+                    "error-analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "granularity",
+                      "value": "daily"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "org_id",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "71e865e1-2fec-4a0c-a720-dc586aeea54f",
+    "name": "Unisson agent-evals superadmin API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

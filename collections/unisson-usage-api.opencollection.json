@@ -1,0 +1,59 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals usage API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Usage Stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/usage/stats",
+            "params": [
+              {
+                "name": "year",
+                "value": "",
+                "type": "query",
+                "description": "Filter by year"
+              },
+              {
+                "name": "month",
+                "value": "",
+                "type": "query",
+                "description": "Filter by month (1-12)"
+              },
+              {
+                "name": "day",
+                "value": "",
+                "type": "query",
+                "description": "Filter by day (1-31) - returns hourly breakdown"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "Timezone for hourly breakdown (e.g., 'America/Los_Angeles')"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get usage statistics for the current organization.\n\nReturns:\n- Run duration in seconds (sum of all non-sub runs) for the filtered period\n- Per-user breakdown of runs and duration for the filtered period\n- Daily usage breakdown for the filtered period (or hourly if day is specified)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

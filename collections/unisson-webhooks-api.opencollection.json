@@ -1,0 +1,58 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals webhooks API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Handle Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/triggers/webhook/:webhook_token",
+            "params": [
+              {
+                "name": "webhook_token",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Public webhook endpoint. Receives payloads and triggers agent runs.\n\nAuthentication is via the webhook_token in the URL.\nOptional HMAC-SHA256 signature verification via X-Webhook-Signature header."
+        },
+        {
+          "info": {
+            "name": "Clerk Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/webhooks/clerk"
+          },
+          "docs": "Handle Clerk webhook events\n\nEvents handled:\n- organization.created: Create organization in our database\n- organization.updated: Update organization in our database\n- organization.deleted: Delete organization from our database\n- organizationMembership.created: Link user to organization\n- organizationMembership.updated: Update user role\n- organizationMembership.deleted: Unlink user from organization\n- user.created: Create user in our database\n- user.updated: Update user in our database\n- user.del"
+        },
+        {
+          "info": {
+            "name": "Recall Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/webhooks/recall"
+          },
+          "docs": "Handle Recall.ai meeting-bot webhooks.\n\nWhen a bot finishes (status ``done``), enqueue transcript ingestion;\nthe heavy work (fetch transcript, create meetings, extract tickets)\nruns in a Celery task so the handler returns 200 quickly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

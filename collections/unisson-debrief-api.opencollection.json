@@ -1,0 +1,114 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals debrief API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "debrief",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Debrief",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/debrief/:run_id",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Fetch an existing debrief conversation for a run. 404 if none exists.\n\nRead-only / idempotent counterpart to POST /{run_id}/init. Tolerates a\nmissing trajectory (GC'd runs) so old conversations remain viewable.\nThe POST handlers below are guest-blocked by the write guard; this GET is\nreachable by guests, so it scopes the run to their granted customers\n(``authorize_run_access`` 404s a run outside them)."
+        },
+        {
+          "info": {
+            "name": "Init Debrief",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/debrief/:run_id/init",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initialize a debrief session by loading the run's trajectory from S3."
+        },
+        {
+          "info": {
+            "name": "Send Debrief Message",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/debrief/:run_id/message",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Send a message in a debrief session and stream the LLM response."
+        },
+        {
+          "info": {
+            "name": "Apply Debrief Proposal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/debrief/:run_id/apply-proposal",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Apply or decline a KB change proposal from a debrief session."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

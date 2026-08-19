@@ -1,0 +1,247 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals emails API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "emails",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Email Counts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/emails/counts",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Per-direction email counts for the toolbar chips. Honours the\nsame customer + search filters as ``list_emails`` so the chip\nnumbers match what the user would see if they clicked through.\nDirection filter itself is intentionally NOT applied — the chips\nsurface \"what would happen if I switched to this direction\"."
+        },
+        {
+          "info": {
+            "name": "List Emails",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/emails",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "direction_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status_filter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List emails for the organization with pagination and filters.\n\n``q`` does a case-insensitive contains-match across subject, from\naddress, sender name, and snippet — what the toolbar search input\nfeeds in. Body text is intentionally excluded for performance: the\ncolumn isn't indexed and matching it would scan every row in the\norg."
+        },
+        {
+          "info": {
+            "name": "Get Email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/emails/:email_id",
+            "params": [
+              {
+                "name": "email_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a specific email by ID."
+        },
+        {
+          "info": {
+            "name": "Delete Email",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/emails/:email_id",
+            "params": [
+              {
+                "name": "email_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete an email."
+        },
+        {
+          "info": {
+            "name": "Sync Gmail Emails",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/emails/sync/gmail",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Trigger a manual Gmail sync for the organization."
+        },
+        {
+          "info": {
+            "name": "Get Sync Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/emails/sync/status/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check the status of a Gmail sync task."
+        },
+        {
+          "info": {
+            "name": "Assign Email To Customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/emails/:email_id/assign",
+            "params": [
+              {
+                "name": "email_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Manually assign an email to a customer."
+        },
+        {
+          "info": {
+            "name": "Get Email Sync Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/emails/config/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get email sync config for a customer."
+        },
+        {
+          "info": {
+            "name": "Update Email Sync Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/emails/config/:customer_id",
+            "params": [
+              {
+                "name": "customer_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create or update email sync config for a customer."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

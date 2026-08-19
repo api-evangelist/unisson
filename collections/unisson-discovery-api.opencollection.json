@@ -1,0 +1,155 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals discovery API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Or Create Discovery Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/discovery/builder-conversation",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get-or-create the organization's single Discovery conversation (one\npersistent thread per org; the ``is_discovery`` partial unique index makes\nget-or-create race-safe; excluded from every conversation list)."
+        },
+        {
+          "info": {
+            "name": "List Discovery Sources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/discovery/sources",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the org's connected Discovery sources."
+        },
+        {
+          "info": {
+            "name": "Upsert Discovery Source",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/discovery/sources",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Connect/update email, Slack, Granola, or logs for Discovery."
+        },
+        {
+          "info": {
+            "name": "Delete Discovery Source",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/discovery/sources/:source_type",
+            "params": [
+              {
+                "name": "source_type",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Disconnect a source (soft-delete)."
+        },
+        {
+          "info": {
+            "name": "List Discovery Opportunities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/discovery/opportunities",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the opportunities surfaced in a Discovery conversation (right pane).\n\nEvery member of the organization may read its shared opportunities."
+        },
+        {
+          "info": {
+            "name": "Build Opportunity Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/discovery/opportunities/:opportunity_id/build",
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create the proposed agent (a normal org agent — it just exists, like any\nother) and return its id so the frontend opens the Agent Builder on it,\npre-filled, to refine + add triggers. Idempotent: if the agent was already\nbuilt, returns the existing one."
+        },
+        {
+          "info": {
+            "name": "Dismiss Opportunity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/discovery/opportunities/:opportunity_id",
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Dismiss (soft-delete) an opportunity from the org's shared thread."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

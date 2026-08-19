@@ -1,0 +1,249 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals skills API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "skills",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Skills",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/skills",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the org's skills (built-in + custom), built-ins first."
+        },
+        {
+          "info": {
+            "name": "Create Skill",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/skills",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a custom skill (members only)."
+        },
+        {
+          "info": {
+            "name": "Get Or Create Skill Builder Conversation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/skills/builder-conversation",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get-or-create the organization's Skill-Builder conversation (members\nonly). One persistent thread per org (``is_skill_builder``); the\npartial unique index makes get-or-create race-safe; excluded from every\nconversation list."
+        },
+        {
+          "info": {
+            "name": "Get Skill",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a single skill."
+        },
+        {
+          "info": {
+            "name": "Update Skill",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Direct edit of a skill (members only). name/description/instructions are\nversioned (source ``manual``); icon is set directly."
+        },
+        {
+          "info": {
+            "name": "Delete Skill",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Soft-delete a custom skill (members only). Built-ins reject delete (403)."
+        },
+        {
+          "info": {
+            "name": "Rename Skill",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id/rename",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Rename a custom skill's slug (and optionally its name). Built-in slugs are\nwiring — 403. Members only."
+        },
+        {
+          "info": {
+            "name": "List Instruction Versions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id/instruction-versions",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "A skill's instruction version history, newest first."
+        },
+        {
+          "info": {
+            "name": "Get Instruction Version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id/instruction-versions/:version_id",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "A single instruction version (full text)."
+        },
+        {
+          "info": {
+            "name": "Revert Instruction Version",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/skills/:skill_id/instruction-versions/:version_id/revert",
+            "params": [
+              {
+                "name": "skill_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Restore the skill's profile to a prior version (members only). Appends a\nnew ``revert`` version — history is never rewritten."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

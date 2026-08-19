@@ -1,0 +1,76 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals internal-auth-sessions API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "internal-auth-sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Bootstrap Auth Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/internal/auth-sessions/:token/bootstrap",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return the Kernel handoff payload so the page can mount KernelManagedAuth.\n\n410 once the session has been finalized or has expired — the page should\nshow an \"expired/already done\" view in that case."
+        },
+        {
+          "info": {
+            "name": "Finalize Auth Session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/internal/auth-sessions/:token/finalize",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Called by the page once the React component reports success / error.\n\nOn success: flips the linked run from authentication_required → pending\nand enqueues the same background execution /external/runs would have\nenqueued on a happy-path call. Idempotent: a second call returns 409."
+        },
+        {
+          "info": {
+            "name": "Get Connection Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/internal/auth-sessions/:token/connection-status",
+            "params": [
+              {
+                "name": "token",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Token-authenticated mirror of ``/managed-auth/connect/{id}/status``.\n\nUsed by the raw-liveview UI on ``/auth/m/{token}`` to detect login\ncompletion. Token is the credential — same model as ``/bootstrap`` and\n``/finalize``.\n\nDeliberately does NOT call ``record_authenticated_domain`` like the\nClerk-authed sibling does: the run's auth-pause resume in\n``browser_agent_runner`` already records the domain after ``/finalize``\nflips the run to ``pending`` and ``enqueue_run_execution`` runs.\n\nMostly a rea"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

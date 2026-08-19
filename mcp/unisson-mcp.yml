@@ -2,12 +2,10 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/unisson-openapi-original.json
-description: >-
-  No official hosted MCP server was found for Unisson (mcp.unisson.ai does
-  not resolve; no registry listing). Candidate tool list derived from the
-  external Runner API operations plus the highest-value platform operations
-  in the harvested OpenAPI — the surface Unisson itself markets as "connect
-  your agents" via the Runner API.
+description: No official hosted MCP server was found for Unisson (mcp.unisson.ai does not resolve; no
+  registry listing). Candidate tool list derived from the external Runner API operations plus the highest-value
+  platform operations in the harvested OpenAPI — the surface Unisson itself markets as "connect your agents"
+  via the Runner API.
 server:
   name: unisson
   transport: http
@@ -60,3 +58,9 @@ tools:
 - name: list_customers
   description: List customers tracked by the organization
   source_operation: openapi/unisson-openapi-original.json#list_customers_api_v1_customers_get
+deployment:
+  mode: none
+  verified: derived
+  tools: 16
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,548 @@
+{
+  "item": [
+    {
+      "id": "adb352ce-96c6-431f-8346-8f944c3cb55a",
+      "name": "email-drafts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "33013065-36e7-43d6-9b2a-03c5bfe6e65c",
+          "name": "List Email Drafts",
+          "request": {
+            "name": "List Email Drafts",
+            "description": {
+              "content": "List drafts for a conversation. Used by the FE on cold-load to\nrehydrate the inline cards after a refresh — without this, the card\nwould show the LLM's original args instead of the user's manual edits.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "email-drafts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "conversation_id",
+                  "value": "<uuid>",
+                  "description": "(Required) Conversation to scope drafts to."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Optional filter — usually 'pending'."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e750e075-f662-4365-a831-7a36dbfea458",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "conversation_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"drafts\": [\n    {\n      \"draft_id\": \"string\",\n      \"tool_call_id\": \"string\",\n      \"conversation_id\": \"string\",\n      \"status\": \"string\",\n      \"to\": [\n        \"string\",\n        \"string\"\n      ],\n      \"cc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"bcc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"subject\": \"string\",\n      \"body\": \"string\",\n      \"last_edited_by\": \"string\",\n      \"created_at\": \"2022-12-01T05:03:03.037Z\",\n      \"updated_at\": \"1960-06-21T08:12:46.851Z\",\n      \"attachments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"thread_id\": \"string\",\n      \"gmail_message_id\": \"string\",\n      \"sent_at\": \"1982-09-20T14:18:52.755Z\"\n    },\n    {\n      \"draft_id\": \"string\",\n      \"tool_call_id\": \"string\",\n      \"conversation_id\": \"string\",\n      \"status\": \"string\",\n      \"to\": [\n        \"string\",\n        \"string\"\n      ],\n      \"cc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"bcc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"subject\": \"string\",\n      \"body\": \"string\",\n      \"last_edited_by\": \"string\",\n      \"created_at\": \"2003-04-26T15:03:35.881Z\",\n      \"updated_at\": \"2020-07-12T12:03:55.982Z\",\n      \"attachments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"thread_id\": \"string\",\n      \"gmail_message_id\": \"string\",\n      \"sent_at\": \"1996-11-20T06:11:30.390Z\"\n    }\n  ],\n  \"total\": 7004\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9264d7f-93c1-4a03-a715-0828118a8acf",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "conversation_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c07f0d1-243d-4785-b2fe-02132de01a14",
+          "name": "Get Email Draft",
+          "request": {
+            "name": "Get Email Draft",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "email-drafts",
+                ":draft_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "draft_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "136061b1-b09b-4755-b5a6-adeae4bb8bf7",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts",
+                    ":draft_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "draft_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"draft_id\": \"string\",\n  \"tool_call_id\": \"string\",\n  \"conversation_id\": \"string\",\n  \"status\": \"string\",\n  \"to\": [\n    \"string\",\n    \"string\"\n  ],\n  \"cc\": [\n    \"string\",\n    \"string\"\n  ],\n  \"bcc\": [\n    \"string\",\n    \"string\"\n  ],\n  \"subject\": \"string\",\n  \"body\": \"string\",\n  \"last_edited_by\": \"string\",\n  \"created_at\": \"2006-12-26T01:42:18.402Z\",\n  \"updated_at\": \"2026-02-04T08:48:51.135Z\",\n  \"attachments\": [\n    \"string\",\n    \"string\"\n  ],\n  \"thread_id\": \"string\",\n  \"gmail_message_id\": \"string\",\n  \"sent_at\": \"1993-12-26T22:08:23.228Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3af4f0e0-38af-4bc0-aa89-37ba0ee65867",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts",
+                    ":draft_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "draft_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8adaed7d-05c2-4116-be2d-f80860ab61cb",
+          "name": "Patch Email Draft",
+          "request": {
+            "name": "Patch Email Draft",
+            "description": {
+              "content": "Apply a human edit to a pending draft.\n\nOnly the fields present in the body are written. 409 once the draft\nhas been sent or discarded — at that point its content is frozen. The\nnext LLM turn picks up the new state via context injection in\n``chat_service``; no LLM call happens here.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "email-drafts",
+                ":draft_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "draft_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"cc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"bcc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"attachments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e92a763d-2515-45eb-ad4a-4e656a7ed45f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts",
+                    ":draft_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "draft_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"cc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"bcc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"attachments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"draft_id\": \"string\",\n  \"tool_call_id\": \"string\",\n  \"conversation_id\": \"string\",\n  \"status\": \"string\",\n  \"to\": [\n    \"string\",\n    \"string\"\n  ],\n  \"cc\": [\n    \"string\",\n    \"string\"\n  ],\n  \"bcc\": [\n    \"string\",\n    \"string\"\n  ],\n  \"subject\": \"string\",\n  \"body\": \"string\",\n  \"last_edited_by\": \"string\",\n  \"created_at\": \"2006-12-26T01:42:18.402Z\",\n  \"updated_at\": \"2026-02-04T08:48:51.135Z\",\n  \"attachments\": [\n    \"string\",\n    \"string\"\n  ],\n  \"thread_id\": \"string\",\n  \"gmail_message_id\": \"string\",\n  \"sent_at\": \"1993-12-26T22:08:23.228Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98856481-eb52-46c9-91a0-570eb846597d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "email-drafts",
+                    ":draft_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "draft_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"cc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"bcc\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"subject\": \"<string>\",\n  \"body\": \"<string>\",\n  \"attachments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\",\n      \"input\": {},\n      \"ctx\": {}\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b8ea791b-2d92-4265-af93-66d6d37e31a5",
+    "name": "Unisson agent-evals email-drafts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

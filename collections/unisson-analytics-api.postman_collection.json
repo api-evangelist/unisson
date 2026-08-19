@@ -1,0 +1,124 @@
+{
+  "item": [
+    {
+      "id": "8bda0a74-0938-466a-97e8-370823b2d2d3",
+      "name": "analytics",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "998cd176-53d8-47cf-8867-08ad307454e8",
+          "name": "Get Analytics Overview",
+          "request": {
+            "name": "Get Analytics Overview",
+            "description": {
+              "content": "Get comprehensive analytics for the organization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "analytics",
+                "overview"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "3aa7e38e-ee42-4db5-9b6c-7dcafdd509d0",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "analytics",
+                    "overview"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_tasks_completed\": 7116,\n  \"total_hours_saved\": 8108.908548752766,\n  \"total_clicks_automated\": 2080,\n  \"total_workflows_learned\": 1928,\n  \"task_leaderboard\": [\n    {\n      \"user_id\": \"string\",\n      \"user_name\": \"string\",\n      \"email\": \"string\",\n      \"tasks_completed\": 2463,\n      \"hours_saved\": 3273.9118155206315,\n      \"clicks_automated\": 4321\n    },\n    {\n      \"user_id\": \"string\",\n      \"user_name\": \"string\",\n      \"email\": \"string\",\n      \"tasks_completed\": 7284,\n      \"hours_saved\": 2216.6078388543133,\n      \"clicks_automated\": 8637\n    }\n  ],\n  \"tasks_monthly_trend\": [\n    {\n      \"month\": \"string\",\n      \"count\": 2219\n    },\n    {\n      \"month\": \"string\",\n      \"count\": 4955\n    }\n  ],\n  \"task_success_rate\": 9393.411473944376,\n  \"tasks_by_source\": [\n    {\n      \"source\": \"string\",\n      \"count\": 8536\n    },\n    {\n      \"source\": \"string\",\n      \"count\": 6583\n    }\n  ],\n  \"avg_task_duration_seconds\": 3569.578644992293,\n  \"tasks\": {\n    \"total_tasks\": 8314,\n    \"open_tasks\": 666,\n    \"resolved_tasks\": 8598,\n    \"resolved_by_agents\": 8366,\n    \"resolution_rate\": 8786.212043181727,\n    \"avg_resolution_hours\": 450.8676919437171,\n    \"by_status\": [\n      {\n        \"status\": \"string\",\n        \"count\": 4644\n      },\n      {\n        \"status\": \"string\",\n        \"count\": 8428\n      }\n    ],\n    \"by_severity\": [\n      {\n        \"severity\": \"string\",\n        \"count\": 2133\n      },\n      {\n        \"severity\": \"string\",\n        \"count\": 1888\n      }\n    ],\n    \"monthly_trend\": [\n      {\n        \"month\": \"string\",\n        \"count\": 3569\n      },\n      {\n        \"month\": \"string\",\n        \"count\": 1568\n      }\n    ]\n  },\n  \"top_workflows\": [\n    {\n      \"workflow_id\": \"string\",\n      \"name\": \"string\",\n      \"run_count\": 8090\n    },\n    {\n      \"workflow_id\": \"string\",\n      \"name\": \"string\",\n      \"run_count\": 5871\n    }\n  ],\n  \"kb\": {\n    \"total_features\": 5725,\n    \"total_workflows\": 7200,\n    \"total_company_knowledge\": 4632,\n    \"total_draft_workflows\": 6811,\n    \"auto_discovered_features\": 4720,\n    \"auto_discovered_workflows\": 5784,\n    \"manually_added_company_knowledge\": 2966,\n    \"manually_added_draft_workflows\": 1987,\n    \"edits_applied\": 4638,\n    \"total_kb_updates\": 7956,\n    \"kb_leaderboard\": [\n      {\n        \"user_id\": \"string\",\n        \"user_name\": \"string\",\n        \"email\": \"string\",\n        \"company_knowledge_added\": 6217,\n        \"workflows_discovered\": 2076,\n        \"draft_workflows_created\": 6708,\n        \"kb_edits\": 2467,\n        \"total_contributions\": 9456\n      },\n      {\n        \"user_id\": \"string\",\n        \"user_name\": \"string\",\n        \"email\": \"string\",\n        \"company_knowledge_added\": 4803,\n        \"workflows_discovered\": 7729,\n        \"draft_workflows_created\": 1663,\n        \"kb_edits\": 305,\n        \"total_contributions\": 3276\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "1a7f5823-f44d-4e62-93d7-5587f79ed3fe",
+    "name": "Unisson agent-evals analytics API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals superadmin API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "superadmin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check Superadmin",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/superadmin/check",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check if the current organization has superadmin access."
+        },
+        {
+          "info": {
+            "name": "Get Costs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/superadmin/costs",
+            "params": [
+              {
+                "name": "granularity",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start date YYYY-MM-DD"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End date YYYY-MM-DD"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific org"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get cost data across all organizations (superadmin only)."
+        },
+        {
+          "info": {
+            "name": "Get Error Analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/superadmin/error-analytics",
+            "params": [
+              {
+                "name": "granularity",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start date YYYY-MM-DD"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End date YYYY-MM-DD"
+              },
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific org"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get error analytics across all organizations (superadmin only)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

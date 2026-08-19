@@ -1,0 +1,129 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals external-api API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "external-api",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create External Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/external/runs",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new run via External API.\n\nRequires scope: runs:create\n\nThe run will execute asynchronously. Use webhooks or polling to track status.\n\nReturns:\n    Run ID and initial status. Poll GET /external/runs/{id} or configure\n    webhooks to receive status updates."
+        },
+        {
+          "info": {
+            "name": "Get External Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/external/runs/:run_id",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get run status and results.\n\nRequires scope: runs:read\n\nReturns:\n- status: pending, queued, running, coordinating, authentication_required, waiting_for_input, completed, failed\n- If authentication_required: includes liveview_url for user login\n- If waiting_for_input: includes question for clarification\n- If completed: includes structured_output based on task_type\n- If failed: includes error_message"
+        },
+        {
+          "info": {
+            "name": "Resume External Run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/external/runs/:run_id/resume",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resume a run after user authentication or input.\n\nCall this after the user has completed authentication via liveview_url,\nor to provide an answer to a clarifying question.\n\nFor authentication_required: Just call this endpoint (no body needed).\nFor waiting_for_input: Include the answer in the request body."
+        },
+        {
+          "info": {
+            "name": "External Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/external/status",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Validate API key and return basic status info.\n\nUse this endpoint to verify your API key is working correctly."
+        },
+        {
+          "info": {
+            "name": "Configure Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/v1/external/webhook",
+            "headers": [
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Configure webhook URL and events for the current API key.\n\nAllows integrators to self-service update their webhook configuration\nwithout going through the dashboard."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

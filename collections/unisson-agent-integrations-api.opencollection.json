@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Unisson agent-evals agent-integrations API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "agent-integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Scopes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/scopes",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Expose the hybrid-scoping registry so the frontend tabs don't\nduplicate the classification logic in TypeScript."
+        },
+        {
+          "info": {
+            "name": "List Apps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/apps",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Search the Pipedream app catalog (natively-handled apps are hidden)."
+        },
+        {
+          "info": {
+            "name": "List Connections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/connections",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List the current user's connected apps (from Pipedream directly)."
+        },
+        {
+          "info": {
+            "name": "Connect App",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/connections/:app_slug/connect",
+            "params": [
+              {
+                "name": "app_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "redirect_url",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a Pipedream Connect Link URL for the user to authorize an app."
+        },
+        {
+          "info": {
+            "name": "Disconnect App",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/connections/:app_slug",
+            "params": [
+              {
+                "name": "app_slug",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke a connection on Pipedream and mark it revoked locally."
+        },
+        {
+          "info": {
+            "name": "Pipedream Webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/v1/agent-integrations/pipedream/webhook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Handle Pipedream Connect webhook notifications.\n\nCalled when a user successfully connects or disconnects an app.\nUpserts the IntegrationConnection row accordingly."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -80,6 +80,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Agents
+  tags_raw:
   - agents
   properties:
   - type: OpenAPI
@@ -90,6 +92,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -99,7 +103,8 @@ apis:
   description: The apis API from Unisson — 12 operation(s) for apis.
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
-  tags:
+  tags: []
+  tags_raw:
   - apis
   properties:
   - type: OpenAPI
@@ -120,6 +125,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Application
+  tags_raw:
   - apps
   properties:
   - type: OpenAPI
@@ -130,6 +137,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -150,6 +159,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Chat
+  tags_raw:
   - chat
   properties:
   - type: OpenAPI
@@ -180,6 +191,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Customers
+  tags_raw:
   - customers
   properties:
   - type: OpenAPI
@@ -200,6 +213,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Discovery
+  tags_raw:
   - discovery
   properties:
   - type: OpenAPI
@@ -210,6 +225,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Documents
+  tags_raw:
   - documents
   properties:
   - type: OpenAPI
@@ -220,6 +237,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Email Drafts
+  tags_raw:
   - email-drafts
   properties:
   - type: OpenAPI
@@ -230,6 +249,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Emails
+  tags_raw:
   - emails
   properties:
   - type: OpenAPI
@@ -240,6 +261,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - External API
+  tags_raw:
   - external-api
   properties:
   - type: OpenAPI
@@ -280,6 +303,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Integration
+  tags_raw:
   - integrations
   properties:
   - type: OpenAPI
@@ -300,6 +325,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Knowledge Base
+  tags_raw:
   - knowledge-base
   properties:
   - type: OpenAPI
@@ -320,6 +347,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Managed Auth
+  tags_raw:
   - managed-auth
   properties:
   - type: OpenAPI
@@ -330,6 +359,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Meetings
+  tags_raw:
   - meetings
   properties:
   - type: OpenAPI
@@ -340,6 +371,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Memory
+  tags_raw:
   - memory
   properties:
   - type: OpenAPI
@@ -350,6 +383,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Notification
+  tags_raw:
   - notifications
   properties:
   - type: OpenAPI
@@ -360,6 +395,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Onboarding
+  tags_raw:
   - onboarding
   properties:
   - type: OpenAPI
@@ -370,6 +407,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Organization
+  tags_raw:
   - organizations
   properties:
   - type: OpenAPI
@@ -380,6 +419,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Product
+  tags_raw:
   - products
   properties:
   - type: OpenAPI
@@ -400,6 +441,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Runs
+  tags_raw:
   - runs
   properties:
   - type: OpenAPI
@@ -410,6 +453,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Scheduled Runs
+  tags_raw:
   - scheduled-runs
   properties:
   - type: OpenAPI
@@ -420,6 +465,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Skills
+  tags_raw:
   - skills
   properties:
   - type: OpenAPI
@@ -430,6 +477,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Superadmin
+  tags_raw:
   - superadmin
   properties:
   - type: OpenAPI
@@ -440,6 +489,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Task Types
+  tags_raw:
   - task-types
   properties:
   - type: OpenAPI
@@ -450,6 +501,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Task
+  tags_raw:
   - tasks
   properties:
   - type: OpenAPI
@@ -470,6 +523,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Usage
+  tags_raw:
   - usage
   properties:
   - type: OpenAPI
@@ -480,6 +535,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Webhook
+  tags_raw:
   - webhooks
   properties:
   - type: OpenAPI
@@ -490,6 +547,8 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
+  - Widget
+  tags_raw:
   - widget
   properties:
   - type: OpenAPI

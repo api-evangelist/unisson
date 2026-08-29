@@ -12,6 +12,18 @@ description: >-
   external Runner API for triggering runs and receiving webhook callbacks
   from your own tools.
 url: https://raw.githubusercontent.com/api-evangelist/unisson/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -554,6 +566,9 @@ apis:
   - type: OpenAPI
     url: openapi/unisson-widget-api-openapi.yml
 common:
+- type: CapabilityMap
+  url: capabilities/unisson-capability-edges.yml
+  name: Unisson Business Capability Map
 - type: Overlay
   url: overlays/unisson-platform-overlay.yaml
 - type: DomainSecurity

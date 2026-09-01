@@ -249,7 +249,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - email-drafts
+  - Email Drafts
   tags_raw:
   - email-drafts
   properties:
@@ -273,7 +273,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - external-api
+  - External API
   tags_raw:
   - external-api
   properties:
@@ -337,7 +337,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - knowledge-base
+  - Knowledge Base
   tags_raw:
   - knowledge-base
   properties:
@@ -359,7 +359,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - managed-auth
+  - Managed Auth
   tags_raw:
   - managed-auth
   properties:
@@ -453,7 +453,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - runs
+  - Runs
   tags_raw:
   - runs
   properties:
@@ -465,7 +465,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - scheduled-runs
+  - Scheduled Runs
   tags_raw:
   - scheduled-runs
   properties:
@@ -489,7 +489,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - superadmin
+  - Superadmin
   tags_raw:
   - superadmin
   properties:
@@ -501,7 +501,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - task-types
+  - Task Types
   tags_raw:
   - task-types
   properties:
@@ -559,7 +559,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - widget
+  - Widget
   tags_raw:
   - widget
   properties:

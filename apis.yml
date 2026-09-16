@@ -107,17 +107,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/unisson-analytics-api-openapi.yml
-- aid: unisson:unisson-apis-api
-  name: Unisson apis API
-  description: The apis API from Unisson — 12 operation(s) for apis.
-  humanURL: https://www.unisson.ai/
-  baseURL: https://api.unisson.ai
-  tags: []
-  tags_raw:
-  - apis
-  properties:
-  - type: OpenAPI
-    url: openapi/unisson-apis-api-openapi.yml
 - aid: unisson:unisson-appdb-api
   name: Unisson appdb API
   description: The appdb API from Unisson — 7 operation(s) for appdb.
@@ -562,6 +551,16 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/unisson-widget-api-openapi.yml
+- aid: unisson:unisson-ap-is-api
+  name: Unisson AP Is API
+  description: The AP Is API from Unisson — 12 operation(s) for ap is.
+  humanURL: https://www.unisson.ai/
+  baseURL: https://api.unisson.ai
+  tags:
+  - AP Is
+  properties:
+  - type: OpenAPI
+    url: openapi/unisson-ap-is-api-openapi.yml
 common:
 - type: CapabilityMap
   url: capabilities/unisson-capability-edges.yml

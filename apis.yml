@@ -1,16 +1,12 @@
 aid: unisson
 name: Unisson
-description: >-
-  Unisson (YC W26) builds AI agents that act as subject-matter experts for B2B
-  software implementation and customer-facing teams. Its Runner agent executes
-  complex deployment, onboarding, and administration tasks directly inside a
-  product, while Explorer maintains an always up-to-date knowledge base of how
-  the product works. Agents are reachable over Slack, Microsoft Teams,
-  WhatsApp, email, and an embeddable widget, and the platform exposes a
-  bearer-token REST API (api.unisson.ai) covering agents, runs, scheduled
-  runs, skills, knowledge base, integrations, customers, meetings, and an
-  external Runner API for triggering runs and receiving webhook callbacks
-  from your own tools.
+description: Unisson (YC W26) builds AI agents that act as subject-matter experts for B2B software implementation
+  and customer-facing teams. Its Runner agent executes complex deployment, onboarding, and administration
+  tasks directly inside a product, while Explorer maintains an always up-to-date knowledge base of how
+  the product works. Agents are reachable over Slack, Microsoft Teams, WhatsApp, email, and an embeddable
+  widget, and the platform exposes a bearer-token REST API (api.unisson.ai) covering agents, runs, scheduled
+  runs, skills, knowledge base, integrations, customers, meetings, and an external Runner API for triggering
+  runs and receiving webhook callbacks from your own tools.
 url: https://raw.githubusercontent.com/api-evangelist/unisson/refs/heads/main/apis.yml
 deliveryModel:
   model: saas
@@ -46,7 +42,7 @@ x-tier: enriched
 x-tier-reason: live-openapi-harvested
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-09-16'
 tags:
 - Company
 - Artificial Intelligence
@@ -269,7 +265,7 @@ apis:
   - type: OpenAPI
     url: openapi/unisson-emails-api-openapi.yml
 - aid: unisson:unisson-external-api-api
-  name: Unisson external-api API
+  name: Unisson external-api
   description: The external-api API from Unisson — 5 operation(s) for external-api.
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
@@ -521,7 +517,7 @@ apis:
   - type: OpenAPI
     url: openapi/unisson-tasks-api-openapi.yml
 - aid: unisson:unisson-unisson-api
-  name: Unisson Unisson API
+  name: Unisson API
   description: The Unisson API from Unisson — 1 operation(s) for unisson.
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
@@ -594,7 +590,10 @@ common:
   url: https://trust.unisson.ai/
 - type: X-MCPServerCandidate
   url: mcp/unisson-mcp.yml
-  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate
+    — a tool list derived from the published API contracts, not an existing server. The scorer already
+    read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type
+    surfaces with a server that does not exist.'
 - type: LLMsTxt
   url: llms/unisson-llms.txt
 - type: Conformance

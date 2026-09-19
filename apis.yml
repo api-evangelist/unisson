@@ -247,7 +247,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - Emails
+  - Email
   tags_raw:
   - emails
   properties:
@@ -545,7 +545,7 @@ apis:
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
   tags:
-  - Widget
+  - Widgets
   tags_raw:
   - widget
   properties:
@@ -556,7 +556,8 @@ apis:
   description: The apis API from Unisson — 12 operation(s) for apis.
   humanURL: https://www.unisson.ai/
   baseURL: https://api.unisson.ai
-  tags:
+  tags: []
+  tags_raw:
   - apis
   properties:
   - type: OpenAPI

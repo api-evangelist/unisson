@@ -1,0 +1,52 @@
+slug: unisson
+provider: Unisson
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: agent-evals
+  spec_file: unisson-agent-evals-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /api/v1/agents/{agent_id}/eval-runs  Create Eval Run; schemas EvalCriterion, TestCaseCreate,
+    EvalCaseResultResponse
+  reason: Manages test cases and evaluation runs against AI agents with scoring criteria — evaluation
+    tooling in the AI/ML model lifecycle (MLOps). Could alternatively be read as general software quality
+    engineering, hence 0.7.
+- tag: knowledge-base
+  spec_file: unisson-knowledge-base-api-openapi.yml
+  capability_id: BC-830
+  capability_id_l1: BC-830
+  capability_name: Knowledge Management
+  confidence: 0.7
+  evidence: KBCompanyKnowledgeResponse, KBAgentInsightResponse, 'List Features', 'List Workflows', 'Generate
+    Draft Workflow Endpoint'
+  reason: This surface curates a structured body of organisational/product knowledge — features, workflows,
+    company knowledge and agent insights — matching the vendor's 'always up-to-date knowledge base of
+    how the product works'. Knowledge Management is the honest L1; the split between capture and curation
+    is not determinable, so no L2.
+- tag: organizations
+  spec_file: unisson-organizations-api-openapi.yml
+  capability_id: BC-4230.20
+  capability_id_l1: BC-4230
+  capability_name: Tenant Configuration Management
+  confidence: 0.7
+  evidence: GET /api/v1/organizations/me/access-control; PATCH /api/v1/organizations/me/allowed-domains;
+    PATCH /api/v1/organizations/me/proxy  Update Proxy Settings; schemas UpdateMemberDefaultsRequest,
+    ApiKeyCreateRequest
+  reason: 'Operations manage the customer organisation (tenant) in the multi-tenant service: member listing
+    and invites, permission defaults/overrides, API keys, and a long list of per-tenant settings (allowed
+    domains, default start URL, browser context, proxy, Slack notification level). That is tenant configuration
+    management; some ambiguity because member/permission and API-key surfaces also touch identity and
+    credentialing.'

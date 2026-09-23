@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals skills API
+  title: Unisson Skills API
   version: 1.0.0
 tags:
-- name: skills
+- name: Skills
 paths:
   /api/v1/skills:
     get:
       tags:
-      - skills
+      - Skills
       summary: List Skills
       description: List the org's skills (built-in + custom), built-ins first.
       operationId: list_skills_api_v1_skills_get
@@ -26,7 +26,7 @@ paths:
       - HTTPBearer: []
     post:
       tags:
-      - skills
+      - Skills
       summary: Create Skill
       description: Create a custom skill (members only).
       operationId: create_skill_api_v1_skills_post
@@ -54,7 +54,7 @@ paths:
   /api/v1/skills/builder-conversation:
     get:
       tags:
-      - skills
+      - Skills
       summary: Get Or Create Skill Builder Conversation
       description: 'Get-or-create the organization''s Skill-Builder conversation (members
 
@@ -76,7 +76,7 @@ paths:
   /api/v1/skills/{skill_id}:
     get:
       tags:
-      - skills
+      - Skills
       summary: Get Skill
       description: Get a single skill.
       operationId: get_skill_api_v1_skills__skill_id__get
@@ -105,7 +105,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     put:
       tags:
-      - skills
+      - Skills
       summary: Update Skill
       description: 'Direct edit of a skill (members only). name/description/instructions are
 
@@ -142,7 +142,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - skills
+      - Skills
       summary: Delete Skill
       description: Soft-delete a custom skill (members only). Built-ins reject delete (403).
       operationId: delete_skill_api_v1_skills__skill_id__delete
@@ -168,7 +168,7 @@ paths:
   /api/v1/skills/{skill_id}/rename:
     patch:
       tags:
-      - skills
+      - Skills
       summary: Rename Skill
       description: 'Rename a custom skill''s slug (and optionally its name). Built-in slugs are
 
@@ -206,7 +206,7 @@ paths:
   /api/v1/skills/{skill_id}/instruction-versions:
     get:
       tags:
-      - skills
+      - Skills
       summary: List Instruction Versions
       description: A skill's instruction version history, newest first.
       operationId: list_instruction_versions_api_v1_skills__skill_id__instruction_versions_get
@@ -256,7 +256,7 @@ paths:
   /api/v1/skills/{skill_id}/instruction-versions/{version_id}:
     get:
       tags:
-      - skills
+      - Skills
       summary: Get Instruction Version
       description: A single instruction version (full text).
       operationId: get_instruction_version_api_v1_skills__skill_id__instruction_versions__version_id__get
@@ -293,7 +293,7 @@ paths:
   /api/v1/skills/{skill_id}/instruction-versions/{version_id}/revert:
     post:
       tags:
-      - skills
+      - Skills
       summary: Revert Instruction Version
       description: 'Restore the skill''s profile to a prior version (members only). Appends a
 
@@ -331,161 +331,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SkillResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        slug:
-          type: string
-          title: Slug
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instructions
-        origin:
-          type: string
-          title: Origin
-        is_builtin:
-          type: boolean
-          title: Is Builtin
-        entry_tool:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entry Tool
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        created_by:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Created By
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - id
-      - organization_id
-      - slug
-      - name
-      - origin
-      - is_builtin
-      - created_at
-      - updated_at
-      title: SkillResponse
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    SkillInstructionVersionResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        skill_id:
-          type: string
-          format: uuid
-          title: Skill Id
-        version_number:
-          type: integer
-          title: Version Number
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instructions
-        source:
-          type: string
-          title: Source
-        created_by:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Created By
-        parent_version_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Parent Version Id
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - skill_id
-      - version_number
-      - source
-      - created_at
-      title: SkillInstructionVersionResponse
-      description: One immutable snapshot in a skill's instruction history.
     ValidationError:
       properties:
         loc:
@@ -512,6 +357,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SkillRenameRequest:
       properties:
         slug:
@@ -585,6 +439,67 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
+    SkillInstructionVersionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        skill_id:
+          type: string
+          format: uuid
+          title: Skill Id
+        version_number:
+          type: integer
+          title: Version Number
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - skill_id
+      - version_number
+      - source
+      - created_at
+      title: SkillInstructionVersionResponse
+      description: One immutable snapshot in a skill's instruction history.
     SkillCreate:
       properties:
         slug:
@@ -651,15 +566,100 @@ components:
       type: object
       title: SkillUpdate
       description: Direct edit (PUT). name/description/instructions are versioned; icon isn't.
-    HTTPValidationError:
+    UsedAgent:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    SkillResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        origin:
+          type: string
+          title: Origin
+        is_builtin:
+          type: boolean
+          title: Is Builtin
+        entry_tool:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entry Tool
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - slug
+      - name
+      - origin
+      - is_builtin
+      - created_at
+      - updated_at
+      title: SkillResponse
   securitySchemes:
     HTTPBearer:
       type: http

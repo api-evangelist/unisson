@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals scheduled-runs API
+  title: Unisson Scheduled Runs API
   version: 1.0.0
 tags:
-- name: scheduled-runs
+- name: Scheduled Runs
 paths:
   /api/v1/scheduled-runs:
     get:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: List Scheduled Runs
       description: List all scheduled runs for the organization (non-deleted, ordered by next_run_at).
       operationId: list_scheduled_runs_api_v1_scheduled_runs_get
@@ -23,7 +23,7 @@ paths:
       - HTTPBearer: []
     post:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: Create Scheduled Run
       description: Create a new scheduled run.
       operationId: create_scheduled_run_api_v1_scheduled_runs_post
@@ -51,7 +51,7 @@ paths:
   /api/v1/scheduled-runs/{scheduled_run_id}:
     get:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: Get Scheduled Run
       description: Get a specific scheduled run.
       operationId: get_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__get
@@ -79,7 +79,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: Cancel Scheduled Run
       description: Cancel and delete a scheduled run.
       operationId: cancel_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__delete
@@ -104,7 +104,7 @@ paths:
   /api/v1/scheduled-runs/{scheduled_run_id}/pause:
     post:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: Pause Scheduled Run
       description: Pause a recurring scheduled run.
       operationId: pause_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__pause_post
@@ -133,7 +133,7 @@ paths:
   /api/v1/scheduled-runs/{scheduled_run_id}/resume:
     post:
       tags:
-      - scheduled-runs
+      - Scheduled Runs
       summary: Resume Scheduled Run
       description: Resume a paused scheduled run.
       operationId: resume_scheduled_run_api_v1_scheduled_runs__scheduled_run_id__resume_post
@@ -161,48 +161,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ScheduledRunListResponse:
-      properties:
-        scheduled_runs:
-          items:
-            $ref: '#/components/schemas/ScheduledRunResponse'
-          type: array
-          title: Scheduled Runs
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - scheduled_runs
-      - total
-      title: ScheduledRunListResponse
-      description: List of scheduled runs
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ScheduledRunCreate:
       properties:
         request_text:
@@ -250,6 +208,57 @@ components:
       - scheduled_at
       title: ScheduledRunCreate
       description: Request to create a new scheduled run
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ScheduledRunListResponse:
+      properties:
+        scheduled_runs:
+          items:
+            $ref: '#/components/schemas/ScheduledRunResponse'
+          type: array
+          title: Scheduled Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - scheduled_runs
+      - total
+      title: ScheduledRunListResponse
+      description: List of scheduled runs
     ScheduledRunResponse:
       properties:
         request_text:
@@ -337,15 +346,6 @@ components:
       - created_at
       title: ScheduledRunResponse
       description: Scheduled run response
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

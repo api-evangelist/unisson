@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals customer-files API
+  title: Unisson Customer Files API
   version: 1.0.0
 tags:
 - name: customer-files
@@ -131,6 +131,52 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CustomerFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/CustomerFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: CustomerFileListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CustomerFileResponse:
       properties:
         id:
@@ -197,52 +243,6 @@ components:
         ``models.workspace_file_customer``). ``id`` is the provenance row''s PK —
 
         used to address the file in the content/delete endpoints.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CustomerFileListResponse:
-      properties:
-        files:
-          items:
-            $ref: '#/components/schemas/CustomerFileResponse'
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: CustomerFileListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

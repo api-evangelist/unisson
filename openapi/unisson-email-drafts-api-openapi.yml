@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals email-drafts API
+  title: Unisson Email Drafts API
   version: 1.0.0
 tags:
-- name: email-drafts
+- name: Email Drafts
 paths:
   /api/v1/email-drafts:
     get:
       tags:
-      - email-drafts
+      - Email Drafts
       summary: List Email Drafts
       description: 'List drafts for a conversation. Used by the FE on cold-load to
 
@@ -54,7 +54,7 @@ paths:
   /api/v1/email-drafts/{draft_id}:
     get:
       tags:
-      - email-drafts
+      - Email Drafts
       summary: Get Email Draft
       operationId: get_email_draft_api_v1_email_drafts__draft_id__get
       security:
@@ -82,7 +82,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     patch:
       tags:
-      - email-drafts
+      - Email Drafts
       summary: Patch Email Draft
       description: 'Apply a human edit to a pending draft.
 
@@ -126,6 +126,56 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EmailDraftListResponse:
+      properties:
+        drafts:
+          items:
+            $ref: '#/components/schemas/EmailDraftResponse'
+          type: array
+          title: Drafts
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - drafts
+      - total
+      title: EmailDraftListResponse
     EmailDraftResponse:
       properties:
         draft_id:
@@ -210,47 +260,6 @@ components:
       - created_at
       - updated_at
       title: EmailDraftResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EmailDraftListResponse:
-      properties:
-        drafts:
-          items:
-            $ref: '#/components/schemas/EmailDraftResponse'
-          type: array
-          title: Drafts
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - drafts
-      - total
-      title: EmailDraftListResponse
     EmailDraftPatchRequest:
       properties:
         to:
@@ -298,15 +307,6 @@ components:
         the request body are written; missing keys are left as-is so the
 
         user can change just the subject without re-sending the body.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

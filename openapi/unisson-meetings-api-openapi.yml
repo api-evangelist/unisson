@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals meetings API
+  title: Unisson Meetings API
   version: 1.0.0
 tags:
-- name: meetings
+- name: Meetings
 paths:
   /api/v1/meetings/upcoming-events:
     get:
       tags:
-      - meetings
+      - Meetings
       summary: List Upcoming Events
       description: 'Live upcoming Calendar events for one customer (no DB persistence).
 
@@ -57,7 +57,7 @@ paths:
   /api/v1/meetings:
     get:
       tags:
-      - meetings
+      - Meetings
       summary: List Meetings
       description: List all meetings for the organization with pagination and filters.
       operationId: list_meetings_api_v1_meetings_get
@@ -122,7 +122,7 @@ paths:
   /api/v1/meetings/{meeting_id}:
     get:
       tags:
-      - meetings
+      - Meetings
       summary: Get Meeting
       description: Get a specific meeting by ID.
       operationId: get_meeting_api_v1_meetings__meeting_id__get
@@ -151,7 +151,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - meetings
+      - Meetings
       summary: Delete Meeting
       description: Soft-delete a meeting.
       operationId: delete_meeting_api_v1_meetings__meeting_id__delete
@@ -180,7 +180,7 @@ paths:
   /api/v1/meetings/{meeting_id}/recording:
     get:
       tags:
-      - meetings
+      - Meetings
       summary: Get Meeting Recording
       description: 'On-demand Recall playback data for a bot-recorded meeting: a freshly
 
@@ -218,7 +218,7 @@ paths:
   /api/v1/meetings/{meeting_id}/reprocess:
     post:
       tags:
-      - meetings
+      - Meetings
       summary: Reprocess Meeting
       description: Re-run LLM analysis on an existing meeting transcript.
       operationId: reprocess_meeting_api_v1_meetings__meeting_id__reprocess_post
@@ -248,7 +248,7 @@ paths:
   /api/v1/meetings/import:
     post:
       tags:
-      - meetings
+      - Meetings
       summary: Import Meeting Transcript
       description: 'Import a meeting transcript from a file as a brand-new
 
@@ -288,7 +288,7 @@ paths:
   /api/v1/meetings/{meeting_id}/transcript:
     post:
       tags:
-      - meetings
+      - Meetings
       summary: Attach Meeting Transcript
       description: 'Attach an uploaded transcript to an EXISTING meeting and run
 
@@ -330,7 +330,7 @@ paths:
   /api/v1/meetings/sync/google_meet:
     post:
       tags:
-      - meetings
+      - Meetings
       summary: Sync Google Meet
       description: Sync Google Calendar meetings across all enabled customers.
       operationId: sync_google_meet_api_v1_meetings_sync_google_meet_post
@@ -345,16 +345,49 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    Body_import_meeting_transcript_api_v1_meetings_import_post:
+    MeetingListResponse:
       properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
+        meetings:
+          items:
+            $ref: '#/components/schemas/MeetingListItem'
+          type: array
+          title: Meetings
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
       type: object
       required:
-      - file
-      title: Body_import_meeting_transcript_api_v1_meetings_import_post
+      - meetings
+      - total
+      - page
+      - page_size
+      title: MeetingListResponse
+      description: Paginated list of meetings.
+    MeetingTaskSummary:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+      type: object
+      required:
+      - id
+      - title
+      - status
+      title: MeetingTaskSummary
+      description: Lightweight task info for meeting responses.
     Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post:
       properties:
         file:
@@ -415,20 +448,49 @@ components:
       - msg
       - type
       title: ValidationError
-    MeetingSyncResponse:
+    HTTPValidationError:
       properties:
-        new_meetings:
-          type: integer
-          title: New Meetings
-        message:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MeetingRecordingResponse:
+      properties:
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+        segments:
+          items:
+            $ref: '#/components/schemas/TranscriptSegment'
+          type: array
+          title: Segments
+          default: []
+      type: object
+      title: MeetingRecordingResponse
+      description: 'On-demand playback data for a bot-recorded meeting. ``video_url`` is a
+
+        short-lived presigned link fetched live from Recall (never persisted) and is
+
+        null once the 7-day retention window lapses. ``segments`` is a fresh
+
+        structured transcript — a fallback for rows ingested before segments were
+
+        persisted; callers prefer the meeting''s stored ``transcript_segments``.'
+    Body_import_meeting_transcript_api_v1_meetings_import_post:
+      properties:
+        file:
           type: string
-          title: Message
+          contentMediaType: application/octet-stream
+          title: File
       type: object
       required:
-      - new_meetings
-      - message
-      title: MeetingSyncResponse
-      description: Response after syncing meetings from a provider.
+      - file
+      title: Body_import_meeting_transcript_api_v1_meetings_import_post
     MeetingResponse:
       properties:
         id:
@@ -539,54 +601,20 @@ components:
       - created_at
       title: MeetingResponse
       description: Schema for meeting response.
-    MeetingRecordingResponse:
+    MeetingSyncResponse:
       properties:
-        video_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Video Url
-        segments:
-          items:
-            $ref: '#/components/schemas/TranscriptSegment'
-          type: array
-          title: Segments
-          default: []
-      type: object
-      title: MeetingRecordingResponse
-      description: 'On-demand playback data for a bot-recorded meeting. ``video_url`` is a
-
-        short-lived presigned link fetched live from Recall (never persisted) and is
-
-        null once the 7-day retention window lapses. ``segments`` is a fresh
-
-        structured transcript — a fallback for rows ingested before segments were
-
-        persisted; callers prefer the meeting''s stored ``transcript_segments``.'
-    MeetingListResponse:
-      properties:
-        meetings:
-          items:
-            $ref: '#/components/schemas/MeetingListItem'
-          type: array
-          title: Meetings
-        total:
+        new_meetings:
           type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
+          title: New Meetings
+        message:
+          type: string
+          title: Message
       type: object
       required:
-      - meetings
-      - total
-      - page
-      - page_size
-      title: MeetingListResponse
-      description: Paginated list of meetings.
+      - new_meetings
+      - message
+      title: MeetingSyncResponse
+      description: Response after syncing meetings from a provider.
     MeetingListItem:
       properties:
         id:
@@ -677,34 +705,6 @@ components:
       - created_at
       title: MeetingListItem
       description: Lightweight meeting for list view (no transcript_text).
-    MeetingTaskSummary:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - title
-      - status
-      title: MeetingTaskSummary
-      description: Lightweight task info for meeting responses.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

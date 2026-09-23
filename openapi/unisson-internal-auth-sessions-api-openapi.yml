@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals internal-auth-sessions API
+  title: Unisson Internal Auth Sessions API
   version: 1.0.0
 tags:
 - name: internal-auth-sessions
@@ -133,15 +133,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    FinalizeResponse:
-      properties:
-        redirect_url:
-          type: string
-          title: Redirect Url
-      type: object
-      required:
-      - redirect_url
-      title: FinalizeResponse
     ValidationError:
       properties:
         loc:
@@ -168,6 +159,24 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FinalizeResponse:
+      properties:
+        redirect_url:
+          type: string
+          title: Redirect Url
+      type: object
+      required:
+      - redirect_url
+      title: FinalizeResponse
     FinalizeRequest:
       properties:
         outcome:
@@ -279,15 +288,6 @@ components:
       - on_error_url
       - expires_at
       title: BootstrapResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

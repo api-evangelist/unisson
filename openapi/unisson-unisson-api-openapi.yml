@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: agent-evals Unisson API
+  title: Unisson API
   version: 1.0.0
 tags:
 - name: Unisson

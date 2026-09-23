@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals external-api API
+  title: Unisson External API
   version: 1.0.0
 tags:
 - name: external-api
@@ -10,7 +10,20 @@ paths:
       tags:
       - external-api
       summary: Create External Run
-      description: "Create a new run via External API.\n\nRequires scope: runs:create\n\nThe run will execute asynchronously. Use webhooks or polling to track status.\n\nReturns:\n    Run ID and initial status. Poll GET /external/runs/{id} or configure\n    webhooks to receive status updates."
+      description: 'Create a new run via External API.
+
+
+        Requires scope: runs:create
+
+
+        The run will execute asynchronously. Use webhooks or polling to track status.
+
+
+        Returns:
+
+        Run ID and initial status. Poll GET /external/runs/{id} or configure
+
+        webhooks to receive status updates.'
       operationId: create_external_run_api_v1_external_runs_post
       parameters:
       - name: X-API-Key
@@ -207,18 +220,96 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ExternalRunResumeRequest:
+    ExternalRunResponse:
       properties:
-        answer:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        task_type:
           anyOf:
           - type: string
-            maxLength: 2000
           - type: 'null'
-          title: Answer
-          description: Answer to clarifying question (if any)
+          title: Task Type
+        external_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Reference Id
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
       type: object
-      title: ExternalRunResumeRequest
-      description: Request to resume a paused run.
+      required:
+      - id
+      - status
+      - created_at
+      title: ExternalRunResponse
+      description: Basic run response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExternalWebhookConfigRequest:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 500
+          title: Webhook Url
+          description: URL to receive webhook events. Set to empty string to remove.
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
+      type: object
+      required:
+      - webhook_url
+      title: ExternalWebhookConfigRequest
+      description: Request to update webhook configuration via API key.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ExternalWebhookConfigResponse:
       properties:
         webhook_url:
@@ -243,6 +334,81 @@ components:
       - webhook_events
       title: ExternalWebhookConfigResponse
       description: Response after updating webhook configuration.
+    ExternalRunDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+        external_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Reference Id
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        auth_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Message
+        question:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Question
+        response_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Text
+        structured_output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Structured Output
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: ExternalRunDetailResponse
+      description: Detailed run response with results.
     ExternalStatusResponse:
       properties:
         status:
@@ -279,41 +445,18 @@ components:
       - webhook_events
       title: ExternalStatusResponse
       description: Response for the status endpoint.
-    ExternalRunResponse:
+    ExternalRunResumeRequest:
       properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        task_type:
+        answer:
           anyOf:
           - type: string
+            maxLength: 2000
           - type: 'null'
-          title: Task Type
-        external_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Reference Id
-        liveview_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Liveview Url
+          title: Answer
+          description: Answer to clarifying question (if any)
       type: object
-      required:
-      - id
-      - status
-      - created_at
-      title: ExternalRunResponse
-      description: Basic run response.
+      title: ExternalRunResumeRequest
+      description: Request to resume a paused run.
     ExternalRunCreateRequest:
       properties:
         task:
@@ -447,136 +590,6 @@ components:
       type: object
       title: ExternalRunCreateRequest
       description: Request to create an external run.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ExternalWebhookConfigRequest:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 500
-          title: Webhook Url
-          description: URL to receive webhook events. Set to empty string to remove.
-        webhook_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Webhook Events
-          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
-      type: object
-      required:
-      - webhook_url
-      title: ExternalWebhookConfigRequest
-      description: Request to update webhook configuration via API key.
-    ExternalRunDetailResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        task_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Type
-        external_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Reference Id
-        liveview_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Liveview Url
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        auth_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Auth Message
-        question:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Question
-        response_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response Text
-        structured_output:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Structured Output
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-      type: object
-      required:
-      - id
-      - status
-      - created_at
-      title: ExternalRunDetailResponse
-      description: Detailed run response with results.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

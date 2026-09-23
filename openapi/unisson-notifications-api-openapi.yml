@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals notifications API
+  title: Unisson Notifications API
   version: 1.0.0
 tags:
-- name: notifications
+- name: Notifications
 paths:
   /api/v1/notifications:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: List Notifications
       description: Return the current user's notifications, most recent first.
       operationId: list_notifications_api_v1_notifications_get
@@ -55,7 +55,7 @@ paths:
   /api/v1/notifications/unread-count:
     get:
       tags:
-      - notifications
+      - Notifications
       summary: Unread Count
       description: Return the number of unread notifications for the bell badge.
       operationId: unread_count_api_v1_notifications_unread_count_get
@@ -71,7 +71,7 @@ paths:
   /api/v1/notifications/{notification_id}:
     patch:
       tags:
-      - notifications
+      - Notifications
       summary: Mark Read
       description: Mark a single notification as read/unread.
       operationId: mark_read_api_v1_notifications__notification_id__patch
@@ -107,7 +107,7 @@ paths:
   /api/v1/notifications/mark-all-read:
     post:
       tags:
-      - notifications
+      - Notifications
       summary: Mark All Read
       description: Mark every unread notification for the current user as read.
       operationId: mark_all_read_api_v1_notifications_mark_all_read_post
@@ -122,14 +122,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    MarkReadRequest:
-      properties:
-        is_read:
-          type: boolean
-          title: Is Read
-          default: true
-      type: object
-      title: MarkReadRequest
     ValidationError:
       properties:
         loc:
@@ -156,6 +148,24 @@ components:
       - msg
       - type
       title: ValidationError
+    UnreadCountResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - count
+      title: UnreadCountResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     NotificationResponse:
       properties:
         id:
@@ -215,6 +225,14 @@ components:
       - is_read
       - created_at
       title: NotificationResponse
+    MarkReadRequest:
+      properties:
+        is_read:
+          type: boolean
+          title: Is Read
+          default: true
+      type: object
+      title: MarkReadRequest
     NotificationListResponse:
       properties:
         notifications:
@@ -242,24 +260,6 @@ components:
       - page_size
       - unread_count
       title: NotificationListResponse
-    UnreadCountResponse:
-      properties:
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - count
-      title: UnreadCountResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals agent-integrations API
+  title: Unisson Agent Integrations API
   version: 1.0.0
 tags:
 - name: agent-integrations
@@ -171,43 +171,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    PipedreamWebhookPayload:
-      properties:
-        event:
-          type: string
-          title: Event
-        external_user_id:
-          type: string
-          title: External User Id
-        app_slug:
-          type: string
-          title: App Slug
-        app_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: App Name
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-      type: object
-      required:
-      - event
-      - external_user_id
-      - app_slug
-      title: PipedreamWebhookPayload
-      description: Payload from Pipedream when a user connects/disconnects an app.
-    app__api__v1__agent_integrations__ConnectResponse:
-      properties:
-        connect_url:
-          type: string
-          title: Connect Url
-      type: object
-      required:
-      - connect_url
-      title: ConnectResponse
     ValidationError:
       properties:
         loc:
@@ -234,6 +197,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AppInfo:
       properties:
         slug:
@@ -282,15 +254,15 @@ components:
       - org_scoped_slugs
       title: ScopesResponse
       description: Hybrid-scoping registry, exposed for the frontend.
-    HTTPValidationError:
+    app__api__v1__agent_integrations__ConnectResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        connect_url:
+          type: string
+          title: Connect Url
       type: object
-      title: HTTPValidationError
+      required:
+      - connect_url
+      title: ConnectResponse
     ConnectionInfo:
       properties:
         id:
@@ -343,6 +315,34 @@ components:
       - provider
       - status
       title: ConnectionInfo
+    PipedreamWebhookPayload:
+      properties:
+        event:
+          type: string
+          title: Event
+        external_user_id:
+          type: string
+          title: External User Id
+        app_slug:
+          type: string
+          title: App Slug
+        app_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Name
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+      type: object
+      required:
+      - event
+      - external_user_id
+      - app_slug
+      title: PipedreamWebhookPayload
+      description: Payload from Pipedream when a user connects/disconnects an app.
   securitySchemes:
     HTTPBearer:
       type: http

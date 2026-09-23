@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals live-map API
+  title: Unisson Live Map API
   version: 1.0.0
 tags:
 - name: live-map
@@ -94,6 +94,38 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    LiveMapRequest:
+      properties:
+        start_url:
+          type: string
+          title: Start Url
+        product_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Id
+        allowed_domains:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Domains
+        max_pages:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Pages
+        context_domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context Domain
+      type: object
+      required:
+      - start_url
+      title: LiveMapRequest
     ValidationError:
       properties:
         loc:
@@ -120,6 +152,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LiveMapStatusResponse:
       properties:
         status:
@@ -192,47 +233,6 @@ components:
       - analysis_progress
       - pages_discovered
       title: LiveMapResponse
-    LiveMapRequest:
-      properties:
-        start_url:
-          type: string
-          title: Start Url
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        allowed_domains:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Allowed Domains
-        max_pages:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Max Pages
-        context_domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context Domain
-      type: object
-      required:
-      - start_url
-      title: LiveMapRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

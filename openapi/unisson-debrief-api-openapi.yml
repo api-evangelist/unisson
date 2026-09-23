@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals debrief API
+  title: Unisson Debrief API
   version: 1.0.0
 tags:
 - name: debrief
@@ -175,6 +175,31 @@ components:
       - msg
       - type
       title: ValidationError
+    DebriefMessageRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+        messages:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Messages
+      type: object
+      required:
+      - content
+      - messages
+      title: DebriefMessageRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     DebriefInitResponse:
       properties:
         step_count:
@@ -211,40 +236,6 @@ components:
       - run_status
       - run_result
       title: DebriefInitResponse
-    DebriefApplyProposalResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        message:
-          type: string
-          title: Message
-        auto_debrief_pending_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Auto Debrief Pending Count
-      type: object
-      required:
-      - success
-      - message
-      title: DebriefApplyProposalResponse
-    DebriefMessageRequest:
-      properties:
-        content:
-          type: string
-          title: Content
-        messages:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Messages
-      type: object
-      required:
-      - content
-      - messages
-      title: DebriefMessageRequest
     DebriefApplyProposalRequest:
       properties:
         proposal_id:
@@ -292,15 +283,24 @@ components:
       - role
       - content
       title: DebriefMessageData
-    HTTPValidationError:
+    DebriefApplyProposalResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
       type: object
-      title: HTTPValidationError
+      required:
+      - success
+      - message
+      title: DebriefApplyProposalResponse
   securitySchemes:
     HTTPBearer:
       type: http

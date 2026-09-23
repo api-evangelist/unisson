@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals superadmin API
+  title: Unisson Superadmin API
   version: 1.0.0
 tags:
-- name: superadmin
+- name: Superadmin
 paths:
   /api/v1/superadmin/check:
     get:
       tags:
-      - superadmin
+      - Superadmin
       summary: Check Superadmin
       description: Check if the current organization has superadmin access.
       operationId: check_superadmin_api_v1_superadmin_check_get
@@ -23,7 +23,7 @@ paths:
   /api/v1/superadmin/costs:
     get:
       tags:
-      - superadmin
+      - Superadmin
       summary: Get Costs
       description: Get cost data across all organizations (superadmin only).
       operationId: get_costs_api_v1_superadmin_costs_get
@@ -87,7 +87,7 @@ paths:
   /api/v1/superadmin/error-analytics:
     get:
       tags:
-      - superadmin
+      - Superadmin
       summary: Get Error Analytics
       description: Get error analytics across all organizations (superadmin only).
       operationId: get_error_analytics_api_v1_superadmin_error_analytics_get
@@ -150,6 +150,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     OrgErrorSummary:
       properties:
         org_id:
@@ -173,6 +199,131 @@ components:
       - total_failed
       - error_breakdown
       title: OrgErrorSummary
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ErrorCategoryCount:
+      properties:
+        category:
+          type: string
+          title: Category
+        count:
+          type: integer
+          title: Count
+        percentage:
+          type: number
+          title: Percentage
+      type: object
+      required:
+      - category
+      - count
+      - percentage
+      title: ErrorCategoryCount
+    CategoryCost:
+      properties:
+        category:
+          type: string
+          title: Category
+        cost:
+          type: number
+          title: Cost
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+      type: object
+      required:
+      - category
+      - cost
+      - input_tokens
+      - output_tokens
+      title: CategoryCost
+    ConfiguredModel:
+      properties:
+        role:
+          type: string
+          title: Role
+        model:
+          type: string
+          title: Model
+        used_by:
+          type: string
+          title: Used By
+      type: object
+      required:
+      - role
+      - model
+      - used_by
+      title: ConfiguredModel
+      description: 'Which model a product surface is *configured* to run on (from
+
+        settings.*_MODEL) — the intent view, independent of the date filter.'
+    CategoryTimeBucket:
+      properties:
+        period:
+          type: string
+          title: Period
+        category:
+          type: string
+          title: Category
+        cost:
+          type: number
+          title: Cost
+        call_count:
+          type: integer
+          title: Call Count
+      type: object
+      required:
+      - period
+      - category
+      - cost
+      - call_count
+      title: CategoryTimeBucket
+    OrgCostSummary:
+      properties:
+        org_id:
+          type: string
+          title: Org Id
+        org_name:
+          type: string
+          title: Org Name
+        total_runs:
+          type: integer
+          title: Total Runs
+        total_duration_seconds:
+          type: integer
+          title: Total Duration Seconds
+        total_llm_cost:
+          type: number
+          title: Total Llm Cost
+        total_kernel_cost:
+          type: number
+          title: Total Kernel Cost
+        total_cost:
+          type: number
+          title: Total Cost
+        total_llm_tokens:
+          type: integer
+          title: Total Llm Tokens
+      type: object
+      required:
+      - org_id
+      - org_name
+      - total_runs
+      - total_duration_seconds
+      - total_llm_cost
+      - total_kernel_cost
+      - total_cost
+      - total_llm_tokens
+      title: OrgCostSummary
     ModelCost:
       properties:
         model:
@@ -231,122 +382,6 @@ components:
       - total_cost
       - run_count
       title: TimeBucket
-    ErrorTimeBucket:
-      properties:
-        period:
-          type: string
-          title: Period
-        category:
-          type: string
-          title: Category
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - period
-      - category
-      - count
-      title: ErrorTimeBucket
-    CategoryTimeBucket:
-      properties:
-        period:
-          type: string
-          title: Period
-        category:
-          type: string
-          title: Category
-        cost:
-          type: number
-          title: Cost
-        call_count:
-          type: integer
-          title: Call Count
-      type: object
-      required:
-      - period
-      - category
-      - cost
-      - call_count
-      title: CategoryTimeBucket
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ErrorAnalyticsResponse:
-      properties:
-        total_failed_runs:
-          type: integer
-          title: Total Failed Runs
-        total_runs:
-          type: integer
-          title: Total Runs
-        failure_rate:
-          type: number
-          title: Failure Rate
-        error_by_category:
-          items:
-            $ref: '#/components/schemas/ErrorCategoryCount'
-          type: array
-          title: Error By Category
-        error_by_org:
-          items:
-            $ref: '#/components/schemas/OrgErrorSummary'
-          type: array
-          title: Error By Org
-        error_time_series:
-          items:
-            $ref: '#/components/schemas/ErrorTimeBucket'
-          type: array
-          title: Error Time Series
-      type: object
-      required:
-      - total_failed_runs
-      - total_runs
-      - failure_rate
-      - error_by_category
-      - error_by_org
-      - error_time_series
-      title: ErrorAnalyticsResponse
-    ErrorCategoryCount:
-      properties:
-        category:
-          type: string
-          title: Category
-        count:
-          type: integer
-          title: Count
-        percentage:
-          type: number
-          title: Percentage
-      type: object
-      required:
-      - category
-      - count
-      - percentage
-      title: ErrorCategoryCount
     SuperadminCostsResponse:
       properties:
         org_summaries:
@@ -414,26 +449,58 @@ components:
       - category_model_breakdown
       - configured_models
       title: SuperadminCostsResponse
-    ConfiguredModel:
+    ErrorAnalyticsResponse:
       properties:
-        role:
-          type: string
-          title: Role
-        model:
-          type: string
-          title: Model
-        used_by:
-          type: string
-          title: Used By
+        total_failed_runs:
+          type: integer
+          title: Total Failed Runs
+        total_runs:
+          type: integer
+          title: Total Runs
+        failure_rate:
+          type: number
+          title: Failure Rate
+        error_by_category:
+          items:
+            $ref: '#/components/schemas/ErrorCategoryCount'
+          type: array
+          title: Error By Category
+        error_by_org:
+          items:
+            $ref: '#/components/schemas/OrgErrorSummary'
+          type: array
+          title: Error By Org
+        error_time_series:
+          items:
+            $ref: '#/components/schemas/ErrorTimeBucket'
+          type: array
+          title: Error Time Series
       type: object
       required:
-      - role
-      - model
-      - used_by
-      title: ConfiguredModel
-      description: 'Which model a product surface is *configured* to run on (from
-
-        settings.*_MODEL) — the intent view, independent of the date filter.'
+      - total_failed_runs
+      - total_runs
+      - failure_rate
+      - error_by_category
+      - error_by_org
+      - error_time_series
+      title: ErrorAnalyticsResponse
+    ErrorTimeBucket:
+      properties:
+        period:
+          type: string
+          title: Period
+        category:
+          type: string
+          title: Category
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - period
+      - category
+      - count
+      title: ErrorTimeBucket
     CategoryModelCost:
       properties:
         category:
@@ -466,73 +533,6 @@ components:
       description: 'A (category, model) pair with its real spend — the join between the
 
         cost-by-category and cost-by-model breakdowns.'
-    OrgCostSummary:
-      properties:
-        org_id:
-          type: string
-          title: Org Id
-        org_name:
-          type: string
-          title: Org Name
-        total_runs:
-          type: integer
-          title: Total Runs
-        total_duration_seconds:
-          type: integer
-          title: Total Duration Seconds
-        total_llm_cost:
-          type: number
-          title: Total Llm Cost
-        total_kernel_cost:
-          type: number
-          title: Total Kernel Cost
-        total_cost:
-          type: number
-          title: Total Cost
-        total_llm_tokens:
-          type: integer
-          title: Total Llm Tokens
-      type: object
-      required:
-      - org_id
-      - org_name
-      - total_runs
-      - total_duration_seconds
-      - total_llm_cost
-      - total_kernel_cost
-      - total_cost
-      - total_llm_tokens
-      title: OrgCostSummary
-    CategoryCost:
-      properties:
-        category:
-          type: string
-          title: Category
-        cost:
-          type: number
-          title: Cost
-        input_tokens:
-          type: integer
-          title: Input Tokens
-        output_tokens:
-          type: integer
-          title: Output Tokens
-      type: object
-      required:
-      - category
-      - cost
-      - input_tokens
-      - output_tokens
-      title: CategoryCost
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

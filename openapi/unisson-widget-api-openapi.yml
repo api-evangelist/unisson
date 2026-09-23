@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals widget API
+  title: Unisson Widget API
   version: 1.0.0
 tags:
-- name: widget
+- name: Widget
 paths:
   /api/v1/widget/config:
     get:
       tags:
-      - widget
+      - Widget
       summary: Get Widget Config
       description: 'Return widget branding and behavior configuration.
 
@@ -38,7 +38,7 @@ paths:
   /api/v1/widget/sessions/org:
     get:
       tags:
-      - widget
+      - Widget
       summary: List End User Sessions
       description: 'List all end-user sessions for the organization.
 
@@ -83,7 +83,7 @@ paths:
   /api/v1/widget/sessions/{session_id}/admin:
     delete:
       tags:
-      - widget
+      - Widget
       summary: Delete Widget Session
       description: 'Delete a widget session and its linked conversation.
 
@@ -115,7 +115,7 @@ paths:
   /api/v1/widget/sessions/api/{api_key_id}/{end_user_email}:
     delete:
       tags:
-      - widget
+      - Widget
       summary: Revoke Api Key User Session
       description: 'Revoke an API-key end-user''s Kernel profile + presence row.
 
@@ -156,7 +156,7 @@ paths:
   /api/v1/widget/sessions/slack/{end_user_email}:
     delete:
       tags:
-      - widget
+      - Widget
       summary: Revoke Slack User Session
       description: 'Revoke an external Slack user''s Kernel profile + presence row.
 
@@ -190,7 +190,7 @@ paths:
   /api/v1/widget/sessions:
     post:
       tags:
-      - widget
+      - Widget
       summary: Create Or Resume Session
       description: 'Create a new widget session or resume an existing one.
 
@@ -228,7 +228,7 @@ paths:
   /api/v1/widget/sessions/{session_id}/messages:
     get:
       tags:
-      - widget
+      - Widget
       summary: Get Widget Messages
       description: Return message history for a widget session.
       operationId: get_widget_messages_api_v1_widget_sessions__session_id__messages_get
@@ -260,7 +260,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     post:
       tags:
-      - widget
+      - Widget
       summary: Send Widget Message
       description: 'Send a message in a widget session and stream the response via SSE.
 
@@ -304,7 +304,7 @@ paths:
   /api/v1/widget/sessions/{session_id}/execute-task:
     post:
       tags:
-      - widget
+      - Widget
       summary: Execute Widget Task
       description: Execute a task from a widget session (TaskSuggestionCard button click).
       operationId: execute_widget_task_api_v1_widget_sessions__session_id__execute_task_post
@@ -344,7 +344,7 @@ paths:
   /api/v1/widget/sessions/{session_id}/runs/{run_id}/resume:
     post:
       tags:
-      - widget
+      - Widget
       summary: Resume Widget Run
       description: Resume a widget run after authentication or clarifying question.
       operationId: resume_widget_run_api_v1_widget_sessions__session_id__runs__run_id__resume_post
@@ -390,7 +390,7 @@ paths:
   /api/v1/widget/sessions/{session_id}/runs/{run_id}/result-screenshots:
     get:
       tags:
-      - widget
+      - Widget
       summary: Get Widget Result Screenshots
       description: Get presigned URLs for result screenshots saved by the agent.
       operationId: get_widget_result_screenshots_api_v1_widget_sessions__session_id__runs__run_id__result_screenshots_get
@@ -429,6 +429,102 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WidgetExecuteTaskRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+          description: Task description
+        message_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Message Id
+          description: Source message ID (from task suggestion)
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - request_text
+      title: WidgetExecuteTaskRequest
+      description: Execute a task from a widget session.
+    WidgetConfigResponse:
+      properties:
+        branding:
+          additionalProperties: true
+          type: object
+          title: Branding
+        behavior:
+          additionalProperties: true
+          type: object
+          title: Behavior
+      type: object
+      required:
+      - branding
+      - behavior
+      title: WidgetConfigResponse
+      description: Widget configuration returned to the frontend widget.
+    WidgetMessageRequest:
+      properties:
+        content:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Content
+          description: Message content
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode for tasks: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - content
+      title: WidgetMessageRequest
+      description: Send a message in a widget session.
     WidgetSessionCreateRequest:
       properties:
         session_id:
@@ -478,30 +574,55 @@ components:
       type: object
       title: WidgetSessionCreateRequest
       description: Create or resume a widget session.
-    EndUserSessionsResponse:
+    WidgetSessionResponse:
       properties:
-        sessions:
-          items:
-            $ref: '#/components/schemas/EndUserSessionInfo'
-          type: array
-          title: Sessions
-        total:
-          type: integer
-          title: Total
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
+        session_id:
+          type: string
+          format: uuid4
+          title: Session Id
+        conversation_id:
+          type: string
+          format: uuid4
+          title: Conversation Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
       type: object
       required:
-      - sessions
-      - total
-      - limit
-      - offset
-      title: EndUserSessionsResponse
-      description: Paginated end-user sessions for an organization.
+      - session_id
+      - conversation_id
+      - created_at
+      title: WidgetSessionResponse
+      description: Widget session with conversation link.
+    WidgetExecuteTaskResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - run_id
+      - message_id
+      title: WidgetExecuteTaskResponse
+      description: Response after starting a task execution.
+    WidgetResumeRunRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Answer
+          description: User answer for clarifying questions
+      type: object
+      title: WidgetResumeRunRequest
+      description: Resume a run that is waiting for input or authentication.
     EndUserSessionInfo:
       properties:
         source:
@@ -570,151 +691,30 @@ components:
       - last_activity_at
       title: EndUserSessionInfo
       description: A single end-user session from either widget or external API.
-    WidgetMessageRequest:
+    EndUserSessionsResponse:
       properties:
-        content:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Content
-          description: Message content
-        execution_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Mode
-          description: 'Execution mode for tasks: ''cloud'' (default) or ''local_browser'''
-      type: object
-      required:
-      - content
-      title: WidgetMessageRequest
-      description: Send a message in a widget session.
-    WidgetConfigResponse:
-      properties:
-        branding:
-          additionalProperties: true
-          type: object
-          title: Branding
-        behavior:
-          additionalProperties: true
-          type: object
-          title: Behavior
-      type: object
-      required:
-      - branding
-      - behavior
-      title: WidgetConfigResponse
-      description: Widget configuration returned to the frontend widget.
-    WidgetResumeRunRequest:
-      properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 5000
-          - type: 'null'
-          title: Answer
-          description: User answer for clarifying questions
-      type: object
-      title: WidgetResumeRunRequest
-      description: Resume a run that is waiting for input or authentication.
-    ValidationError:
-      properties:
-        loc:
+        sessions:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/EndUserSessionInfo'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Sessions
+        total:
+          type: integer
+          title: Total
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    WidgetExecuteTaskResponse:
-      properties:
-        run_id:
-          type: string
-          format: uuid4
-          title: Run Id
-        message_id:
-          type: string
-          format: uuid4
-          title: Message Id
-      type: object
-      required:
-      - run_id
-      - message_id
-      title: WidgetExecuteTaskResponse
-      description: Response after starting a task execution.
-    WidgetExecuteTaskRequest:
-      properties:
-        request_text:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Request Text
-          description: Task description
-        message_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Message Id
-          description: Source message ID (from task suggestion)
-        execution_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Mode
-          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
-      type: object
-      required:
-      - request_text
-      title: WidgetExecuteTaskRequest
-      description: Execute a task from a widget session.
-    WidgetSessionResponse:
-      properties:
-        session_id:
-          type: string
-          format: uuid4
-          title: Session Id
-        conversation_id:
-          type: string
-          format: uuid4
-          title: Conversation Id
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - session_id
-      - conversation_id
-      - created_at
-      title: WidgetSessionResponse
-      description: Widget session with conversation link.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - sessions
+      - total
+      - limit
+      - offset
+      title: EndUserSessionsResponse
+      description: Paginated end-user sessions for an organization.
   securitySchemes:
     HTTPBearer:
       type: http

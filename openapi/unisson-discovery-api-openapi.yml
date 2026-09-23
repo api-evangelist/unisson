@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals discovery API
+  title: Unisson Discovery API
   version: 1.0.0
 tags:
-- name: discovery
+- name: Discovery
 paths:
   /api/v1/discovery/builder-conversation:
     get:
       tags:
-      - discovery
+      - Discovery
       summary: Get Or Create Discovery Conversation
       description: 'Get-or-create the organization''s single Discovery conversation (one
 
@@ -28,7 +28,7 @@ paths:
   /api/v1/discovery/sources:
     get:
       tags:
-      - discovery
+      - Discovery
       summary: List Discovery Sources
       description: List the org's connected Discovery sources.
       operationId: list_discovery_sources_api_v1_discovery_sources_get
@@ -46,7 +46,7 @@ paths:
       - HTTPBearer: []
     put:
       tags:
-      - discovery
+      - Discovery
       summary: Upsert Discovery Source
       description: Connect/update email, Slack, Granola, or logs for Discovery.
       operationId: upsert_discovery_source_api_v1_discovery_sources_put
@@ -74,7 +74,7 @@ paths:
   /api/v1/discovery/sources/{source_type}:
     delete:
       tags:
-      - discovery
+      - Discovery
       summary: Delete Discovery Source
       description: Disconnect a source (soft-delete).
       operationId: delete_discovery_source_api_v1_discovery_sources__source_type__delete
@@ -99,7 +99,7 @@ paths:
   /api/v1/discovery/opportunities:
     get:
       tags:
-      - discovery
+      - Discovery
       summary: List Discovery Opportunities
       description: 'List the opportunities surfaced in a Discovery conversation (right pane).
 
@@ -135,7 +135,7 @@ paths:
   /api/v1/discovery/opportunities/{opportunity_id}/build:
     post:
       tags:
-      - discovery
+      - Discovery
       summary: Build Opportunity Agent
       description: 'Create the proposed agent (a normal org agent — it just exists, like any
 
@@ -171,7 +171,7 @@ paths:
   /api/v1/discovery/opportunities/{opportunity_id}:
     delete:
       tags:
-      - discovery
+      - Discovery
       summary: Dismiss Opportunity
       description: Dismiss (soft-delete) an opportunity from the org's shared thread.
       operationId: dismiss_opportunity_api_v1_discovery_opportunities__opportunity_id__delete
@@ -196,59 +196,41 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DiscoveryOpportunityResponse:
+    ValidationError:
       properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        conversation_id:
-          type: string
-          format: uuid
-          title: Conversation Id
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        evidence:
-          items: {}
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Evidence
-        impact_estimate:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Impact Estimate
-        proposed_agent_spec:
-          additionalProperties: true
-          type: object
-          title: Proposed Agent Spec
-        built_agent_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Built Agent Id
-        status:
+          title: Location
+        msg:
           type: string
-          title: Status
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - id
-      - conversation_id
-      - title
-      - status
-      title: DiscoveryOpportunityResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     DiscoverySourceResponse:
       properties:
         id:
@@ -284,74 +266,6 @@ components:
       - config
       - status
       title: DiscoverySourceResponse
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    BuildOpportunityResponse:
-      properties:
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        skipped_automations:
-          type: integer
-          title: Skipped Automations
-          default: 0
-      type: object
-      required:
-      - agent_id
-      title: BuildOpportunityResponse
-      description: Result of "Build this" — the draft agent to open in the Agent Builder.
     ChatConversationResponse:
       properties:
         id:
@@ -405,6 +319,21 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
+    BuildOpportunityResponse:
+      properties:
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        skipped_automations:
+          type: integer
+          title: Skipped Automations
+          default: 0
+      type: object
+      required:
+      - agent_id
+      title: BuildOpportunityResponse
+      description: Result of "Build this" — the draft agent to open in the Agent Builder.
     DiscoverySourceUpsert:
       properties:
         source_type:
@@ -425,15 +354,86 @@ components:
       - source_type
       title: DiscoverySourceUpsert
       description: Connect / update a Discovery source (one per source_type per org).
-    HTTPValidationError:
+    DiscoveryOpportunityResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
+        id:
+          type: string
+          format: uuid
+          title: Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        evidence:
+          items: {}
           type: array
-          title: Detail
+          title: Evidence
+        impact_estimate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Estimate
+        proposed_agent_spec:
+          additionalProperties: true
+          type: object
+          title: Proposed Agent Spec
+        built_agent_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Built Agent Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - conversation_id
+      - title
+      - status
+      title: DiscoveryOpportunityResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
   securitySchemes:
     HTTPBearer:
       type: http

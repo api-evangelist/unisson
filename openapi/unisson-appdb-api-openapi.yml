@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals appdb API
+  title: Unisson Appdb API
   version: 1.0.0
 tags:
 - name: appdb
@@ -227,76 +227,31 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AppDbQueryResponse:
-      properties:
-        columns:
-          items:
-            type: string
-          type: array
-          title: Columns
-        rows:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Rows
-        row_count:
-          type: integer
-          title: Row Count
-        truncated:
-          type: boolean
-          title: Truncated
-      type: object
-      required:
-      - columns
-      - rows
-      - row_count
-      - truncated
-      title: AppDbQueryResponse
-    AppDbStatementRequest:
-      properties:
-        sql:
-          type: string
-          maxLength: 100000
-          minLength: 1
-          title: Sql
-        params:
-          anyOf:
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Params
-        scope:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope
-      type: object
-      required:
-      - sql
-      title: AppDbStatementRequest
-    AppDbColumn:
+    AppDbTable:
       properties:
         name:
           type: string
           title: Name
-        type:
-          type: string
-          title: Type
-        nullable:
-          type: boolean
-          title: Nullable
-        default:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Default
+        columns:
+          items:
+            $ref: '#/components/schemas/AppDbColumn'
+          type: array
+          title: Columns
+        primary_key:
+          items:
+            type: string
+          type: array
+          title: Primary Key
+        approx_rows:
+          type: integer
+          title: Approx Rows
       type: object
       required:
       - name
-      - type
-      - nullable
-      title: AppDbColumn
+      - columns
+      - primary_key
+      - approx_rows
+      title: AppDbTable
     ValidationError:
       properties:
         loc:
@@ -323,31 +278,37 @@ components:
       - msg
       - type
       title: ValidationError
-    AppDbTable:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AppDbColumn:
       properties:
         name:
           type: string
           title: Name
-        columns:
-          items:
-            $ref: '#/components/schemas/AppDbColumn'
-          type: array
-          title: Columns
-        primary_key:
-          items:
-            type: string
-          type: array
-          title: Primary Key
-        approx_rows:
-          type: integer
-          title: Approx Rows
+        type:
+          type: string
+          title: Type
+        nullable:
+          type: boolean
+          title: Nullable
+        default:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default
       type: object
       required:
       - name
-      - columns
-      - primary_key
-      - approx_rows
-      title: AppDbTable
+      - type
+      - nullable
+      title: AppDbColumn
     AppDbTablesResponse:
       properties:
         scope:
@@ -363,6 +324,54 @@ components:
       - scope
       - tables
       title: AppDbTablesResponse
+    AppDbStatementRequest:
+      properties:
+        sql:
+          type: string
+          maxLength: 100000
+          minLength: 1
+          title: Sql
+        params:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Params
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      type: object
+      required:
+      - sql
+      title: AppDbStatementRequest
+    AppDbQueryResponse:
+      properties:
+        columns:
+          items:
+            type: string
+          type: array
+          title: Columns
+        rows:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Rows
+        row_count:
+          type: integer
+          title: Row Count
+        truncated:
+          type: boolean
+          title: Truncated
+      type: object
+      required:
+      - columns
+      - rows
+      - row_count
+      - truncated
+      title: AppDbQueryResponse
     AppDbExecuteResponse:
       properties:
         status:
@@ -384,15 +393,6 @@ components:
       - status
       - statements
       title: AppDbExecuteResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

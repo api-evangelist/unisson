@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals products API
+  title: Unisson Products API
   version: 1.0.0
 tags:
-- name: products
+- name: Products
 paths:
   /api/v1/products:
     get:
       tags:
-      - products
+      - Products
       summary: List Products
       description: List all products for the organization.
       operationId: list_products_api_v1_products_get
@@ -26,7 +26,7 @@ paths:
       - HTTPBearer: []
     post:
       tags:
-      - products
+      - Products
       summary: Create Product
       description: Create a new product.
       operationId: create_product_api_v1_products_post
@@ -54,7 +54,7 @@ paths:
   /api/v1/products/{product_id}:
     get:
       tags:
-      - products
+      - Products
       summary: Get Product
       description: Get a single product.
       operationId: get_product_api_v1_products__product_id__get
@@ -82,7 +82,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     patch:
       tags:
-      - products
+      - Products
       summary: Update Product
       description: Update a product.
       operationId: update_product_api_v1_products__product_id__patch
@@ -116,7 +116,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - products
+      - Products
       summary: Delete Product
       description: 'Soft-delete a product, cascade-soft-delete its KB entries (features,
 
@@ -144,6 +144,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ProductCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        url:
+          type: string
+          maxLength: 2048
+          title: Url
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      required:
+      - name
+      - url
+      title: ProductCreate
+      description: Schema for creating a product.
     ValidationError:
       properties:
         loc:
@@ -170,43 +191,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ProductUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-      type: object
-      title: ProductUpdate
-      description: Schema for updating a product.
-    ProductCreate:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          title: Name
-        url:
-          type: string
-          maxLength: 2048
-          title: Url
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-      type: object
-      required:
-      - name
-      - url
-      title: ProductCreate
-      description: Schema for creating a product.
     ProductResponse:
       properties:
         id:
@@ -259,6 +243,22 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ProductUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      type: object
+      title: ProductUpdate
+      description: Schema for updating a product.
   securitySchemes:
     HTTPBearer:
       type: http

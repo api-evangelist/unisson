@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals memory API
+  title: Unisson Memory API
   version: 1.0.0
 tags:
-- name: memory
+- name: Memory
 paths:
   /api/v1/memory:
     get:
       tags:
-      - memory
+      - Memory
       summary: List Memory Files
       description: 'List all memory files: the account file, then every member''s file.'
       operationId: list_memory_files_api_v1_memory_get
@@ -27,7 +27,7 @@ paths:
   /api/v1/memory/account:
     get:
       tags:
-      - memory
+      - Memory
       summary: Get Account Memory
       description: The org's account-level memory file (get-or-create).
       operationId: get_account_memory_api_v1_memory_account_get
@@ -42,7 +42,7 @@ paths:
       - HTTPBearer: []
     put:
       tags:
-      - memory
+      - Memory
       summary: Update Account Memory
       description: Edit the account file (members only; versioned as ``manual``).
       operationId: update_account_memory_api_v1_memory_account_put
@@ -70,7 +70,7 @@ paths:
   /api/v1/memory/me:
     get:
       tags:
-      - memory
+      - Memory
       summary: Get My Memory
       description: The caller's own memory file (get-or-create).
       operationId: get_my_memory_api_v1_memory_me_get
@@ -86,7 +86,7 @@ paths:
   /api/v1/memory/users/{user_id}:
     get:
       tags:
-      - memory
+      - Memory
       summary: Get User Memory
       description: A member's memory file (get-or-create). Any member may view any file.
       operationId: get_user_memory_api_v1_memory_users__user_id__get
@@ -115,7 +115,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     put:
       tags:
-      - memory
+      - Memory
       summary: Update User Memory
       description: 'Edit a member''s memory file (any member may edit any file; versioned as
 
@@ -153,7 +153,7 @@ paths:
   /api/v1/memory/{memory_file_id}/versions:
     get:
       tags:
-      - memory
+      - Memory
       summary: List Memory Versions
       description: A memory file's content version history, newest first.
       operationId: list_memory_versions_api_v1_memory__memory_file_id__versions_get
@@ -203,7 +203,7 @@ paths:
   /api/v1/memory/{memory_file_id}/versions/{version_id}:
     get:
       tags:
-      - memory
+      - Memory
       summary: Get Memory Version
       description: A single content version (full text).
       operationId: get_memory_version_api_v1_memory__memory_file_id__versions__version_id__get
@@ -240,7 +240,7 @@ paths:
   /api/v1/memory/{memory_file_id}/versions/{version_id}/revert:
     post:
       tags:
-      - memory
+      - Memory
       summary: Revert Memory Version
       description: 'Restore a memory file to a prior version (members only). Appends a new
 
@@ -278,6 +278,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     MemoryFileVersionResponse:
       properties:
         id:
@@ -324,32 +350,15 @@ components:
       - created_at
       title: MemoryFileVersionResponse
       description: One immutable snapshot in a memory file's content history.
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
     MemoryFileResponse:
       properties:
         id:
@@ -416,15 +425,6 @@ components:
       - content
       title: MemoryFileUpdate
       description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

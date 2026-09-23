@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals apps API
+  title: Unisson Apps API
   version: 1.0.0
 tags:
-- name: apps
+- name: Apps
 paths:
   /api/v1/apps/templates:
     get:
       tags:
-      - apps
+      - Apps
       summary: List Templates
       operationId: list_templates_api_v1_apps_templates_get
       responses:
@@ -26,7 +26,7 @@ paths:
   /api/v1/apps:
     get:
       tags:
-      - apps
+      - Apps
       summary: List Apps
       operationId: list_apps_api_v1_apps_get
       responses:
@@ -41,7 +41,7 @@ paths:
   /api/v1/apps/{app_id}:
     get:
       tags:
-      - apps
+      - Apps
       summary: Get App
       operationId: get_app_api_v1_apps__app_id__get
       security:
@@ -69,7 +69,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     patch:
       tags:
-      - apps
+      - Apps
       summary: Update App
       operationId: update_app_api_v1_apps__app_id__patch
       security:
@@ -103,7 +103,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
     delete:
       tags:
-      - apps
+      - Apps
       summary: Delete App
       operationId: delete_app_api_v1_apps__app_id__delete
       security:
@@ -128,7 +128,7 @@ paths:
   /api/v1/apps/{app_id}/readme:
     get:
       tags:
-      - apps
+      - Apps
       summary: Get App Readme
       description: 'The app''s markdown README only — avoids the heavyweight detail endpoint
 
@@ -160,7 +160,7 @@ paths:
   /api/v1/apps/{app_id}/versions:
     get:
       tags:
-      - apps
+      - Apps
       summary: List App Versions
       description: 'Newest-first list of an app''s versions — the agent-written change
 
@@ -194,7 +194,7 @@ paths:
   /api/v1/apps/{app_id}/versions/{version_number}:
     get:
       tags:
-      - apps
+      - Apps
       summary: Get App Version
       description: 'Full detail (image-inlined html + readme) of ONE past version, for
 
@@ -232,7 +232,7 @@ paths:
   /api/v1/apps/{app_id}/versions/{version_number}/restore:
     post:
       tags:
-      - apps
+      - Apps
       summary: Restore App Version
       description: 'Revert the live app to a past snapshot. History stays append-only: the
 
@@ -271,6 +271,106 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    MiniAppVersionListResponse:
+      properties:
+        versions:
+          items:
+            $ref: '#/components/schemas/MiniAppVersionResponse'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - versions
+      title: MiniAppVersionListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AppTemplateResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          type: string
+          title: Icon
+        description:
+          type: string
+          title: Description
+        prompt:
+          type: string
+          title: Prompt
+      type: object
+      required:
+      - id
+      - name
+      - icon
+      - description
+      - prompt
+      title: AppTemplateResponse
+    MiniAppVersionResponse:
+      properties:
+        version_number:
+          type: integer
+          title: Version Number
+        change_summary:
+          type: string
+          title: Change Summary
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+      type: object
+      required:
+      - version_number
+      - change_summary
+      title: MiniAppVersionResponse
+      description: 'One entry in an app''s version history — the agent-written change summary
+
+        users review instead of raw source diffs. ``html`` is omitted from the list;
+
+        fetch a single version''s detail to preview it.'
     MiniAppReadmeResponse:
       properties:
         readme:
@@ -283,6 +383,31 @@ components:
       description: 'Just the app''s markdown README — a light endpoint so the "View README"
 
         modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
+    MiniAppUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        guest_access:
+          anyOf:
+          - type: string
+            pattern: ^(none|view|interact)$
+          - type: 'null'
+          title: Guest Access
+      type: object
+      title: MiniAppUpdate
+      description: 'PATCH semantics — only provided fields change. (App html is updated
+
+        by the agent via update_app, not over this API.)'
     MiniAppResponse:
       properties:
         id:
@@ -333,6 +458,17 @@ components:
       - name
       - guest_access
       title: MiniAppResponse
+    MiniAppListResponse:
+      properties:
+        apps:
+          items:
+            $ref: '#/components/schemas/MiniAppResponse'
+          type: array
+          title: Apps
+      type: object
+      required:
+      - apps
+      title: MiniAppListResponse
     MiniAppDetailResponse:
       properties:
         id:
@@ -397,142 +533,6 @@ components:
       - guest_access
       - html
       title: MiniAppDetailResponse
-    MiniAppVersionResponse:
-      properties:
-        version_number:
-          type: integer
-          title: Version Number
-        change_summary:
-          type: string
-          title: Change Summary
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        created_by_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created By Name
-      type: object
-      required:
-      - version_number
-      - change_summary
-      title: MiniAppVersionResponse
-      description: 'One entry in an app''s version history — the agent-written change summary
-
-        users review instead of raw source diffs. ``html`` is omitted from the list;
-
-        fetch a single version''s detail to preview it.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MiniAppUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        guest_access:
-          anyOf:
-          - type: string
-            pattern: ^(none|view|interact)$
-          - type: 'null'
-          title: Guest Access
-      type: object
-      title: MiniAppUpdate
-      description: 'PATCH semantics — only provided fields change. (App html is updated
-
-        by the agent via update_app, not over this API.)'
-    MiniAppListResponse:
-      properties:
-        apps:
-          items:
-            $ref: '#/components/schemas/MiniAppResponse'
-          type: array
-          title: Apps
-      type: object
-      required:
-      - apps
-      title: MiniAppListResponse
-    AppTemplateResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          type: string
-          title: Icon
-        description:
-          type: string
-          title: Description
-        prompt:
-          type: string
-          title: Prompt
-      type: object
-      required:
-      - id
-      - name
-      - icon
-      - description
-      - prompt
-      title: AppTemplateResponse
-    MiniAppVersionListResponse:
-      properties:
-        versions:
-          items:
-            $ref: '#/components/schemas/MiniAppVersionResponse'
-          type: array
-          title: Versions
-      type: object
-      required:
-      - versions
-      title: MiniAppVersionListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

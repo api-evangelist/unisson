@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals usage API
+  title: Unisson Usage API
   version: 1.0.0
 tags:
-- name: usage
+- name: Usage
 paths:
   /api/v1/usage/stats:
     get:
       tags:
-      - usage
+      - Usage
       summary: Get Usage Stats
       description: 'Get usage statistics for the current organization.
 
@@ -84,19 +84,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DailyUsage:
-      properties:
-        date:
-          type: string
-          title: Date
-        duration_seconds:
-          type: integer
-          title: Duration Seconds
-      type: object
-      required:
-      - date
-      - duration_seconds
-      title: DailyUsage
     ValidationError:
       properties:
         loc:
@@ -148,6 +135,28 @@ components:
       - run_count
       - duration_seconds
       title: UserUsageStats
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DailyUsage:
+      properties:
+        date:
+          type: string
+          title: Date
+        duration_seconds:
+          type: integer
+          title: Duration Seconds
+      type: object
+      required:
+      - date
+      - duration_seconds
+      title: DailyUsage
     UsageStatsResponse:
       properties:
         total_duration_seconds:
@@ -169,15 +178,6 @@ components:
       - user_usage
       - daily_usage
       title: UsageStatsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals code-map API
+  title: Unisson Code Map API
   version: 1.0.0
 tags:
 - name: code-map
@@ -117,34 +117,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    CodeMapStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        progress:
-          type: integer
-          title: Progress
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        repository_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Repository Name
-        framework_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Framework Type
-      type: object
-      required:
-      - status
-      - progress
-      title: CodeMapStatusResponse
     ValidationError:
       properties:
         loc:
@@ -171,6 +143,25 @@ components:
       - msg
       - type
       title: ValidationError
+    AnalyzeRequest:
+      properties:
+        repository_full_name:
+          type: string
+          title: Repository Full Name
+        app_directory:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Directory
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+      type: object
+      required:
+      - repository_full_name
+      title: AnalyzeRequest
     HTTPValidationError:
       properties:
         detail:
@@ -225,25 +216,34 @@ components:
       - analysis_status
       - analysis_progress
       title: CodeMapResponse
-    AnalyzeRequest:
+    CodeMapStatusResponse:
       properties:
-        repository_full_name:
+        status:
           type: string
-          title: Repository Full Name
-        app_directory:
+          title: Status
+        progress:
+          type: integer
+          title: Progress
+        error_message:
           anyOf:
           - type: string
           - type: 'null'
-          title: App Directory
-        branch:
+          title: Error Message
+        repository_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Branch
+          title: Repository Name
+        framework_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework Type
       type: object
       required:
-      - repository_full_name
-      title: AnalyzeRequest
+      - status
+      - progress
+      title: CodeMapStatusResponse
   securitySchemes:
     HTTPBearer:
       type: http

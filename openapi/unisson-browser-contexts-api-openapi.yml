@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals browser-contexts API
+  title: Unisson Browser Contexts API
   version: 1.0.0
 tags:
 - name: browser-contexts
@@ -31,7 +31,17 @@ paths:
       tags:
       - browser-contexts
       summary: Delete User Session
-      description: "Delete a user's saved authentication.\n\n- If domain is provided: Surgically removes auth for that specific domain\n  (starts a Kernel browser session to filter cookies, then persists)\n- If domain is not provided: Clears ALL auth by deleting the unified context\n\nUsers can delete their own session. Admins can delete any user's session."
+      description: 'Delete a user''s saved authentication.
+
+
+        - If domain is provided: Surgically removes auth for that specific domain
+
+        (starts a Kernel browser session to filter cookies, then persists)
+
+        - If domain is not provided: Clears ALL auth by deleting the unified context
+
+
+        Users can delete their own session. Admins can delete any user''s session.'
       operationId: delete_user_session_api_v1_browser_contexts_user__user_id__delete
       security:
       - HTTPBearer: []
@@ -67,36 +77,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OrgSessionsResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserWithSessionsResponse'
-          type: array
-          title: Users
-      type: object
-      required:
-      - users
-      title: OrgSessionsResponse
-      description: Response containing all users with saved sessions in the organization.
-    AuthenticatedDomainInfo:
-      properties:
-        domain:
-          type: string
-          title: Domain
-        authenticated_at:
-          type: string
-          title: Authenticated At
-        last_used_at:
-          type: string
-          title: Last Used At
-      type: object
-      required:
-      - domain
-      - authenticated_at
-      - last_used_at
-      title: AuthenticatedDomainInfo
-      description: Information about an authenticated domain.
     ValidationError:
       properties:
         loc:
@@ -123,6 +103,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     UserWithSessionsResponse:
       properties:
         user_id:
@@ -166,15 +155,36 @@ components:
       - authenticated_domains
       title: UserWithSessionsResponse
       description: User with their unified context and authenticated domains.
-    HTTPValidationError:
+    OrgSessionsResponse:
       properties:
-        detail:
+        users:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/UserWithSessionsResponse'
           type: array
-          title: Detail
+          title: Users
       type: object
-      title: HTTPValidationError
+      required:
+      - users
+      title: OrgSessionsResponse
+      description: Response containing all users with saved sessions in the organization.
+    AuthenticatedDomainInfo:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        authenticated_at:
+          type: string
+          title: Authenticated At
+        last_used_at:
+          type: string
+          title: Last Used At
+      type: object
+      required:
+      - domain
+      - authenticated_at
+      - last_used_at
+      title: AuthenticatedDomainInfo
+      description: Information about an authenticated domain.
   securitySchemes:
     HTTPBearer:
       type: http

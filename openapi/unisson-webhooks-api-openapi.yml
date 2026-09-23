@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals webhooks API
+  title: Unisson Webhooks API
   version: 1.0.0
 tags:
-- name: webhooks
+- name: Webhooks
 paths:
   /api/v1/triggers/webhook/{webhook_token}:
     post:
       tags:
-      - webhooks
+      - Webhooks
       summary: Handle Webhook
       description: 'Public webhook endpoint. Receives payloads and triggers agent runs.
 
@@ -39,7 +39,7 @@ paths:
   /api/v1/webhooks/clerk:
     post:
       tags:
-      - webhooks
+      - Webhooks
       summary: Clerk Webhook
       description: 'Handle Clerk webhook events
 
@@ -73,7 +73,7 @@ paths:
   /api/v1/webhooks/recall:
     post:
       tags:
-      - webhooks
+      - Webhooks
       summary: Recall Webhook
       description: 'Handle Recall.ai meeting-bot webhooks.
 

@@ -1,14 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Unisson agent-evals managed-auth API
+  title: Unisson Managed Auth API
   version: 1.0.0
 tags:
-- name: managed-auth
+- name: Managed Auth
 paths:
   /api/v1/managed-auth/connect:
     post:
       tags:
-      - managed-auth
+      - Managed Auth
       summary: Create Connection
       description: 'Create a Kernel Managed Auth connection and start the login flow.
 
@@ -39,7 +39,7 @@ paths:
   /api/v1/managed-auth/connect/{connection_id}/status:
     get:
       tags:
-      - managed-auth
+      - Managed Auth
       summary: Get Connection Status
       description: 'Poll the status of a Kernel Managed Auth connection.
 
@@ -71,7 +71,7 @@ paths:
   /api/v1/managed-auth/connect/{connection_id}:
     delete:
       tags:
-      - managed-auth
+      - Managed Auth
       summary: Cancel Connection
       description: Cancel an in-progress Kernel Managed Auth login flow.
       operationId: cancel_connection_api_v1_managed_auth_connect__connection_id__delete
@@ -95,6 +95,20 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ConnectRequest:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        login_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Login Url
+      type: object
+      required:
+      - domain
+      title: ConnectRequest
     ValidationError:
       properties:
         loc:
@@ -121,6 +135,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     app__api__v1__managed_auth__ConnectResponse:
       properties:
         connection_id:
@@ -138,20 +161,6 @@ components:
       - hosted_url
       - domain
       title: ConnectResponse
-    ConnectRequest:
-      properties:
-        domain:
-          type: string
-          title: Domain
-        login_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Login Url
-      type: object
-      required:
-      - domain
-      title: ConnectRequest
     ConnectionStatusResponse:
       properties:
         status:
@@ -186,15 +195,6 @@ components:
       required:
       - status
       title: ConnectionStatusResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

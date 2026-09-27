@@ -23,166 +23,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    StatusCount:
-      properties:
-        status:
-          type: string
-          title: Status
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - status
-      - count
-      title: StatusCount
-    UserKBStats:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        user_name:
-          type: string
-          title: User Name
-        email:
-          type: string
-          title: Email
-        company_knowledge_added:
-          type: integer
-          title: Company Knowledge Added
-        workflows_discovered:
-          type: integer
-          title: Workflows Discovered
-        draft_workflows_created:
-          type: integer
-          title: Draft Workflows Created
-        kb_edits:
-          type: integer
-          title: Kb Edits
-        total_contributions:
-          type: integer
-          title: Total Contributions
-      type: object
-      required:
-      - user_id
-      - user_name
-      - email
-      - company_knowledge_added
-      - workflows_discovered
-      - draft_workflows_created
-      - kb_edits
-      - total_contributions
-      title: UserKBStats
-    KBStats:
-      properties:
-        total_features:
-          type: integer
-          title: Total Features
-        total_workflows:
-          type: integer
-          title: Total Workflows
-        total_company_knowledge:
-          type: integer
-          title: Total Company Knowledge
-        total_draft_workflows:
-          type: integer
-          title: Total Draft Workflows
-        auto_discovered_features:
-          type: integer
-          title: Auto Discovered Features
-        auto_discovered_workflows:
-          type: integer
-          title: Auto Discovered Workflows
-        manually_added_company_knowledge:
-          type: integer
-          title: Manually Added Company Knowledge
-        manually_added_draft_workflows:
-          type: integer
-          title: Manually Added Draft Workflows
-        edits_applied:
-          type: integer
-          title: Edits Applied
-        total_kb_updates:
-          type: integer
-          title: Total Kb Updates
-        kb_leaderboard:
-          items:
-            $ref: '#/components/schemas/UserKBStats'
-          type: array
-          title: Kb Leaderboard
-      type: object
-      required:
-      - total_features
-      - total_workflows
-      - total_company_knowledge
-      - total_draft_workflows
-      - auto_discovered_features
-      - auto_discovered_workflows
-      - manually_added_company_knowledge
-      - manually_added_draft_workflows
-      - edits_applied
-      - total_kb_updates
-      - kb_leaderboard
-      title: KBStats
-    UserTaskStats:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        user_name:
-          type: string
-          title: User Name
-        email:
-          type: string
-          title: Email
-        tasks_completed:
-          type: integer
-          title: Tasks Completed
-        hours_saved:
-          type: number
-          title: Hours Saved
-        clicks_automated:
-          type: integer
-          title: Clicks Automated
-      type: object
-      required:
-      - user_id
-      - user_name
-      - email
-      - tasks_completed
-      - hours_saved
-      - clicks_automated
-      title: UserTaskStats
-    WorkflowStats:
-      properties:
-        workflow_id:
-          type: string
-          title: Workflow Id
-        name:
-          type: string
-          title: Name
-        run_count:
-          type: integer
-          title: Run Count
-      type: object
-      required:
-      - workflow_id
-      - name
-      - run_count
-      title: WorkflowStats
-    SeverityCount:
-      properties:
-        severity:
-          type: string
-          title: Severity
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - severity
-      - count
-      title: SeverityCount
     AnalyticsOverviewResponse:
       properties:
         total_tasks_completed:
@@ -248,62 +88,43 @@ components:
       - top_workflows
       - kb
       title: AnalyticsOverviewResponse
-    AgentStats:
+    UserKBStats:
       properties:
-        agent_id:
+        user_id:
           type: string
-          title: Agent Id
-        agent_name:
+          title: User Id
+        user_name:
           type: string
-          title: Agent Name
-        agent_icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Icon
-        runs_completed:
+          title: User Name
+        email:
+          type: string
+          title: Email
+        company_knowledge_added:
           type: integer
-          title: Runs Completed
-        runs_failed:
+          title: Company Knowledge Added
+        workflows_discovered:
           type: integer
-          title: Runs Failed
-        success_rate:
-          type: number
-          title: Success Rate
+          title: Workflows Discovered
+        draft_workflows_created:
+          type: integer
+          title: Draft Workflows Created
+        kb_edits:
+          type: integer
+          title: Kb Edits
+        total_contributions:
+          type: integer
+          title: Total Contributions
       type: object
       required:
-      - agent_id
-      - agent_name
-      - runs_completed
-      - runs_failed
-      - success_rate
-      title: AgentStats
-    MonthlyCount:
-      properties:
-        month:
-          type: string
-          title: Month
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - month
-      - count
-      title: MonthlyCount
-    SourceCount:
-      properties:
-        source:
-          type: string
-          title: Source
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - source
-      - count
-      title: SourceCount
+      - user_id
+      - user_name
+      - email
+      - company_knowledge_added
+      - workflows_discovered
+      - draft_workflows_created
+      - kb_edits
+      - total_contributions
+      title: UserKBStats
     TaskAnalyticsData:
       properties:
         total_tasks:
@@ -353,6 +174,185 @@ components:
       - by_severity
       - monthly_trend
       title: TaskAnalyticsData
+    StatusCount:
+      properties:
+        status:
+          type: string
+          title: Status
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - status
+      - count
+      title: StatusCount
+    SourceCount:
+      properties:
+        source:
+          type: string
+          title: Source
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - source
+      - count
+      title: SourceCount
+    MonthlyCount:
+      properties:
+        month:
+          type: string
+          title: Month
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - month
+      - count
+      title: MonthlyCount
+    KBStats:
+      properties:
+        total_features:
+          type: integer
+          title: Total Features
+        total_workflows:
+          type: integer
+          title: Total Workflows
+        total_company_knowledge:
+          type: integer
+          title: Total Company Knowledge
+        total_draft_workflows:
+          type: integer
+          title: Total Draft Workflows
+        auto_discovered_features:
+          type: integer
+          title: Auto Discovered Features
+        auto_discovered_workflows:
+          type: integer
+          title: Auto Discovered Workflows
+        manually_added_company_knowledge:
+          type: integer
+          title: Manually Added Company Knowledge
+        manually_added_draft_workflows:
+          type: integer
+          title: Manually Added Draft Workflows
+        edits_applied:
+          type: integer
+          title: Edits Applied
+        total_kb_updates:
+          type: integer
+          title: Total Kb Updates
+        kb_leaderboard:
+          items:
+            $ref: '#/components/schemas/UserKBStats'
+          type: array
+          title: Kb Leaderboard
+      type: object
+      required:
+      - total_features
+      - total_workflows
+      - total_company_knowledge
+      - total_draft_workflows
+      - auto_discovered_features
+      - auto_discovered_workflows
+      - manually_added_company_knowledge
+      - manually_added_draft_workflows
+      - edits_applied
+      - total_kb_updates
+      - kb_leaderboard
+      title: KBStats
+    WorkflowStats:
+      properties:
+        workflow_id:
+          type: string
+          title: Workflow Id
+        name:
+          type: string
+          title: Name
+        run_count:
+          type: integer
+          title: Run Count
+      type: object
+      required:
+      - workflow_id
+      - name
+      - run_count
+      title: WorkflowStats
+    AgentStats:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        agent_name:
+          type: string
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        runs_completed:
+          type: integer
+          title: Runs Completed
+        runs_failed:
+          type: integer
+          title: Runs Failed
+        success_rate:
+          type: number
+          title: Success Rate
+      type: object
+      required:
+      - agent_id
+      - agent_name
+      - runs_completed
+      - runs_failed
+      - success_rate
+      title: AgentStats
+    SeverityCount:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - severity
+      - count
+      title: SeverityCount
+    UserTaskStats:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        email:
+          type: string
+          title: Email
+        tasks_completed:
+          type: integer
+          title: Tasks Completed
+        hours_saved:
+          type: number
+          title: Hours Saved
+        clicks_automated:
+          type: integer
+          title: Clicks Automated
+      type: object
+      required:
+      - user_id
+      - user_name
+      - email
+      - tasks_completed
+      - hours_saved
+      - clicks_automated
+      title: UserTaskStats
   securitySchemes:
     HTTPBearer:
       type: http

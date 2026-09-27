@@ -891,163 +891,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    KBSummary:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+        features_count:
+          type: integer
+          title: Features Count
+        workflows_count:
+          type: integer
+          title: Workflows Count
+        explorations_count:
+          type: integer
+          title: Explorations Count
+          default: 0
+        company_knowledge_count:
+          type: integer
+          title: Company Knowledge Count
+          default: 0
+        agent_insights_count:
+          type: integer
+          title: Agent Insights Count
+          default: 0
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    KBFeatureResponse:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        navigation_path:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Navigation Path
-        url:
-          anyOf:
-          - type: string
-            maxLength: 2048
-          - type: 'null'
-          title: Url
-        key_actions:
-          items:
-            type: string
-          type: array
-          title: Key Actions
-          default: []
-        related_terms:
-          items:
-            type: string
-          type: array
-          title: Related Terms
-          default: []
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        product_id:
-          type: string
-          format: uuid
-          title: Product Id
-        discovered_by_run_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Discovered By Run Id
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - name
-      - id
-      - organization_id
-      - product_id
-      - created_at
-      - updated_at
-      title: KBFeatureResponse
-      description: Schema for KB feature response.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GenerateDraftWorkflowResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-        starting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Starting Url
-        blocks:
-          items:
-            $ref: '#/components/schemas/DraftWorkflowBlock'
-          type: array
-          title: Blocks
-      type: object
-      required:
-      - name
-      - starting_url
-      - blocks
-      title: GenerateDraftWorkflowResponse
-      description: Generated draft workflow ready for editing.
-    KBDraftWorkflowUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        starting_url:
-          anyOf:
-          - type: string
-            maxLength: 2048
-          - type: 'null'
-          title: Starting Url
-        blocks:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/DraftWorkflowBlock'
-            type: array
-          - type: 'null'
-          title: Blocks
-      type: object
-      title: KBDraftWorkflowUpdate
-      description: Schema for updating a draft workflow.
+      - features_count
+      - workflows_count
+      title: KBSummary
+      description: Summary of KB contents.
     KBWorkflowResponse:
       properties:
         name:
@@ -1165,6 +1034,160 @@ components:
       - updated_at
       title: KBWorkflowResponse
       description: Schema for KB workflow response.
+    KBCompanyKnowledgeResponse:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          title: Title
+        description:
+          type: string
+          title: Description
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        is_pinned:
+          type: boolean
+          title: Is Pinned
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - title
+      - description
+      - id
+      - organization_id
+      - product_id
+      - is_pinned
+      - created_at
+      - updated_at
+      title: KBCompanyKnowledgeResponse
+      description: Schema for company knowledge response.
+    GenerateDraftWorkflowRequest:
+      properties:
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - description
+      title: GenerateDraftWorkflowRequest
+      description: Request to generate a draft workflow from user description.
+    Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post
+    KBFeatureResponse:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        navigation_path:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Navigation Path
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Url
+        key_actions:
+          items:
+            type: string
+          type: array
+          title: Key Actions
+          default: []
+        related_terms:
+          items:
+            type: string
+          type: array
+          title: Related Terms
+          default: []
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        discovered_by_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Discovered By Run Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+      - name
+      - id
+      - organization_id
+      - product_id
+      - created_at
+      - updated_at
+      title: KBFeatureResponse
+      description: Schema for KB feature response.
+    LinkedWorkflow:
+      properties:
+        workflow_id:
+          type: string
+          title: Workflow Id
+        trigger_name:
+          type: string
+          title: Trigger Name
+      type: object
+      required:
+      - workflow_id
+      - trigger_name
+      title: LinkedWorkflow
+      description: A reference to a sub-workflow that can be loaded on demand during execution.
     KBDraftWorkflowCreate:
       properties:
         name:
@@ -1193,6 +1216,67 @@ components:
       - name
       title: KBDraftWorkflowCreate
       description: Schema for creating a draft workflow.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WorkflowStep:
+      properties:
+        step_number:
+          type: integer
+          title: Step Number
+        action:
+          type: string
+          title: Action
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        skips_to_step:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Skips To Step
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        step_type:
+          type: string
+          enum:
+          - cua
+          - chat
+          title: Step Type
+          default: cua
+        chat_tool:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chat Tool
+        chat_args:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Chat Args
+      type: object
+      required:
+      - step_number
+      - action
+      title: WorkflowStep
+      description: A single step in a workflow.
     KBDraftWorkflowResponse:
       properties:
         name:
@@ -1247,49 +1331,59 @@ components:
       - updated_at
       title: KBDraftWorkflowResponse
       description: Schema for draft workflow response.
-    KBFeatureUpdate:
+    KBCompanyKnowledgeCreate:
       properties:
-        name:
+        title:
+          type: string
+          maxLength: 255
+          title: Title
+        description:
+          type: string
+          title: Description
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+      type: object
+      required:
+      - title
+      - description
+      - product_id
+      title: KBCompanyKnowledgeCreate
+      description: Schema for creating a company knowledge entry.
+    KBAgentInsightUpdate:
+      properties:
+        title:
           anyOf:
           - type: string
             maxLength: 255
-            minLength: 1
           - type: 'null'
-          title: Name
+          title: Title
         description:
           anyOf:
           - type: string
           - type: 'null'
           title: Description
-        navigation_path:
+        product_domain:
           anyOf:
           - type: string
-            maxLength: 500
+            maxLength: 255
           - type: 'null'
-          title: Navigation Path
-        url:
+          title: Product Domain
+        category:
           anyOf:
           - type: string
-            maxLength: 2048
+            maxLength: 100
           - type: 'null'
-          title: Url
-        key_actions:
+          title: Category
+        is_pinned:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: boolean
           - type: 'null'
-          title: Key Actions
-        related_terms:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Related Terms
+          title: Is Pinned
       type: object
-      title: KBFeatureUpdate
-      description: Schema for updating a KB feature.
+      title: KBAgentInsightUpdate
+      description: Schema for updating an agent insight entry.
     KBWorkflowUpdate:
       properties:
         name:
@@ -1357,58 +1451,118 @@ components:
       type: object
       title: KBWorkflowUpdate
       description: Schema for updating a KB workflow.
-    WorkflowStep:
+    WorkflowInput:
       properties:
-        step_number:
-          type: integer
-          title: Step Number
-        action:
+        name:
           type: string
-          title: Action
+          title: Name
+        description:
+          type: string
+          title: Description
+        required:
+          type: boolean
+          title: Required
+          default: true
+      type: object
+      required:
+      - name
+      - description
+      title: WorkflowInput
+      description: A required input for a workflow (variable value the user must provide).
+    GenerateDraftWorkflowResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          items:
+            $ref: '#/components/schemas/DraftWorkflowBlock'
+          type: array
+          title: Blocks
+      type: object
+      required:
+      - name
+      - starting_url
+      - blocks
+      title: GenerateDraftWorkflowResponse
+      description: Generated draft workflow ready for editing.
+    KBDraftWorkflowUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
         description:
           anyOf:
           - type: string
           - type: 'null'
           title: Description
+        starting_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Starting Url
+        blocks:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DraftWorkflowBlock'
+            type: array
+          - type: 'null'
+          title: Blocks
+      type: object
+      title: KBDraftWorkflowUpdate
+      description: Schema for updating a draft workflow.
+    KBFeatureUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        navigation_path:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Navigation Path
         url:
           anyOf:
           - type: string
+            maxLength: 2048
           - type: 'null'
           title: Url
-        skips_to_step:
+        key_actions:
           anyOf:
-          - type: integer
+          - items:
+              type: string
+            type: array
           - type: 'null'
-          title: Skips To Step
-        notes:
+          title: Key Actions
+        related_terms:
           anyOf:
-          - type: string
+          - items:
+              type: string
+            type: array
           - type: 'null'
-          title: Notes
-        step_type:
-          type: string
-          enum:
-          - cua
-          - chat
-          title: Step Type
-          default: cua
-        chat_tool:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Chat Tool
-        chat_args:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Chat Args
+          title: Related Terms
       type: object
-      required:
-      - step_number
-      - action
-      title: WorkflowStep
-      description: A single step in a workflow.
+      title: KBFeatureUpdate
+      description: Schema for updating a KB feature.
     DraftWorkflowBlock:
       properties:
         block_number:
@@ -1438,207 +1592,32 @@ components:
       - description
       title: DraftWorkflowBlock
       description: A block in a draft workflow - either feature-linked or plain text.
-    Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post:
+    ValidationError:
       properties:
-        file:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          contentMediaType: application/octet-stream
-          title: File
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - file
-      title: Body_import_company_knowledge_from_file_api_v1_knowledge_base_company_knowledge_import_file_post
-    KBSummary:
-      properties:
-        features_count:
-          type: integer
-          title: Features Count
-        workflows_count:
-          type: integer
-          title: Workflows Count
-        explorations_count:
-          type: integer
-          title: Explorations Count
-          default: 0
-        company_knowledge_count:
-          type: integer
-          title: Company Knowledge Count
-          default: 0
-        agent_insights_count:
-          type: integer
-          title: Agent Insights Count
-          default: 0
-      type: object
-      required:
-      - features_count
-      - workflows_count
-      title: KBSummary
-      description: Summary of KB contents.
-    KBAgentInsightUpdate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        product_domain:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Product Domain
-        category:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Category
-        is_pinned:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Pinned
-      type: object
-      title: KBAgentInsightUpdate
-      description: Schema for updating an agent insight entry.
-    KBCompanyKnowledgeCreate:
-      properties:
-        title:
-          type: string
-          maxLength: 255
-          title: Title
-        description:
-          type: string
-          title: Description
-        product_id:
-          type: string
-          format: uuid
-          title: Product Id
-      type: object
-      required:
-      - title
-      - description
-      - product_id
-      title: KBCompanyKnowledgeCreate
-      description: Schema for creating a company knowledge entry.
-    KBCompanyKnowledgeResponse:
-      properties:
-        title:
-          type: string
-          maxLength: 255
-          title: Title
-        description:
-          type: string
-          title: Description
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        product_id:
-          type: string
-          format: uuid
-          title: Product Id
-        is_pinned:
-          type: boolean
-          title: Is Pinned
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-      type: object
-      required:
-      - title
-      - description
-      - id
-      - organization_id
-      - product_id
-      - is_pinned
-      - created_at
-      - updated_at
-      title: KBCompanyKnowledgeResponse
-      description: Schema for company knowledge response.
-    WorkflowInput:
-      properties:
-        name:
-          type: string
-          title: Name
-        description:
-          type: string
-          title: Description
-        required:
-          type: boolean
-          title: Required
-          default: true
-      type: object
-      required:
-      - name
-      - description
-      title: WorkflowInput
-      description: A required input for a workflow (variable value the user must provide).
-    KBCompanyKnowledgeUpdate:
-      properties:
-        title:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        is_pinned:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Pinned
-      type: object
-      title: KBCompanyKnowledgeUpdate
-      description: Schema for updating a company knowledge entry.
-    LinkedWorkflow:
-      properties:
-        workflow_id:
-          type: string
-          title: Workflow Id
-        trigger_name:
-          type: string
-          title: Trigger Name
-      type: object
-      required:
-      - workflow_id
-      - trigger_name
-      title: LinkedWorkflow
-      description: A reference to a sub-workflow that can be loaded on demand during execution.
-    GenerateDraftWorkflowRequest:
-      properties:
-        starting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Starting Url
-        description:
-          type: string
-          title: Description
-      type: object
-      required:
-      - description
-      title: GenerateDraftWorkflowRequest
-      description: Request to generate a draft workflow from user description.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     KBAgentInsightResponse:
       properties:
         title:
@@ -1701,6 +1680,27 @@ components:
       - updated_at
       title: KBAgentInsightResponse
       description: Schema for agent insight response.
+    KBCompanyKnowledgeUpdate:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_pinned:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Pinned
+      type: object
+      title: KBCompanyKnowledgeUpdate
+      description: Schema for updating a company knowledge entry.
   securitySchemes:
     HTTPBearer:
       type: http

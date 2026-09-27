@@ -77,6 +77,45 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OrgSessionsResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserWithSessionsResponse'
+          type: array
+          title: Users
+      type: object
+      required:
+      - users
+      title: OrgSessionsResponse
+      description: Response containing all users with saved sessions in the organization.
+    AuthenticatedDomainInfo:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        authenticated_at:
+          type: string
+          title: Authenticated At
+        last_used_at:
+          type: string
+          title: Last Used At
+      type: object
+      required:
+      - domain
+      - authenticated_at
+      - last_used_at
+      title: AuthenticatedDomainInfo
+      description: Information about an authenticated domain.
     ValidationError:
       properties:
         loc:
@@ -103,15 +142,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     UserWithSessionsResponse:
       properties:
         user_id:
@@ -155,36 +185,6 @@ components:
       - authenticated_domains
       title: UserWithSessionsResponse
       description: User with their unified context and authenticated domains.
-    OrgSessionsResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserWithSessionsResponse'
-          type: array
-          title: Users
-      type: object
-      required:
-      - users
-      title: OrgSessionsResponse
-      description: Response containing all users with saved sessions in the organization.
-    AuthenticatedDomainInfo:
-      properties:
-        domain:
-          type: string
-          title: Domain
-        authenticated_at:
-          type: string
-          title: Authenticated At
-        last_used_at:
-          type: string
-          title: Last Used At
-      type: object
-      required:
-      - domain
-      - authenticated_at
-      - last_used_at
-      title: AuthenticatedDomainInfo
-      description: Information about an authenticated domain.
   securitySchemes:
     HTTPBearer:
       type: http

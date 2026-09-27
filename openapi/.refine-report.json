@@ -50,9 +50,7 @@
     "unisson-webhooks-api-openapi.yml",
     "unisson-widget-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -106,8 +104,7 @@
     "unisson-openapi-original.json: declared missing tag: usage",
     "unisson-openapi-original.json: declared missing tag: webhooks",
     "unisson-openapi-original.json: declared missing tag: widget",
-    "superseded outputs removed: unisson-ap-is-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 45 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "unisson-agent-evals-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -115,7 +112,7 @@
     "unisson-agent-triggers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "unisson-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "unisson-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "unisson-ap-is-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unisson-apis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "unisson-appdb-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "unisson-apps-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "unisson-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",

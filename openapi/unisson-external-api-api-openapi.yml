@@ -220,87 +220,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ExternalRunResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        task_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Type
-        external_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Reference Id
-        liveview_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Liveview Url
-      type: object
-      required:
-      - id
-      - status
-      - created_at
-      title: ExternalRunResponse
-      description: Basic run response.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ExternalWebhookConfigRequest:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 500
-          title: Webhook Url
-          description: URL to receive webhook events. Set to empty string to remove.
-        webhook_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Webhook Events
-          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
-      type: object
-      required:
-      - webhook_url
-      title: ExternalWebhookConfigRequest
-      description: Request to update webhook configuration via API key.
     HTTPValidationError:
       properties:
         detail:
@@ -310,6 +229,18 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ExternalRunResumeRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
+          description: Answer to clarifying question (if any)
+      type: object
+      title: ExternalRunResumeRequest
+      description: Request to resume a paused run.
     ExternalWebhookConfigResponse:
       properties:
         webhook_url:
@@ -334,6 +265,26 @@ components:
       - webhook_events
       title: ExternalWebhookConfigResponse
       description: Response after updating webhook configuration.
+    ExternalWebhookConfigRequest:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 500
+          title: Webhook Url
+          description: URL to receive webhook events. Set to empty string to remove.
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
+      type: object
+      required:
+      - webhook_url
+      title: ExternalWebhookConfigRequest
+      description: Request to update webhook configuration via API key.
     ExternalRunDetailResponse:
       properties:
         id:
@@ -445,18 +396,67 @@ components:
       - webhook_events
       title: ExternalStatusResponse
       description: Response for the status endpoint.
-    ExternalRunResumeRequest:
+    ExternalRunResponse:
       properties:
-        answer:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        task_type:
           anyOf:
           - type: string
-            maxLength: 2000
           - type: 'null'
-          title: Answer
-          description: Answer to clarifying question (if any)
+          title: Task Type
+        external_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Reference Id
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
       type: object
-      title: ExternalRunResumeRequest
-      description: Request to resume a paused run.
+      required:
+      - id
+      - status
+      - created_at
+      title: ExternalRunResponse
+      description: Basic run response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ExternalRunCreateRequest:
       properties:
         task:

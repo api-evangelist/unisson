@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Unisson APIS API
+  title: Unisson APIs API
   version: 1.0.0
 tags:
 - name: APIs
@@ -415,127 +415,39 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    StartManualRecordingRequest:
+    RecordingHarResponse:
       properties:
-        title:
-          type: string
-          title: Title
-        starting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Starting Url
-        copilot_enabled:
-          type: boolean
-          title: Copilot Enabled
-          default: false
-      type: object
-      required:
-      - title
-      title: StartManualRecordingRequest
-      description: Request body for starting a manual recording.
-    RecordingListResponse:
-      properties:
-        recordings:
-          items:
-            $ref: '#/components/schemas/RecordingResponse'
-          type: array
-          title: Recordings
-      type: object
-      required:
-      - recordings
-      title: RecordingListResponse
-      description: Response model for listing recordings.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CombinedAPIDataResponse:
-      properties:
-        apis:
-          items:
-            $ref: '#/components/schemas/APIResponse'
-          type: array
-          title: Apis
-        recordings:
-          items:
-            $ref: '#/components/schemas/RecordingResponse'
-          type: array
-          title: Recordings
-      type: object
-      required:
-      - apis
-      - recordings
-      title: CombinedAPIDataResponse
-      description: Combined response with both APIs and recordings.
-    ExecuteAPIResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        data:
+        har_data:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          title: Data
-        execution_time_ms:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Execution Time Ms
-        steps_executed:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Steps Executed
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        step:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Step
-        status_code:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Status Code
-        body:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Body
+          title: Har Data
+      type: object
+      title: RecordingHarResponse
+      description: Response model for a recording's HAR data.
+    StartManualRecordingResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        liveview_url:
+          type: string
+          title: Liveview Url
+        kernel_browser_id:
+          type: string
+          title: Kernel Browser Id
+        organization_id:
+          type: string
+          title: Organization Id
       type: object
       required:
-      - success
-      title: ExecuteAPIResponse
-      description: Response from API execution.
+      - session_id
+      - liveview_url
+      - kernel_browser_id
+      - organization_id
+      title: StartManualRecordingResponse
+      description: Response for starting a manual recording.
     HTTPValidationError:
       properties:
         detail:
@@ -545,46 +457,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    StopManualRecordingResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        recording_id:
-          type: string
-          title: Recording Id
-        workflow_id:
-          type: string
-          title: Workflow Id
-        request_count:
-          type: integer
-          title: Request Count
-        api_request_count:
-          type: integer
-          title: Api Request Count
-        interaction_count:
-          type: integer
-          title: Interaction Count
-      type: object
-      required:
-      - success
-      - recording_id
-      - workflow_id
-      - request_count
-      - api_request_count
-      - interaction_count
-      title: StopManualRecordingResponse
-      description: Response for stopping a manual recording.
-    CopilotMessageRequest:
-      properties:
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - message
-      title: CopilotMessageRequest
-      description: Request body for sending a message to the copilot observer.
     APIStepResponse:
       properties:
         name:
@@ -635,165 +507,6 @@ components:
       - headers
       title: APIStepResponse
       description: A single step in an API definition.
-    StartManualRecordingResponse:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        liveview_url:
-          type: string
-          title: Liveview Url
-        kernel_browser_id:
-          type: string
-          title: Kernel Browser Id
-        organization_id:
-          type: string
-          title: Organization Id
-      type: object
-      required:
-      - session_id
-      - liveview_url
-      - kernel_browser_id
-      - organization_id
-      title: StartManualRecordingResponse
-      description: Response for starting a manual recording.
-    RecordingResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        workflow_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workflow Id
-        workflow_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Workflow Name
-        run_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Run Id
-        task_description:
-          type: string
-          title: Task Description
-        starting_url:
-          type: string
-          title: Starting Url
-        request_count:
-          type: integer
-          title: Request Count
-        status:
-          type: string
-          title: Status
-        recorded_at:
-          type: string
-          title: Recorded At
-        har_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Har Data
-        recording_type:
-          type: string
-          title: Recording Type
-          default: cua
-      type: object
-      required:
-      - id
-      - workflow_id
-      - workflow_name
-      - run_id
-      - task_description
-      - starting_url
-      - request_count
-      - status
-      - recorded_at
-      title: RecordingResponse
-      description: Response model for a network recording.
-    RecordingHarResponse:
-      properties:
-        har_data:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Har Data
-      type: object
-      title: RecordingHarResponse
-      description: Response model for a recording's HAR data.
-    ActiveRecordingResponse:
-      properties:
-        has_active_session:
-          type: boolean
-          title: Has Active Session
-        session_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Id
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        starting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Starting Url
-        liveview_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Liveview Url
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        copilot_enabled:
-          type: boolean
-          title: Copilot Enabled
-          default: false
-      type: object
-      required:
-      - has_active_session
-      title: ActiveRecordingResponse
-      description: Response for active recording check.
-    ExecuteAPIRequest:
-      properties:
-        cookies:
-          additionalProperties:
-            type: string
-          type: object
-          title: Cookies
-          default: {}
-        storage:
-          additionalProperties:
-            type: string
-          type: object
-          title: Storage
-          default: {}
-        headers:
-          additionalProperties:
-            type: string
-          type: object
-          title: Headers
-          default: {}
-        params:
-          additionalProperties:
-            type: string
-          type: object
-          title: Params
-          default: {}
-      type: object
-      title: ExecuteAPIRequest
-      description: Request body for executing an API.
     APIResponse:
       properties:
         id:
@@ -864,6 +577,293 @@ components:
       - created_at
       title: APIResponse
       description: Response model for a generated API.
+    ExecuteAPIResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Data
+        execution_time_ms:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Execution Time Ms
+        steps_executed:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Steps Executed
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Step
+        status_code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Status Code
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+      type: object
+      required:
+      - success
+      title: ExecuteAPIResponse
+      description: Response from API execution.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CopilotMessageRequest:
+      properties:
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - message
+      title: CopilotMessageRequest
+      description: Request body for sending a message to the copilot observer.
+    StartManualRecordingRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        copilot_enabled:
+          type: boolean
+          title: Copilot Enabled
+          default: false
+      type: object
+      required:
+      - title
+      title: StartManualRecordingRequest
+      description: Request body for starting a manual recording.
+    RecordingListResponse:
+      properties:
+        recordings:
+          items:
+            $ref: '#/components/schemas/RecordingResponse'
+          type: array
+          title: Recordings
+      type: object
+      required:
+      - recordings
+      title: RecordingListResponse
+      description: Response model for listing recordings.
+    RecordingResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        workflow_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Id
+        workflow_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workflow Name
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+        task_description:
+          type: string
+          title: Task Description
+        starting_url:
+          type: string
+          title: Starting Url
+        request_count:
+          type: integer
+          title: Request Count
+        status:
+          type: string
+          title: Status
+        recorded_at:
+          type: string
+          title: Recorded At
+        har_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Har Data
+        recording_type:
+          type: string
+          title: Recording Type
+          default: cua
+      type: object
+      required:
+      - id
+      - workflow_id
+      - workflow_name
+      - run_id
+      - task_description
+      - starting_url
+      - request_count
+      - status
+      - recorded_at
+      title: RecordingResponse
+      description: Response model for a network recording.
+    ActiveRecordingResponse:
+      properties:
+        has_active_session:
+          type: boolean
+          title: Has Active Session
+        session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        starting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Starting Url
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        copilot_enabled:
+          type: boolean
+          title: Copilot Enabled
+          default: false
+      type: object
+      required:
+      - has_active_session
+      title: ActiveRecordingResponse
+      description: Response for active recording check.
+    ExecuteAPIRequest:
+      properties:
+        cookies:
+          additionalProperties:
+            type: string
+          type: object
+          title: Cookies
+          default: {}
+        storage:
+          additionalProperties:
+            type: string
+          type: object
+          title: Storage
+          default: {}
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Headers
+          default: {}
+        params:
+          additionalProperties:
+            type: string
+          type: object
+          title: Params
+          default: {}
+      type: object
+      title: ExecuteAPIRequest
+      description: Request body for executing an API.
+    StopManualRecordingResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        recording_id:
+          type: string
+          title: Recording Id
+        workflow_id:
+          type: string
+          title: Workflow Id
+        request_count:
+          type: integer
+          title: Request Count
+        api_request_count:
+          type: integer
+          title: Api Request Count
+        interaction_count:
+          type: integer
+          title: Interaction Count
+      type: object
+      required:
+      - success
+      - recording_id
+      - workflow_id
+      - request_count
+      - api_request_count
+      - interaction_count
+      title: StopManualRecordingResponse
+      description: Response for stopping a manual recording.
+    CombinedAPIDataResponse:
+      properties:
+        apis:
+          items:
+            $ref: '#/components/schemas/APIResponse'
+          type: array
+          title: Apis
+        recordings:
+          items:
+            $ref: '#/components/schemas/RecordingResponse'
+          type: array
+          title: Recordings
+      type: object
+      required:
+      - apis
+      - recordings
+      title: CombinedAPIDataResponse
+      description: Combined response with both APIs and recordings.
   securitySchemes:
     HTTPBearer:
       type: http

@@ -227,57 +227,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AppDbTable:
-      properties:
-        name:
-          type: string
-          title: Name
-        columns:
-          items:
-            $ref: '#/components/schemas/AppDbColumn'
-          type: array
-          title: Columns
-        primary_key:
-          items:
-            type: string
-          type: array
-          title: Primary Key
-        approx_rows:
-          type: integer
-          title: Approx Rows
-      type: object
-      required:
-      - name
-      - columns
-      - primary_key
-      - approx_rows
-      title: AppDbTable
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -287,28 +236,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    AppDbColumn:
-      properties:
-        name:
-          type: string
-          title: Name
-        type:
-          type: string
-          title: Type
-        nullable:
-          type: boolean
-          title: Nullable
-        default:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Default
-      type: object
-      required:
-      - name
-      - type
-      - nullable
-      title: AppDbColumn
     AppDbTablesResponse:
       properties:
         scope:
@@ -346,6 +273,28 @@ components:
       required:
       - sql
       title: AppDbStatementRequest
+    AppDbColumn:
+      properties:
+        name:
+          type: string
+          title: Name
+        type:
+          type: string
+          title: Type
+        nullable:
+          type: boolean
+          title: Nullable
+        default:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default
+      type: object
+      required:
+      - name
+      - type
+      - nullable
+      title: AppDbColumn
     AppDbQueryResponse:
       properties:
         columns:
@@ -372,6 +321,32 @@ components:
       - row_count
       - truncated
       title: AppDbQueryResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AppDbExecuteResponse:
       properties:
         status:
@@ -393,6 +368,31 @@ components:
       - status
       - statements
       title: AppDbExecuteResponse
+    AppDbTable:
+      properties:
+        name:
+          type: string
+          title: Name
+        columns:
+          items:
+            $ref: '#/components/schemas/AppDbColumn'
+          type: array
+          title: Columns
+        primary_key:
+          items:
+            type: string
+          type: array
+          title: Primary Key
+        approx_rows:
+          type: integer
+          title: Approx Rows
+      type: object
+      required:
+      - name
+      - columns
+      - primary_key
+      - approx_rows
+      title: AppDbTable
   securitySchemes:
     HTTPBearer:
       type: http

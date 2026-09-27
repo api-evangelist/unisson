@@ -126,32 +126,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -161,21 +135,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    EmailDraftListResponse:
-      properties:
-        drafts:
-          items:
-            $ref: '#/components/schemas/EmailDraftResponse'
-          type: array
-          title: Drafts
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - drafts
-      - total
-      title: EmailDraftListResponse
     EmailDraftResponse:
       properties:
         draft_id:
@@ -307,6 +266,47 @@ components:
         the request body are written; missing keys are left as-is so the
 
         user can change just the subject without re-sending the body.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EmailDraftListResponse:
+      properties:
+        drafts:
+          items:
+            $ref: '#/components/schemas/EmailDraftResponse'
+          type: array
+          title: Drafts
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - drafts
+      - total
+      title: EmailDraftListResponse
   securitySchemes:
     HTTPBearer:
       type: http

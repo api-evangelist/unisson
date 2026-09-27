@@ -271,43 +271,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    MiniAppVersionListResponse:
-      properties:
-        versions:
-          items:
-            $ref: '#/components/schemas/MiniAppVersionResponse'
-          type: array
-          title: Versions
-      type: object
-      required:
-      - versions
-      title: MiniAppVersionListResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -317,60 +280,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    AppTemplateResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          type: string
-          title: Icon
-        description:
-          type: string
-          title: Description
-        prompt:
-          type: string
-          title: Prompt
-      type: object
-      required:
-      - id
-      - name
-      - icon
-      - description
-      - prompt
-      title: AppTemplateResponse
-    MiniAppVersionResponse:
-      properties:
-        version_number:
-          type: integer
-          title: Version Number
-        change_summary:
-          type: string
-          title: Change Summary
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        created_by_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created By Name
-      type: object
-      required:
-      - version_number
-      - change_summary
-      title: MiniAppVersionResponse
-      description: 'One entry in an app''s version history — the agent-written change summary
-
-        users review instead of raw source diffs. ``html`` is omitted from the list;
-
-        fetch a single version''s detail to preview it.'
     MiniAppReadmeResponse:
       properties:
         readme:
@@ -458,6 +367,32 @@ components:
       - name
       - guest_access
       title: MiniAppResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     MiniAppListResponse:
       properties:
         apps:
@@ -469,6 +404,31 @@ components:
       required:
       - apps
       title: MiniAppListResponse
+    AppTemplateResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          type: string
+          title: Icon
+        description:
+          type: string
+          title: Description
+        prompt:
+          type: string
+          title: Prompt
+      type: object
+      required:
+      - id
+      - name
+      - icon
+      - description
+      - prompt
+      title: AppTemplateResponse
     MiniAppDetailResponse:
       properties:
         id:
@@ -533,6 +493,46 @@ components:
       - guest_access
       - html
       title: MiniAppDetailResponse
+    MiniAppVersionListResponse:
+      properties:
+        versions:
+          items:
+            $ref: '#/components/schemas/MiniAppVersionResponse'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - versions
+      title: MiniAppVersionListResponse
+    MiniAppVersionResponse:
+      properties:
+        version_number:
+          type: integer
+          title: Version Number
+        change_summary:
+          type: string
+          title: Change Summary
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        created_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created By Name
+      type: object
+      required:
+      - version_number
+      - change_summary
+      title: MiniAppVersionResponse
+      description: 'One entry in an app''s version history — the agent-written change summary
+
+        users review instead of raw source diffs. ``html`` is omitted from the list;
+
+        fetch a single version''s detail to preview it.'
   securitySchemes:
     HTTPBearer:
       type: http

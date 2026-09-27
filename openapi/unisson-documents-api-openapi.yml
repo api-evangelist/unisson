@@ -244,32 +244,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -279,6 +253,58 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    DocumentCreateRequest:
+      properties:
+        title:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Title
+        document_type:
+          type: string
+          pattern: ^(proposal|sow|technical_spec|architecture|contract|other)$
+          title: Document Type
+          default: other
+        provider:
+          type: string
+          title: Provider
+          default: google_drive
+        provider_file_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider File Id
+        file_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Url
+        mime_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mime Type
+      type: object
+      required:
+      - title
+      title: DocumentCreateRequest
+      description: Schema for linking a document to a customer.
+    DocumentListResponse:
+      properties:
+        documents:
+          items:
+            $ref: '#/components/schemas/DocumentResponse'
+          type: array
+          title: Documents
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - documents
+      - total
+      title: DocumentListResponse
+      description: List of documents for a customer.
     DocumentResponse:
       properties:
         id:
@@ -386,58 +412,32 @@ components:
       - created_at
       title: DocumentResponse
       description: Full document response.
-    DocumentCreateRequest:
+    ValidationError:
       properties:
-        title:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Title
-        document_type:
-          type: string
-          pattern: ^(proposal|sow|technical_spec|architecture|contract|other)$
-          title: Document Type
-          default: other
-        provider:
-          type: string
-          title: Provider
-          default: google_drive
-        provider_file_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Provider File Id
-        file_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: File Url
-        mime_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Mime Type
-      type: object
-      required:
-      - title
-      title: DocumentCreateRequest
-      description: Schema for linking a document to a customer.
-    DocumentListResponse:
-      properties:
-        documents:
+        loc:
           items:
-            $ref: '#/components/schemas/DocumentResponse'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Documents
-        total:
-          type: integer
-          title: Total
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - documents
-      - total
-      title: DocumentListResponse
-      description: List of documents for a customer.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     Body_upload_document_api_v1_customers__customer_id__documents_upload_post:
       properties:
         file:

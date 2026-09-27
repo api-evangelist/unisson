@@ -149,48 +149,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DebriefMessageRequest:
-      properties:
-        content:
-          type: string
-          title: Content
-        messages:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Messages
-      type: object
-      required:
-      - content
-      - messages
-      title: DebriefMessageRequest
     HTTPValidationError:
       properties:
         detail:
@@ -236,28 +194,6 @@ components:
       - run_status
       - run_result
       title: DebriefInitResponse
-    DebriefApplyProposalRequest:
-      properties:
-        proposal_id:
-          type: string
-          title: Proposal Id
-        proposal_type:
-          type: string
-          title: Proposal Type
-        proposal_data:
-          additionalProperties: true
-          type: object
-          title: Proposal Data
-        action:
-          type: string
-          title: Action
-      type: object
-      required:
-      - proposal_id
-      - proposal_type
-      - proposal_data
-      - action
-      title: DebriefApplyProposalRequest
     DebriefMessageData:
       properties:
         id:
@@ -283,6 +219,70 @@ components:
       - role
       - content
       title: DebriefMessageData
+    DebriefApplyProposalRequest:
+      properties:
+        proposal_id:
+          type: string
+          title: Proposal Id
+        proposal_type:
+          type: string
+          title: Proposal Type
+        proposal_data:
+          additionalProperties: true
+          type: object
+          title: Proposal Data
+        action:
+          type: string
+          title: Action
+      type: object
+      required:
+      - proposal_id
+      - proposal_type
+      - proposal_data
+      - action
+      title: DebriefApplyProposalRequest
+    DebriefMessageRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+        messages:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Messages
+      type: object
+      required:
+      - content
+      - messages
+      title: DebriefMessageRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DebriefApplyProposalResponse:
       properties:
         success:

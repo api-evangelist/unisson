@@ -196,32 +196,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -231,129 +205,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    DiscoverySourceResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        source_type:
-          type: string
-          title: Source Type
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-        status:
-          type: string
-          title: Status
-        last_read_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Read At
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - source_type
-      - config
-      - status
-      title: DiscoverySourceResponse
-    ChatConversationResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        organization_id:
-          type: string
-          format: uuid4
-          title: Organization Id
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-        last_run_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Run Status
-        request_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Request Status
-        participants:
-          items:
-            type: string
-          type: array
-          title: Participants
-          default: []
-        tagged_agents:
-          items:
-            $ref: '#/components/schemas/UsedAgent'
-          type: array
-          title: Tagged Agents
-          default: []
-      type: object
-      required:
-      - id
-      - organization_id
-      - created_at
-      title: ChatConversationResponse
-    BuildOpportunityResponse:
-      properties:
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        skipped_automations:
-          type: integer
-          title: Skipped Automations
-          default: 0
-      type: object
-      required:
-      - agent_id
-      title: BuildOpportunityResponse
-      description: Result of "Build this" — the draft agent to open in the Agent Builder.
-    DiscoverySourceUpsert:
-      properties:
-        source_type:
-          type: string
-          maxLength: 20
-          title: Source Type
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-        status:
-          type: string
-          maxLength: 20
-          title: Status
-          default: connected
-      type: object
-      required:
-      - source_type
-      title: DiscoverySourceUpsert
-      description: Connect / update a Discovery source (one per source_type per org).
     DiscoveryOpportunityResponse:
       properties:
         id:
@@ -407,6 +258,59 @@ components:
       - title
       - status
       title: DiscoveryOpportunityResponse
+    ChatConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        last_run_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Run Status
+        request_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Status
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - created_at
+      title: ChatConversationResponse
     UsedAgent:
       properties:
         id:
@@ -434,6 +338,102 @@ components:
       description: 'An agent tagged into a conversation (subset of AgentResponse
 
         sufficient to render an agent chip/badge).'
+    DiscoverySourceUpsert:
+      properties:
+        source_type:
+          type: string
+          maxLength: 20
+          title: Source Type
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+        status:
+          type: string
+          maxLength: 20
+          title: Status
+          default: connected
+      type: object
+      required:
+      - source_type
+      title: DiscoverySourceUpsert
+      description: Connect / update a Discovery source (one per source_type per org).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BuildOpportunityResponse:
+      properties:
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        skipped_automations:
+          type: integer
+          title: Skipped Automations
+          default: 0
+      type: object
+      required:
+      - agent_id
+      title: BuildOpportunityResponse
+      description: Result of "Build this" — the draft agent to open in the Agent Builder.
+    DiscoverySourceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_type:
+          type: string
+          title: Source Type
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+        status:
+          type: string
+          title: Status
+        last_read_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Read At
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - source_type
+      - config
+      - status
+      title: DiscoverySourceResponse
   securitySchemes:
     HTTPBearer:
       type: http

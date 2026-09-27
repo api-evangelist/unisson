@@ -260,6 +260,160 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentTriggerCreate:
+      properties:
+        trigger_type:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - event
+          title: Trigger Type
+        name:
+          type: string
+          maxLength: 255
+          title: Name
+        request_text_template:
+          type: string
+          title: Request Text Template
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          type: boolean
+          title: Is Recurring
+          default: false
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Recurrence Value
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+      type: object
+      required:
+      - trigger_type
+      - name
+      - request_text_template
+      title: AgentTriggerCreate
+      description: Schema for creating an agent trigger.
+    AgentTriggerUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        request_text_template:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Request Text Template
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Recurring
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Recurrence Value
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+      type: object
+      title: AgentTriggerUpdate
+      description: 'Schema for updating an agent trigger.
+
+
+        Every field is optional; missing fields are left alone, explicit None clears
+
+        the corresponding column. Use `model_dump(exclude_unset=True)` at the call
+
+        site to distinguish "left alone" from "set to None".'
     AgentTriggerResponse:
       properties:
         id:
@@ -377,160 +531,6 @@ components:
       - updated_at
       title: AgentTriggerResponse
       description: Schema for agent trigger response.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AgentTriggerUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        request_text_template:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Request Text Template
-        scheduled_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled At
-        is_recurring:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Recurring
-        recurrence_type:
-          anyOf:
-          - type: string
-            enum:
-            - hours
-            - days
-            - weeks
-          - type: 'null'
-          title: Recurrence Type
-        recurrence_value:
-          anyOf:
-          - type: integer
-            exclusiveMinimum: 0.0
-          - type: 'null'
-          title: Recurrence Value
-        event_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Source
-        event_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Event Config
-      type: object
-      title: AgentTriggerUpdate
-      description: 'Schema for updating an agent trigger.
-
-
-        Every field is optional; missing fields are left alone, explicit None clears
-
-        the corresponding column. Use `model_dump(exclude_unset=True)` at the call
-
-        site to distinguish "left alone" from "set to None".'
-    AgentTriggerCreate:
-      properties:
-        trigger_type:
-          type: string
-          enum:
-          - schedule
-          - webhook
-          - event
-          title: Trigger Type
-        name:
-          type: string
-          maxLength: 255
-          title: Name
-        request_text_template:
-          type: string
-          title: Request Text Template
-        scheduled_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled At
-        is_recurring:
-          type: boolean
-          title: Is Recurring
-          default: false
-        recurrence_type:
-          anyOf:
-          - type: string
-            enum:
-            - hours
-            - days
-            - weeks
-          - type: 'null'
-          title: Recurrence Type
-        recurrence_value:
-          anyOf:
-          - type: integer
-            exclusiveMinimum: 0.0
-          - type: 'null'
-          title: Recurrence Value
-        event_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Source
-        event_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Event Config
-      type: object
-      required:
-      - trigger_type
-      - name
-      - request_text_template
-      title: AgentTriggerCreate
-      description: Schema for creating an agent trigger.
   securitySchemes:
     HTTPBearer:
       type: http

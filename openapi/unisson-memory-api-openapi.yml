@@ -278,78 +278,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MemoryFileVersionResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        memory_file_id:
-          type: string
-          format: uuid
-          title: Memory File Id
-        version_number:
-          type: integer
-          title: Version Number
-        content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Content
-        source:
-          type: string
-          title: Source
-        created_by:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Created By
-        parent_version_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Parent Version Id
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - memory_file_id
-      - version_number
-      - source
-      - created_at
-      title: MemoryFileVersionResponse
-      description: One immutable snapshot in a memory file's content history.
     HTTPValidationError:
       properties:
         detail:
@@ -425,6 +353,78 @@ components:
       - content
       title: MemoryFileUpdate
       description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MemoryFileVersionResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        memory_file_id:
+          type: string
+          format: uuid
+          title: Memory File Id
+        version_number:
+          type: integer
+          title: Version Number
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - memory_file_id
+      - version_number
+      - source
+      - created_at
+      title: MemoryFileVersionResponse
+      description: One immutable snapshot in a memory file's content history.
   securitySchemes:
     HTTPBearer:
       type: http

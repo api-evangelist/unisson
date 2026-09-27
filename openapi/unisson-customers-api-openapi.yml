@@ -2156,6 +2156,328 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    GuestListResponse:
+      properties:
+        guests:
+          items:
+            $ref: '#/components/schemas/GuestAccountResponse'
+          type: array
+          title: Guests
+        pending_invitations:
+          items:
+            $ref: '#/components/schemas/PendingInviteResponse'
+          type: array
+          title: Pending Invitations
+      type: object
+      required:
+      - guests
+      - pending_invitations
+      title: GuestListResponse
+    CustomerRisksResponse:
+      properties:
+        risks:
+          items:
+            $ref: '#/components/schemas/CustomerRiskResponse'
+          type: array
+          title: Risks
+      type: object
+      required:
+      - risks
+      title: CustomerRisksResponse
+      description: Response with list of customer risks.
+    CustomerDigestItem:
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        customer_name:
+          type: string
+          title: Customer Name
+        insight_type:
+          type: string
+          title: Insight Type
+        severity:
+          type: string
+          title: Severity
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - customer_id
+      - customer_name
+      - insight_type
+      - severity
+      - message
+      title: CustomerDigestItem
+      description: A single insight in the daily digest.
+    PlaybookTemplateCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepCreate'
+          type: array
+          title: Steps
+          default: []
+      type: object
+      required:
+      - name
+      title: PlaybookTemplateCreate
+      description: Schema for creating a playbook template.
+    PlaybookStepCreate:
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Order Index
+      type: object
+      required:
+      - title
+      title: PlaybookStepCreate
+      description: Schema for creating a playbook step.
+    CustomerMeetingSourcesSyncResponse:
+      properties:
+        sources:
+          additionalProperties:
+            $ref: '#/components/schemas/MeetingSourceSyncResult'
+          type: object
+          title: Sources
+      type: object
+      required:
+      - sources
+      title: CustomerMeetingSourcesSyncResponse
+    CustomerListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        name:
+          type: string
+          title: Name
+        status:
+          type: string
+          title: Status
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        priority:
+          type: string
+          title: Priority
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        owners:
+          items:
+            $ref: '#/components/schemas/CustomerOwnerInfo'
+          type: array
+          title: Owners
+          default: []
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        open_tasks_count:
+          type: integer
+          title: Open Tasks Count
+          default: 0
+        total_tasks_count:
+          type: integer
+          title: Total Tasks Count
+          default: 0
+        total_meetings_count:
+          type: integer
+          title: Total Meetings Count
+          default: 0
+        total_emails_count:
+          type: integer
+          title: Total Emails Count
+          default: 0
+        total_documents_count:
+          type: integer
+          title: Total Documents Count
+          default: 0
+        integrations:
+          items:
+            $ref: '#/components/schemas/CustomerListIntegrationSummary'
+          type: array
+          title: Integrations
+          default: []
+      type: object
+      required:
+      - id
+      - organization_id
+      - name
+      - status
+      - priority
+      - created_at
+      title: CustomerListItem
+      description: Lightweight customer item for list views.
+    PlaybookTemplateResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookTemplateStepResponse'
+          type: array
+          title: Steps
+          default: []
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - name
+      - created_at
+      title: PlaybookTemplateResponse
+      description: Schema for template response.
+    PlaybookTemplatesResponse:
+      properties:
+        templates:
+          items:
+            $ref: '#/components/schemas/PlaybookTemplateResponse'
+          type: array
+          title: Templates
+      type: object
+      required:
+      - templates
+      title: PlaybookTemplatesResponse
+      description: Response with list of templates.
+    CustomerRiskResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        risk_type:
+          type: string
+          title: Risk Type
+        severity:
+          type: string
+          title: Severity
+        description:
+          type: string
+          title: Description
+        detected_at:
+          type: string
+          format: date-time
+          title: Detected At
+        resolved_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Resolved At
+      type: object
+      required:
+      - id
+      - customer_id
+      - risk_type
+      - severity
+      - description
+      - detected_at
+      title: CustomerRiskResponse
+      description: Schema for a customer risk.
+    GrafanaLinkRequest:
+      properties:
+        dashboard_uid:
+          type: string
+          title: Dashboard Uid
+        alert_rule_ids:
+          items:
+            type: string
+          type: array
+          title: Alert Rule Ids
+      type: object
+      required:
+      - dashboard_uid
+      title: GrafanaLinkRequest
+    CustomerDigestResponse:
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+        insights:
+          items:
+            $ref: '#/components/schemas/CustomerDigestItem'
+          type: array
+          title: Insights
+        summary:
+          type: string
+          title: Summary
+      type: object
+      required:
+      - generated_at
+      - insights
+      - summary
+      title: CustomerDigestResponse
+      description: Daily digest across all customers.
     MeetingSourceSyncResult:
       properties:
         success:
@@ -2176,74 +2498,186 @@ components:
       required:
       - success
       title: MeetingSourceSyncResult
-    ValidationError:
+    CustomerResourceLinkRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        external_id:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: External Id
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PendingInviteResponse:
+      - external_id
+      title: CustomerResourceLinkRequest
+      description: 'Generic shape for linking a single external resource to a
+
+        customer. Used by the Drive folder / Notion page / Slack channel
+
+        pickers — each writes one CustomerIntegrationConfig row keyed by
+
+        `(customer_id, provider)`. Display name is stored alongside the id
+
+        so the UI can show "Q4 Planning" instead of just `1Bxy…`.'
+    CustomerIntegrationConfigResponse:
       properties:
         id:
           type: string
-          format: uuid4
+          format: uuid
           title: Id
-        email:
+        customer_id:
           type: string
-          title: Email
-        invited_at:
+          format: uuid
+          title: Customer Id
+        provider:
+          type: string
+          title: Provider
+        external_id:
+          type: string
+          title: External Id
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+          default: {}
+        sync_status:
+          type: string
+          title: Sync Status
+        last_synced_at:
           anyOf:
           - type: string
             format: date-time
           - type: 'null'
-          title: Invited At
-        expires_at:
+          title: Last Synced At
+        sync_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sync Error
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
           anyOf:
           - type: string
             format: date-time
           - type: 'null'
-          title: Expires At
-        allowed_agent_ids:
+          title: Created At
+        updated_at:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: string
+            format: date-time
           - type: 'null'
-          title: Allowed Agent Ids
+          title: Updated At
       type: object
       required:
       - id
-      - email
-      title: PendingInviteResponse
+      - customer_id
+      - provider
+      - external_id
+      - sync_status
+      - is_active
+      title: CustomerIntegrationConfigResponse
+    IntegrationSyncLogResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        direction:
+          type: string
+          title: Direction
+        entity_type:
+          type: string
+          title: Entity Type
+        entity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entity Id
+        status:
+          type: string
+          title: Status
+        details:
+          additionalProperties: true
+          type: object
+          title: Details
+          default: {}
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - direction
+      - entity_type
+      - status
+      title: IntegrationSyncLogResponse
+    PlaybookResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        name:
+          type: string
+          title: Name
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepResponse'
+          type: array
+          title: Steps
+          default: []
+        progress_percent:
+          type: number
+          title: Progress Percent
+          default: 0.0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - customer_id
+      - name
+      - created_at
+      title: PlaybookResponse
+      description: Schema for playbook response.
+    CustomerGranolaConfigRequest:
+      properties:
+        folder_ids:
+          items:
+            type: string
+          type: array
+          title: Folder Ids
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+      type: object
+      title: CustomerGranolaConfigRequest
+      description: Customer-specific Granola narrowing; attendee targets stay mandatory.
+    MeetingPrepRequest:
+      properties:
+        calendar_event_id:
+          type: string
+          minLength: 1
+          title: Calendar Event Id
+      type: object
+      required:
+      - calendar_event_id
+      title: MeetingPrepRequest
+      description: Request to (re)generate prep for a specific upcoming meeting.
     CustomerListResponse:
       properties:
         customers:
@@ -2301,96 +2735,388 @@ components:
         Clerk-synced profile photo when available; the frontend falls
 
         back to initials when it''s null.'
-    CustomerRiskResponse:
+    GuestInviteRequest:
       properties:
-        id:
+        email:
           type: string
-          format: uuid
-          title: Id
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-        risk_type:
-          type: string
-          title: Risk Type
-        severity:
-          type: string
-          title: Severity
-        description:
-          type: string
-          title: Description
-        detected_at:
-          type: string
-          format: date-time
-          title: Detected At
-        resolved_at:
+          format: email
+          title: Email
+        allowed_agent_ids:
+          items:
+            type: string
+            format: uuid4
+          type: array
+          title: Allowed Agent Ids
+          default: []
+        expires_at:
           anyOf:
           - type: string
             format: date-time
           - type: 'null'
-          title: Resolved At
+          title: Expires At
       type: object
       required:
-      - id
-      - customer_id
-      - risk_type
-      - severity
-      - description
-      - detected_at
-      title: CustomerRiskResponse
-      description: Schema for a customer risk.
-    MeetingPrepResponse:
+      - email
+      title: GuestInviteRequest
+    CustomerListIntegrationSummary:
       properties:
-        customer_name:
+        provider:
+          type: string
+          title: Provider
+      type: object
+      required:
+      - provider
+      title: CustomerListIntegrationSummary
+      description: Per-row integration summary surfaced in the customers table.
+    GuestUpdateRequest:
+      properties:
+        allowed_agent_ids:
           anyOf:
-          - type: string
+          - items:
+              type: string
+              format: uuid4
+            type: array
           - type: 'null'
-          title: Customer Name
-        calendar_event_id:
-          type: string
-          title: Calendar Event Id
-        title:
-          type: string
-          title: Title
-        meeting_start:
+          title: Allowed Agent Ids
+        expires_at:
           anyOf:
           - type: string
             format: date-time
           - type: 'null'
-          title: Meeting Start
+          title: Expires At
+      type: object
+      required:
+      - allowed_agent_ids
+      - expires_at
+      title: GuestUpdateRequest
+      description: 'Full replacement of an accepted guest''s agent allowlist + expiry.
+
+
+        Used by the customer Guests page to edit a guest or re-grant access to an
+
+        expired one (set a future ``expires_at``).
+
+
+        Both fields are REQUIRED (no defaults) because this is a full replacement —
+
+        a partial PATCH omitting one would otherwise silently reset it (e.g.
+
+        omitting ``allowed_agent_ids`` would wipe an explicit allowlist to
+
+        unrestricted). ``allowed_agent_ids``: ``None`` = unrestricted (all agents) —
+
+        lets the editor preserve a legacy guest''s "all agents" access; ``[]`` = no
+
+        agents; ``[...]`` = exactly those.'
+    FinalizeProfileAuthBody:
+      properties:
+        connection_id:
+          type: string
+          title: Connection Id
+      type: object
+      required:
+      - connection_id
+      title: FinalizeProfileAuthBody
+    PlaybooksResponse:
+      properties:
+        playbooks:
+          items:
+            $ref: '#/components/schemas/PlaybookResponse'
+          type: array
+          title: Playbooks
+      type: object
+      required:
+      - playbooks
+      title: PlaybooksResponse
+      description: Response with list of playbooks.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    StartProfileAuthBody:
+      properties:
+        login_url:
+          type: string
+          title: Login Url
+        profile_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Profile Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        force_reconnect:
+          type: boolean
+          title: Force Reconnect
+          default: false
+      type: object
+      required:
+      - login_url
+      title: StartProfileAuthBody
+    AssignProfileBody:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+      type: object
+      required:
+      - user_id
+      title: AssignProfileBody
+    CustomerUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        status:
+          anyOf:
+          - type: string
+            pattern: ^(active|on_hold|completed|cancelled)$
+          - type: 'null'
+          title: Status
+        priority:
+          anyOf:
+          - type: string
+            pattern: ^(high|medium|low)$
+          - type: 'null'
+          title: Priority
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        recall_bot_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Recall Bot Enabled
+        owner_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Owner Ids
+      type: object
+      title: CustomerUpdate
+      description: Schema for updating a customer. All fields optional for PATCH semantics.
+    PlaybookCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          default: Onboarding Playbook
+        steps:
+          items:
+            $ref: '#/components/schemas/PlaybookStepCreate'
+          type: array
+          title: Steps
+          default: []
+        template_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Template Id
+      type: object
+      title: PlaybookCreate
+      description: Schema for creating a playbook.
+    GrafanaConfigUpdate:
+      properties:
+        alert_rule_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Alert Rule Ids
+      type: object
+      title: GrafanaConfigUpdate
+    CustomerTimelineResponse:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/CustomerTimelineEvent'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: CustomerTimelineResponse
+      description: Response with customer timeline.
+    CustomerSummaryResponse:
+      properties:
         summary:
           anyOf:
           - type: string
           - type: 'null'
           title: Summary
-        content:
+        generated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Generated At
+        key_achievements:
+          items:
+            type: string
+          type: array
+          title: Key Achievements
+          default: []
+        outstanding_blockers:
+          items:
+            type: string
+          type: array
+          title: Outstanding Blockers
+          default: []
+        next_actions:
+          items:
+            type: string
+          type: array
+          title: Next Actions
+          default: []
+      type: object
+      title: CustomerSummaryResponse
+      description: Response with AI-generated customer summary.
+    GuestAccountResponse:
+      properties:
+        user_id:
+          type: string
+          format: uuid4
+          title: User Id
+        email:
+          type: string
+          title: Email
+        name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Content
-        auto_generated:
-          type: boolean
-          title: Auto Generated
-          default: false
-        generated_at:
-          type: string
-          format: date-time
-          title: Generated At
+          title: Name
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        allowed_agent_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Agent Ids
       type: object
       required:
-      - calendar_event_id
+      - user_id
+      - email
+      title: GuestAccountResponse
+    PlaybookTemplateStepResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          type: integer
+          title: Order Index
+      type: object
+      required:
+      - id
       - title
-      - generated_at
-      title: MeetingPrepResponse
-      description: 'A persisted, AI-generated pre-meeting prep.
-
-
-        ``summary`` is a 1-2 sentence headline; ``content`` is the full markdown
-
-        briefing. ``auto_generated`` distinguishes the 1-hour-before sweep from a
-
-        manual "Generate" click.'
+      - order_index
+      title: PlaybookTemplateStepResponse
+      description: Schema for template step response.
+    ChatConversationListResponse:
+      properties:
+        conversations:
+          items:
+            $ref: '#/components/schemas/ChatConversationResponse'
+          type: array
+          title: Conversations
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - conversations
+      - total
+      - page
+      - page_size
+      title: ChatConversationListResponse
     CustomerResponse:
       properties:
         id:
@@ -2489,392 +3215,6 @@ components:
       - created_at
       title: CustomerResponse
       description: Schema for basic customer response.
-    PlaybookCreate:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-          default: Onboarding Playbook
-        steps:
-          items:
-            $ref: '#/components/schemas/PlaybookStepCreate'
-          type: array
-          title: Steps
-          default: []
-        template_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Template Id
-      type: object
-      title: PlaybookCreate
-      description: Schema for creating a playbook.
-    CustomerTimelineEvent:
-      properties:
-        id:
-          type: string
-          title: Id
-        event_type:
-          type: string
-          title: Event Type
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - id
-      - event_type
-      - title
-      - timestamp
-      title: CustomerTimelineEvent
-      description: Schema for a timeline event.
-    PlaybookStepResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        order_index:
-          type: integer
-          title: Order Index
-        is_completed:
-          type: boolean
-          title: Is Completed
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - title
-      - order_index
-      - is_completed
-      - created_at
-      title: PlaybookStepResponse
-      description: Schema for playbook step response.
-    CustomerDigestItem:
-      properties:
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-        customer_name:
-          type: string
-          title: Customer Name
-        insight_type:
-          type: string
-          title: Insight Type
-        severity:
-          type: string
-          title: Severity
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - customer_id
-      - customer_name
-      - insight_type
-      - severity
-      - message
-      title: CustomerDigestItem
-      description: A single insight in the daily digest.
-    GuestListResponse:
-      properties:
-        guests:
-          items:
-            $ref: '#/components/schemas/GuestAccountResponse'
-          type: array
-          title: Guests
-        pending_invitations:
-          items:
-            $ref: '#/components/schemas/PendingInviteResponse'
-          type: array
-          title: Pending Invitations
-      type: object
-      required:
-      - guests
-      - pending_invitations
-      title: GuestListResponse
-    GuestInviteRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        allowed_agent_ids:
-          items:
-            type: string
-            format: uuid4
-          type: array
-          title: Allowed Agent Ids
-          default: []
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-      type: object
-      required:
-      - email
-      title: GuestInviteRequest
-    CustomerListIntegrationSummary:
-      properties:
-        provider:
-          type: string
-          title: Provider
-      type: object
-      required:
-      - provider
-      title: CustomerListIntegrationSummary
-      description: Per-row integration summary surfaced in the customers table.
-    CustomerListItem:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        name:
-          type: string
-          title: Name
-        status:
-          type: string
-          title: Status
-        deadline:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Deadline
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        priority:
-          type: string
-          title: Priority
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-        owners:
-          items:
-            $ref: '#/components/schemas/CustomerOwnerInfo'
-          type: array
-          title: Owners
-          default: []
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-        open_tasks_count:
-          type: integer
-          title: Open Tasks Count
-          default: 0
-        total_tasks_count:
-          type: integer
-          title: Total Tasks Count
-          default: 0
-        total_meetings_count:
-          type: integer
-          title: Total Meetings Count
-          default: 0
-        total_emails_count:
-          type: integer
-          title: Total Emails Count
-          default: 0
-        total_documents_count:
-          type: integer
-          title: Total Documents Count
-          default: 0
-        integrations:
-          items:
-            $ref: '#/components/schemas/CustomerListIntegrationSummary'
-          type: array
-          title: Integrations
-          default: []
-      type: object
-      required:
-      - id
-      - organization_id
-      - name
-      - status
-      - priority
-      - created_at
-      title: CustomerListItem
-      description: Lightweight customer item for list views.
-    GrafanaConfigUpdate:
-      properties:
-        alert_rule_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Alert Rule Ids
-      type: object
-      title: GrafanaConfigUpdate
-    ChatConversationListResponse:
-      properties:
-        conversations:
-          items:
-            $ref: '#/components/schemas/ChatConversationResponse'
-          type: array
-          title: Conversations
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - conversations
-      - total
-      - page
-      - page_size
-      title: ChatConversationListResponse
-    CustomerDigestResponse:
-      properties:
-        generated_at:
-          type: string
-          format: date-time
-          title: Generated At
-        insights:
-          items:
-            $ref: '#/components/schemas/CustomerDigestItem'
-          type: array
-          title: Insights
-        summary:
-          type: string
-          title: Summary
-      type: object
-      required:
-      - generated_at
-      - insights
-      - summary
-      title: CustomerDigestResponse
-      description: Daily digest across all customers.
-    CrossCustomerChatRequest:
-      properties:
-        content:
-          type: string
-          minLength: 1
-          title: Content
-      type: object
-      required:
-      - content
-      title: CrossCustomerChatRequest
-      description: Schema for a cross-customer chat message (portfolio-wide chat).
-    PlaybookTemplateResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        steps:
-          items:
-            $ref: '#/components/schemas/PlaybookTemplateStepResponse'
-          type: array
-          title: Steps
-          default: []
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - name
-      - created_at
-      title: PlaybookTemplateResponse
-      description: Schema for template response.
-    CustomerResourceLinkRequest:
-      properties:
-        external_id:
-          type: string
-          title: External Id
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-      type: object
-      required:
-      - external_id
-      title: CustomerResourceLinkRequest
-      description: 'Generic shape for linking a single external resource to a
-
-        customer. Used by the Drive folder / Notion page / Slack channel
-
-        pickers — each writes one CustomerIntegrationConfig row keyed by
-
-        `(customer_id, provider)`. Display name is stored alongside the id
-
-        so the UI can show "Q4 Planning" instead of just `1Bxy…`.'
     ChatConversationResponse:
       properties:
         id:
@@ -2928,629 +3268,6 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
-    IntegrationSyncLogResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        direction:
-          type: string
-          title: Direction
-        entity_type:
-          type: string
-          title: Entity Type
-        entity_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entity Id
-        status:
-          type: string
-          title: Status
-        details:
-          additionalProperties: true
-          type: object
-          title: Details
-          default: {}
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - direction
-      - entity_type
-      - status
-      title: IntegrationSyncLogResponse
-    AssignProfileBody:
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          title: User Id
-      type: object
-      required:
-      - user_id
-      title: AssignProfileBody
-    PlaybookTemplatesResponse:
-      properties:
-        templates:
-          items:
-            $ref: '#/components/schemas/PlaybookTemplateResponse'
-          type: array
-          title: Templates
-      type: object
-      required:
-      - templates
-      title: PlaybookTemplatesResponse
-      description: Response with list of templates.
-    CustomerRisksResponse:
-      properties:
-        risks:
-          items:
-            $ref: '#/components/schemas/CustomerRiskResponse'
-          type: array
-          title: Risks
-      type: object
-      required:
-      - risks
-      title: CustomerRisksResponse
-      description: Response with list of customer risks.
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    FinalizeProfileAuthBody:
-      properties:
-        connection_id:
-          type: string
-          title: Connection Id
-      type: object
-      required:
-      - connection_id
-      title: FinalizeProfileAuthBody
-    PlaybookStepCreate:
-      properties:
-        title:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        order_index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Order Index
-      type: object
-      required:
-      - title
-      title: PlaybookStepCreate
-      description: Schema for creating a playbook step.
-    CustomerCreate:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        status:
-          type: string
-          pattern: ^(active|on_hold|completed|cancelled)$
-          title: Status
-          default: active
-        priority:
-          type: string
-          pattern: ^(high|medium|low)$
-          title: Priority
-          default: medium
-        deadline:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Deadline
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        website:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Website
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-        owner_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Owner Ids
-      type: object
-      required:
-      - name
-      title: CustomerCreate
-      description: Schema for creating a customer.
-    PlaybookTemplateCreate:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        steps:
-          items:
-            $ref: '#/components/schemas/PlaybookStepCreate'
-          type: array
-          title: Steps
-          default: []
-      type: object
-      required:
-      - name
-      title: PlaybookTemplateCreate
-      description: Schema for creating a playbook template.
-    MeetingPrepRequest:
-      properties:
-        calendar_event_id:
-          type: string
-          minLength: 1
-          title: Calendar Event Id
-      type: object
-      required:
-      - calendar_event_id
-      title: MeetingPrepRequest
-      description: Request to (re)generate prep for a specific upcoming meeting.
-    GrafanaLinkRequest:
-      properties:
-        dashboard_uid:
-          type: string
-          title: Dashboard Uid
-        alert_rule_ids:
-          items:
-            type: string
-          type: array
-          title: Alert Rule Ids
-      type: object
-      required:
-      - dashboard_uid
-      title: GrafanaLinkRequest
-    CustomerGranolaConfigRequest:
-      properties:
-        folder_ids:
-          items:
-            type: string
-          type: array
-          title: Folder Ids
-        enabled:
-          type: boolean
-          title: Enabled
-          default: true
-      type: object
-      title: CustomerGranolaConfigRequest
-      description: Customer-specific Granola narrowing; attendee targets stay mandatory.
-    PlaybooksResponse:
-      properties:
-        playbooks:
-          items:
-            $ref: '#/components/schemas/PlaybookResponse'
-          type: array
-          title: Playbooks
-      type: object
-      required:
-      - playbooks
-      title: PlaybooksResponse
-      description: Response with list of playbooks.
-    GuestAccountResponse:
-      properties:
-        user_id:
-          type: string
-          format: uuid4
-          title: User Id
-        email:
-          type: string
-          title: Email
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Image Url
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-        allowed_agent_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Allowed Agent Ids
-      type: object
-      required:
-      - user_id
-      - email
-      title: GuestAccountResponse
-    PlaybookTemplateStepResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        order_index:
-          type: integer
-          title: Order Index
-      type: object
-      required:
-      - id
-      - title
-      - order_index
-      title: PlaybookTemplateStepResponse
-      description: Schema for template step response.
-    CustomerIntegrationConfigResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-        provider:
-          type: string
-          title: Provider
-        external_id:
-          type: string
-          title: External Id
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-          default: {}
-        sync_status:
-          type: string
-          title: Sync Status
-        last_synced_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Synced At
-        sync_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sync Error
-        is_active:
-          type: boolean
-          title: Is Active
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - customer_id
-      - provider
-      - external_id
-      - sync_status
-      - is_active
-      title: CustomerIntegrationConfigResponse
-    CustomerTimelineResponse:
-      properties:
-        events:
-          items:
-            $ref: '#/components/schemas/CustomerTimelineEvent'
-          type: array
-          title: Events
-      type: object
-      required:
-      - events
-      title: CustomerTimelineResponse
-      description: Response with customer timeline.
-    PlaybookResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-        name:
-          type: string
-          title: Name
-        steps:
-          items:
-            $ref: '#/components/schemas/PlaybookStepResponse'
-          type: array
-          title: Steps
-          default: []
-        progress_percent:
-          type: number
-          title: Progress Percent
-          default: 0.0
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - customer_id
-      - name
-      - created_at
-      title: PlaybookResponse
-      description: Schema for playbook response.
-    GuestUpdateRequest:
-      properties:
-        allowed_agent_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid4
-            type: array
-          - type: 'null'
-          title: Allowed Agent Ids
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-      type: object
-      required:
-      - allowed_agent_ids
-      - expires_at
-      title: GuestUpdateRequest
-      description: 'Full replacement of an accepted guest''s agent allowlist + expiry.
-
-
-        Used by the customer Guests page to edit a guest or re-grant access to an
-
-        expired one (set a future ``expires_at``).
-
-
-        Both fields are REQUIRED (no defaults) because this is a full replacement —
-
-        a partial PATCH omitting one would otherwise silently reset it (e.g.
-
-        omitting ``allowed_agent_ids`` would wipe an explicit allowlist to
-
-        unrestricted). ``allowed_agent_ids``: ``None`` = unrestricted (all agents) —
-
-        lets the editor preserve a legacy guest''s "all agents" access; ``[]`` = no
-
-        agents; ``[...]`` = exactly those.'
-    CustomerSummaryResponse:
-      properties:
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        generated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Generated At
-        key_achievements:
-          items:
-            type: string
-          type: array
-          title: Key Achievements
-          default: []
-        outstanding_blockers:
-          items:
-            type: string
-          type: array
-          title: Outstanding Blockers
-          default: []
-        next_actions:
-          items:
-            type: string
-          type: array
-          title: Next Actions
-          default: []
-      type: object
-      title: CustomerSummaryResponse
-      description: Response with AI-generated customer summary.
-    CustomerUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Name
-        status:
-          anyOf:
-          - type: string
-            pattern: ^(active|on_hold|completed|cancelled)$
-          - type: 'null'
-          title: Status
-        priority:
-          anyOf:
-          - type: string
-            pattern: ^(high|medium|low)$
-          - type: 'null'
-          title: Priority
-        deadline:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Deadline
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        website:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Website
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-        recall_bot_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Recall Bot Enabled
-        owner_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Owner Ids
-      type: object
-      title: CustomerUpdate
-      description: Schema for updating a customer. All fields optional for PATCH semantics.
-    CustomerMeetingSourcesSyncResponse:
-      properties:
-        sources:
-          additionalProperties:
-            $ref: '#/components/schemas/MeetingSourceSyncResult'
-          type: object
-          title: Sources
-      type: object
-      required:
-      - sources
-      title: CustomerMeetingSourcesSyncResponse
-    StartProfileAuthBody:
-      properties:
-        login_url:
-          type: string
-          title: Login Url
-        profile_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Profile Id
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        force_reconnect:
-          type: boolean
-          title: Force Reconnect
-          default: false
-      type: object
-      required:
-      - login_url
-      title: StartProfileAuthBody
     CustomerDetailResponse:
       properties:
         id:
@@ -3699,6 +3416,289 @@ components:
       - created_at
       title: CustomerDetailResponse
       description: Detailed customer response with aggregations.
+    PendingInviteResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        email:
+          type: string
+          title: Email
+        invited_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Invited At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        allowed_agent_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Agent Ids
+      type: object
+      required:
+      - id
+      - email
+      title: PendingInviteResponse
+    MeetingPrepResponse:
+      properties:
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        calendar_event_id:
+          type: string
+          title: Calendar Event Id
+        title:
+          type: string
+          title: Title
+        meeting_start:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Meeting Start
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content
+        auto_generated:
+          type: boolean
+          title: Auto Generated
+          default: false
+        generated_at:
+          type: string
+          format: date-time
+          title: Generated At
+      type: object
+      required:
+      - calendar_event_id
+      - title
+      - generated_at
+      title: MeetingPrepResponse
+      description: 'A persisted, AI-generated pre-meeting prep.
+
+
+        ``summary`` is a 1-2 sentence headline; ``content`` is the full markdown
+
+        briefing. ``auto_generated`` distinguishes the 1-hour-before sweep from a
+
+        manual "Generate" click.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CustomerTimelineEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - id
+      - event_type
+      - title
+      - timestamp
+      title: CustomerTimelineEvent
+      description: Schema for a timeline event.
+    CrossCustomerChatRequest:
+      properties:
+        content:
+          type: string
+          minLength: 1
+          title: Content
+      type: object
+      required:
+      - content
+      title: CrossCustomerChatRequest
+      description: Schema for a cross-customer chat message (portfolio-wide chat).
+    CustomerCreate:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        status:
+          type: string
+          pattern: ^(active|on_hold|completed|cancelled)$
+          title: Status
+          default: active
+        priority:
+          type: string
+          pattern: ^(high|medium|low)$
+          title: Priority
+          default: medium
+        deadline:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Deadline
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        website:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Website
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+        owner_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Owner Ids
+      type: object
+      required:
+      - name
+      title: CustomerCreate
+      description: Schema for creating a customer.
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    PlaybookStepResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        order_index:
+          type: integer
+          title: Order Index
+        is_completed:
+          type: boolean
+          title: Is Completed
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - title
+      - order_index
+      - is_completed
+      - created_at
+      title: PlaybookStepResponse
+      description: Schema for playbook step response.
   securitySchemes:
     HTTPBearer:
       type: http

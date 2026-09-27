@@ -869,6 +869,33 @@ components:
       description: 'Compact per-scout summary used by the Home Live cards to render an
 
         exploration coordinator''s ticker (one row per scout with its latest activity).'
+    ReportIssueResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        issue_id:
+          type: string
+          title: Issue Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - issue_id
+      - message
+      title: ReportIssueResponse
+      description: Response after reporting an issue
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     RunResponse:
       properties:
         request_text:
@@ -1147,6 +1174,63 @@ components:
       - created_at
       - error_message
       title: RunResponse
+    RunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/RunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total
+      - page
+      - page_size
+      title: RunListResponse
+      description: Paginated list of runs
+    RunResumeRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
+      type: object
+      title: RunResumeRequest
+      description: Request to resume a paused run, optionally with an answer to a clarifying question
+    RunTriggerRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        triggered_from:
+          type: string
+          pattern: ^(web|api|chat|widget|slack|webhook)$
+          title: Triggered From
+          default: web
+        run_type:
+          type: string
+          pattern: ^(task|exploration)$
+          title: Run Type
+          default: task
+      type: object
+      required:
+      - request_text
+      title: RunTriggerRequest
+      description: Request to trigger a new run (with validation)
     ValidationError:
       properties:
         loc:
@@ -1191,99 +1275,6 @@ components:
       - reason
       title: ReportIssueRequest
       description: Request to report an issue with a run
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RunResumeRequest:
-      properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Answer
-      type: object
-      title: RunResumeRequest
-      description: Request to resume a paused run, optionally with an answer to a clarifying question
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    RunTriggerRequest:
-      properties:
-        request_text:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Request Text
-        triggered_from:
-          type: string
-          pattern: ^(web|api|chat|widget|slack|webhook)$
-          title: Triggered From
-          default: web
-        run_type:
-          type: string
-          pattern: ^(task|exploration)$
-          title: Run Type
-          default: task
-      type: object
-      required:
-      - request_text
-      title: RunTriggerRequest
-      description: Request to trigger a new run (with validation)
-    RunListResponse:
-      properties:
-        runs:
-          items:
-            $ref: '#/components/schemas/RunResponse'
-          type: array
-          title: Runs
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - runs
-      - total
-      - page
-      - page_size
-      title: RunListResponse
-      description: Paginated list of runs
     RunDetailResponse:
       properties:
         request_text:
@@ -1575,24 +1566,33 @@ components:
       - error_message
       title: RunDetailResponse
       description: Full run details including steps
-    ReportIssueResponse:
+    UsedAgent:
       properties:
-        success:
-          type: boolean
-          title: Success
-        issue_id:
+        id:
           type: string
-          title: Issue Id
-        message:
+          format: uuid4
+          title: Id
+        name:
           type: string
-          title: Message
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
       type: object
       required:
-      - success
-      - issue_id
-      - message
-      title: ReportIssueResponse
-      description: Response after reporting an issue
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
     RunStepResponse:
       properties:
         step_number:

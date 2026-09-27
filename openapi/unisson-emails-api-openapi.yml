@@ -339,6 +339,108 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    EmailSyncResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - task_id
+      - message
+      title: EmailSyncResponse
+      description: Response after syncing emails.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EmailSyncStatusResponse:
+      properties:
+        task_id:
+          type: string
+          title: Task Id
+        status:
+          type: string
+          title: Status
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+      type: object
+      required:
+      - task_id
+      - status
+      title: EmailSyncStatusResponse
+      description: Response for checking sync task status.
+    EmailSyncConfigResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+        customer_domains:
+          items:
+            type: string
+          type: array
+          title: Customer Domains
+          default: []
+        customer_emails:
+          items:
+            type: string
+          type: array
+          title: Customer Emails
+          default: []
+        sync_enabled:
+          type: boolean
+          title: Sync Enabled
+          default: true
+        last_sync_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Sync At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - customer_id
+      - created_at
+      title: EmailSyncConfigResponse
+      description: Schema for email sync config response.
+    EmailAssignRequest:
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+          title: Customer Id
+      type: object
+      required:
+      - customer_id
+      title: EmailAssignRequest
+      description: Schema for assigning an email to a customer.
     EmailSyncConfigUpdate:
       properties:
         customer_domains:
@@ -363,6 +465,30 @@ components:
       type: object
       title: EmailSyncConfigUpdate
       description: Schema for updating email sync config.
+    EmailListResponse:
+      properties:
+        emails:
+          items:
+            $ref: '#/components/schemas/EmailListItem'
+          type: array
+          title: Emails
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - emails
+      - total
+      - page
+      - page_size
+      title: EmailListResponse
+      description: Paginated list of emails.
     ValidationError:
       properties:
         loc:
@@ -389,15 +515,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     EmailResponse:
       properties:
         id:
@@ -522,41 +639,6 @@ components:
       - created_at
       title: EmailResponse
       description: Schema for full email response.
-    EmailAssignRequest:
-      properties:
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-      type: object
-      required:
-      - customer_id
-      title: EmailAssignRequest
-      description: Schema for assigning an email to a customer.
-    EmailListResponse:
-      properties:
-        emails:
-          items:
-            $ref: '#/components/schemas/EmailListItem'
-          type: array
-          title: Emails
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - emails
-      - total
-      - page
-      - page_size
-      title: EmailListResponse
-      description: Paginated list of emails.
     EmailListItem:
       properties:
         id:
@@ -633,88 +715,6 @@ components:
       - created_at
       title: EmailListItem
       description: Lightweight email for list view (no body).
-    EmailSyncResponse:
-      properties:
-        task_id:
-          type: string
-          title: Task Id
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - task_id
-      - message
-      title: EmailSyncResponse
-      description: Response after syncing emails.
-    EmailSyncStatusResponse:
-      properties:
-        task_id:
-          type: string
-          title: Task Id
-        status:
-          type: string
-          title: Status
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-      type: object
-      required:
-      - task_id
-      - status
-      title: EmailSyncStatusResponse
-      description: Response for checking sync task status.
-    EmailSyncConfigResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        customer_id:
-          type: string
-          format: uuid
-          title: Customer Id
-        customer_domains:
-          items:
-            type: string
-          type: array
-          title: Customer Domains
-          default: []
-        customer_emails:
-          items:
-            type: string
-          type: array
-          title: Customer Emails
-          default: []
-        sync_enabled:
-          type: boolean
-          title: Sync Enabled
-          default: true
-        last_sync_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Sync At
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - customer_id
-      - created_at
-      title: EmailSyncConfigResponse
-      description: Schema for email sync config response.
   securitySchemes:
     HTTPBearer:
       type: http

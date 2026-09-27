@@ -171,98 +171,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AppInfo:
-      properties:
-        slug:
-          type: string
-          title: Slug
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        categories:
-          items:
-            type: string
-          type: array
-          title: Categories
-          default: []
-        logo_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Logo Url
-        app_scope:
-          type: string
-          enum:
-          - org
-          - user
-          title: App Scope
-          default: user
-      type: object
-      required:
-      - slug
-      - name
-      title: AppInfo
-    ScopesResponse:
-      properties:
-        org_scoped_slugs:
-          items:
-            type: string
-          type: array
-          title: Org Scoped Slugs
-      type: object
-      required:
-      - org_scoped_slugs
-      title: ScopesResponse
-      description: Hybrid-scoping registry, exposed for the frontend.
-    app__api__v1__agent_integrations__ConnectResponse:
-      properties:
-        connect_url:
-          type: string
-          title: Connect Url
-      type: object
-      required:
-      - connect_url
-      title: ConnectResponse
     ConnectionInfo:
       properties:
         id:
@@ -315,6 +223,98 @@ components:
       - provider
       - status
       title: ConnectionInfo
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ScopesResponse:
+      properties:
+        org_scoped_slugs:
+          items:
+            type: string
+          type: array
+          title: Org Scoped Slugs
+      type: object
+      required:
+      - org_scoped_slugs
+      title: ScopesResponse
+      description: Hybrid-scoping registry, exposed for the frontend.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppInfo:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        categories:
+          items:
+            type: string
+          type: array
+          title: Categories
+          default: []
+        logo_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logo Url
+        app_scope:
+          type: string
+          enum:
+          - org
+          - user
+          title: App Scope
+          default: user
+      type: object
+      required:
+      - slug
+      - name
+      title: AppInfo
+    app__api__v1__agent_integrations__ConnectResponse:
+      properties:
+        connect_url:
+          type: string
+          title: Connect Url
+      type: object
+      required:
+      - connect_url
+      title: ConnectResponse
     PipedreamWebhookPayload:
       properties:
         event:

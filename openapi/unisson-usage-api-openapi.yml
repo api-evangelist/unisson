@@ -84,6 +84,74 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsageStatsResponse:
+      properties:
+        total_duration_seconds:
+          type: integer
+          title: Total Duration Seconds
+        user_usage:
+          items:
+            $ref: '#/components/schemas/UserUsageStats'
+          type: array
+          title: User Usage
+        daily_usage:
+          items:
+            $ref: '#/components/schemas/DailyUsage'
+          type: array
+          title: Daily Usage
+      type: object
+      required:
+      - total_duration_seconds
+      - user_usage
+      - daily_usage
+      title: UsageStatsResponse
+    UserUsageStats:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        email:
+          type: string
+          title: Email
+        run_count:
+          type: integer
+          title: Run Count
+        duration_seconds:
+          type: integer
+          title: Duration Seconds
+      type: object
+      required:
+      - user_id
+      - user_name
+      - email
+      - run_count
+      - duration_seconds
+      title: UserUsageStats
+    DailyUsage:
+      properties:
+        date:
+          type: string
+          title: Date
+        duration_seconds:
+          type: integer
+          title: Duration Seconds
+      type: object
+      required:
+      - date
+      - duration_seconds
+      title: DailyUsage
     ValidationError:
       properties:
         loc:
@@ -110,74 +178,6 @@ components:
       - msg
       - type
       title: ValidationError
-    UserUsageStats:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        user_name:
-          type: string
-          title: User Name
-        email:
-          type: string
-          title: Email
-        run_count:
-          type: integer
-          title: Run Count
-        duration_seconds:
-          type: integer
-          title: Duration Seconds
-      type: object
-      required:
-      - user_id
-      - user_name
-      - email
-      - run_count
-      - duration_seconds
-      title: UserUsageStats
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    DailyUsage:
-      properties:
-        date:
-          type: string
-          title: Date
-        duration_seconds:
-          type: integer
-          title: Duration Seconds
-      type: object
-      required:
-      - date
-      - duration_seconds
-      title: DailyUsage
-    UsageStatsResponse:
-      properties:
-        total_duration_seconds:
-          type: integer
-          title: Total Duration Seconds
-        user_usage:
-          items:
-            $ref: '#/components/schemas/UserUsageStats'
-          type: array
-          title: User Usage
-        daily_usage:
-          items:
-            $ref: '#/components/schemas/DailyUsage'
-          type: array
-          title: Daily Usage
-      type: object
-      required:
-      - total_duration_seconds
-      - user_usage
-      - daily_usage
-      title: UsageStatsResponse
   securitySchemes:
     HTTPBearer:
       type: http

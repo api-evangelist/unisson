@@ -429,6 +429,86 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    WidgetResumeRunRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 5000
+          - type: 'null'
+          title: Answer
+          description: User answer for clarifying questions
+      type: object
+      title: WidgetResumeRunRequest
+      description: Resume a run that is waiting for input or authentication.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WidgetExecuteTaskRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+          description: Task description
+        message_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Message Id
+          description: Source message ID (from task suggestion)
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - request_text
+      title: WidgetExecuteTaskRequest
+      description: Execute a task from a widget session.
+    WidgetExecuteTaskResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - run_id
+      - message_id
+      title: WidgetExecuteTaskResponse
+      description: Response after starting a task execution.
     WidgetSessionCreateRequest:
       properties:
         session_id:
@@ -478,41 +558,6 @@ components:
       type: object
       title: WidgetSessionCreateRequest
       description: Create or resume a widget session.
-    WidgetMessageRequest:
-      properties:
-        content:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Content
-          description: Message content
-        execution_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Mode
-          description: 'Execution mode for tasks: ''cloud'' (default) or ''local_browser'''
-      type: object
-      required:
-      - content
-      title: WidgetMessageRequest
-      description: Send a message in a widget session.
-    WidgetExecuteTaskResponse:
-      properties:
-        run_id:
-          type: string
-          format: uuid4
-          title: Run Id
-        message_id:
-          type: string
-          format: uuid4
-          title: Message Id
-      type: object
-      required:
-      - run_id
-      - message_id
-      title: WidgetExecuteTaskResponse
-      description: Response after starting a task execution.
     EndUserSessionsResponse:
       properties:
         sessions:
@@ -537,31 +582,6 @@ components:
       - offset
       title: EndUserSessionsResponse
       description: Paginated end-user sessions for an organization.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WidgetConfigResponse:
-      properties:
-        branding:
-          additionalProperties: true
-          type: object
-          title: Branding
-        behavior:
-          additionalProperties: true
-          type: object
-          title: Behavior
-      type: object
-      required:
-      - branding
-      - behavior
-      title: WidgetConfigResponse
-      description: Widget configuration returned to the frontend widget.
     WidgetSessionResponse:
       properties:
         session_id:
@@ -583,6 +603,25 @@ components:
       - created_at
       title: WidgetSessionResponse
       description: Widget session with conversation link.
+    WidgetMessageRequest:
+      properties:
+        content:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Content
+          description: Message content
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+          description: 'Execution mode for tasks: ''cloud'' (default) or ''local_browser'''
+      type: object
+      required:
+      - content
+      title: WidgetMessageRequest
+      description: Send a message in a widget session.
     EndUserSessionInfo:
       properties:
         source:
@@ -651,70 +690,31 @@ components:
       - last_activity_at
       title: EndUserSessionInfo
       description: A single end-user session from either widget or external API.
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WidgetConfigResponse:
+      properties:
+        branding:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Branding
+        behavior:
+          additionalProperties: true
+          type: object
+          title: Behavior
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    WidgetExecuteTaskRequest:
-      properties:
-        request_text:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Request Text
-          description: Task description
-        message_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Message Id
-          description: Source message ID (from task suggestion)
-        execution_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Mode
-          description: 'Execution mode: ''cloud'' (default) or ''local_browser'''
-      type: object
-      required:
-      - request_text
-      title: WidgetExecuteTaskRequest
-      description: Execute a task from a widget session.
-    WidgetResumeRunRequest:
-      properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 5000
-          - type: 'null'
-          title: Answer
-          description: User answer for clarifying questions
-      type: object
-      title: WidgetResumeRunRequest
-      description: Resume a run that is waiting for input or authentication.
+      - branding
+      - behavior
+      title: WidgetConfigResponse
+      description: Widget configuration returned to the frontend widget.
   securitySchemes:
     HTTPBearer:
       type: http

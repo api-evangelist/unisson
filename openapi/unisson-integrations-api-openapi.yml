@@ -3265,108 +3265,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    IntegrationStatus:
-      properties:
-        provider:
-          type: string
-          title: Provider
-        connected:
-          type: boolean
-          title: Connected
-        needs_reconnect:
-          type: boolean
-          title: Needs Reconnect
-          default: false
-        connected_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Connected At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - provider
-      - connected
-      title: IntegrationStatus
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    GrafanaDashboardListItem:
-      properties:
-        uid:
-          type: string
-          title: Uid
-        title:
-          type: string
-          title: Title
-        url:
-          type: string
-          title: Url
-          default: ''
-      type: object
-      required:
-      - uid
-      - title
-      title: GrafanaDashboardListItem
-    GranolaCredentialRequest:
-      properties:
-        api_key:
-          type: string
-          maxLength: 4096
-          minLength: 1
-          title: Api Key
-      type: object
-      required:
-      - api_key
-      title: GranolaCredentialRequest
-    ImportMiraklKeysRequest:
-      properties:
-        items:
-          items: {}
-          type: array
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ImportMiraklKeysRequest
-      description: 'Body for the Mirakl bulk key-import endpoint.
-
-
-        Each item is ``{instance_url, persona, api_key, label?}`` — Mirakl is
-
-        self-hosted per customer (so the base URL is part of the credential) and a
-
-        key acts as one persona (operator | seller). Items are validated per-row
-
-        downstream so one malformed row surfaces as a per-item failure instead of
-
-        rejecting the whole batch — hence the permissive element type.'
-    PylonConnectRequest:
-      properties:
-        api_token:
-          type: string
-          title: Api Token
-        webhook_secret:
-          type: string
-          title: Webhook Secret
-      type: object
-      required:
-      - api_token
-      - webhook_secret
-      title: PylonConnectRequest
     GitHubRepository:
       properties:
         id:
@@ -3398,6 +3296,189 @@ components:
       - description
       - url
       title: GitHubRepository
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SlackNotificationConfigBody:
+      properties:
+        channel_id:
+          type: string
+          maxLength: 32
+          minLength: 1
+          title: Channel Id
+        channel_name:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Channel Name
+      type: object
+      required:
+      - channel_id
+      - channel_name
+      title: SlackNotificationConfigBody
+    GranolaCredentialRequest:
+      properties:
+        api_key:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Api Key
+      type: object
+      required:
+      - api_key
+      title: GranolaCredentialRequest
+    GrafanaDashboardListItem:
+      properties:
+        uid:
+          type: string
+          title: Uid
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+          default: ''
+      type: object
+      required:
+      - uid
+      - title
+      title: GrafanaDashboardListItem
+    ImportApiKeysRequest:
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Keys
+        labels:
+          items:
+            type: string
+          type: array
+          title: Labels
+      type: object
+      required:
+      - keys
+      title: ImportApiKeysRequest
+      description: 'Body for the Samsara/Snyk/Checkout bulk key-import endpoints.
+
+
+        ``keys`` and ``labels`` are positionally aligned (``labels`` may be shorter
+
+        than ``keys``; missing positions default to the provider''s own name).
+
+        Blank ``keys`` entries are dropped downstream, so a list of only blanks is
+
+        accepted here and yields an empty per-key result rather than an error.'
+    PylonConnectRequest:
+      properties:
+        api_token:
+          type: string
+          title: Api Token
+        webhook_secret:
+          type: string
+          title: Webhook Secret
+      type: object
+      required:
+      - api_token
+      - webhook_secret
+      title: PylonConnectRequest
+    AssignUserKeyRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        key_id:
+          type: string
+          format: uuid
+          title: Key Id
+      type: object
+      required:
+      - user_id
+      - key_id
+      title: AssignUserKeyRequest
+      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
+    IntegrationStatus:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        connected:
+          type: boolean
+          title: Connected
+        needs_reconnect:
+          type: boolean
+          title: Needs Reconnect
+          default: false
+        connected_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Connected At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - provider
+      - connected
+      title: IntegrationStatus
+    MessagingPairRequest:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        channel:
+          type: string
+          pattern: ^(whatsapp|email)$
+          title: Channel
+        identifier:
+          type: string
+          title: Identifier
+      type: object
+      required:
+      - user_id
+      - channel
+      - identifier
+      title: MessagingPairRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     DriveFile:
       properties:
         id:
@@ -3439,24 +3520,29 @@ components:
       - modified_time
       - created_time
       title: DriveFile
-    MessagingPairRequest:
+    ImportMiraklKeysRequest:
       properties:
-        user_id:
-          type: string
-          title: User Id
-        channel:
-          type: string
-          pattern: ^(whatsapp|email)$
-          title: Channel
-        identifier:
-          type: string
-          title: Identifier
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
       type: object
       required:
-      - user_id
-      - channel
-      - identifier
-      title: MessagingPairRequest
+      - items
+      title: ImportMiraklKeysRequest
+      description: 'Body for the Mirakl bulk key-import endpoint.
+
+
+        Each item is ``{instance_url, persona, api_key, label?}`` — Mirakl is
+
+        self-hosted per customer (so the base URL is part of the credential) and a
+
+        key acts as one persona (operator | seller). Items are validated per-row
+
+        downstream so one malformed row surfaces as a per-item failure instead of
+
+        rejecting the whole batch — hence the permissive element type.'
     ImportRazorpayKeysRequest:
       properties:
         items:
@@ -3478,92 +3564,6 @@ components:
         failure instead of rejecting the whole batch — hence the permissive element
 
         type; only the non-empty envelope is enforced here.'
-    ImportApiKeysRequest:
-      properties:
-        keys:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Keys
-        labels:
-          items:
-            type: string
-          type: array
-          title: Labels
-      type: object
-      required:
-      - keys
-      title: ImportApiKeysRequest
-      description: 'Body for the Samsara/Snyk/Checkout bulk key-import endpoints.
-
-
-        ``keys`` and ``labels`` are positionally aligned (``labels`` may be shorter
-
-        than ``keys``; missing positions default to the provider''s own name).
-
-        Blank ``keys`` entries are dropped downstream, so a list of only blanks is
-
-        accepted here and yields an empty per-key result rather than an error.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AssignUserKeyRequest:
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          title: User Id
-        key_id:
-          type: string
-          format: uuid
-          title: Key Id
-      type: object
-      required:
-      - user_id
-      - key_id
-      title: AssignUserKeyRequest
-      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
-    SlackNotificationConfigBody:
-      properties:
-        channel_id:
-          type: string
-          maxLength: 32
-          minLength: 1
-          title: Channel Id
-        channel_name:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Channel Name
-      type: object
-      required:
-      - channel_id
-      - channel_name
-      title: SlackNotificationConfigBody
   securitySchemes:
     HTTPBearer:
       type: http

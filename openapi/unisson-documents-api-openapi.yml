@@ -244,15 +244,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DocumentCreateRequest:
       properties:
         title:
@@ -289,22 +306,16 @@ components:
       - title
       title: DocumentCreateRequest
       description: Schema for linking a document to a customer.
-    DocumentListResponse:
+    Body_upload_document_api_v1_customers__customer_id__documents_upload_post:
       properties:
-        documents:
-          items:
-            $ref: '#/components/schemas/DocumentResponse'
-          type: array
-          title: Documents
-        total:
-          type: integer
-          title: Total
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
       type: object
       required:
-      - documents
-      - total
-      title: DocumentListResponse
-      description: List of documents for a customer.
+      - file
+      title: Body_upload_document_api_v1_customers__customer_id__documents_upload_post
     DocumentResponse:
       properties:
         id:
@@ -412,42 +423,31 @@ components:
       - created_at
       title: DocumentResponse
       description: Full document response.
-    ValidationError:
+    DocumentListResponse:
       properties:
-        loc:
+        documents:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/DocumentResponse'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Documents
+        total:
+          type: integer
+          title: Total
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Body_upload_document_api_v1_customers__customer_id__documents_upload_post:
+      - documents
+      - total
+      title: DocumentListResponse
+      description: List of documents for a customer.
+    HTTPValidationError:
       properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - file
-      title: Body_upload_document_api_v1_customers__customer_id__documents_upload_post
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

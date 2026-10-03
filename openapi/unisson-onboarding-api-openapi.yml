@@ -51,39 +51,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    OnboardingStatusResponse:
-      properties:
-        completed:
-          type: boolean
-          title: Completed
-      type: object
-      required:
-      - completed
-      title: OnboardingStatusResponse
-    CompleteOnboardingRequest:
-      properties:
-        start_url:
-          type: string
-          title: Start Url
-        allowed_domains:
-          items:
-            type: string
-          type: array
-          title: Allowed Domains
-      type: object
-      required:
-      - start_url
-      - allowed_domains
-      title: CompleteOnboardingRequest
     ValidationError:
       properties:
         loc:
@@ -119,6 +86,39 @@ components:
       required:
       - success
       title: CompleteOnboardingResponse
+    CompleteOnboardingRequest:
+      properties:
+        start_url:
+          type: string
+          title: Start Url
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+      type: object
+      required:
+      - start_url
+      - allowed_domains
+      title: CompleteOnboardingRequest
+    OnboardingStatusResponse:
+      properties:
+        completed:
+          type: boolean
+          title: Completed
+      type: object
+      required:
+      - completed
+      title: OnboardingStatusResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -122,23 +122,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MarkReadRequest:
-      properties:
-        is_read:
-          type: boolean
-          title: Is Read
-          default: true
-      type: object
-      title: MarkReadRequest
     NotificationResponse:
       properties:
         id:
@@ -224,6 +207,23 @@ components:
       - msg
       - type
       title: ValidationError
+    UnreadCountResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - count
+      title: UnreadCountResponse
+    MarkReadRequest:
+      properties:
+        is_read:
+          type: boolean
+          title: Is Read
+          default: true
+      type: object
+      title: MarkReadRequest
     NotificationListResponse:
       properties:
         notifications:
@@ -251,15 +251,15 @@ components:
       - page_size
       - unread_count
       title: NotificationListResponse
-    UnreadCountResponse:
+    HTTPValidationError:
       properties:
-        count:
-          type: integer
-          title: Count
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - count
-      title: UnreadCountResponse
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

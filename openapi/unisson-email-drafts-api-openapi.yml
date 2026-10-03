@@ -126,15 +126,94 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EmailDraftPatchRequest:
+      properties:
+        to:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: To
+        cc:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc
+        bcc:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Bcc
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+        body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Body
+        attachments:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Attachments
+      type: object
+      title: EmailDraftPatchRequest
+      description: 'Partial patch — every field is optional. Only the keys present in
+
+        the request body are written; missing keys are left as-is so the
+
+        user can change just the subject without re-sending the body.'
+    EmailDraftListResponse:
+      properties:
+        drafts:
+          items:
+            $ref: '#/components/schemas/EmailDraftResponse'
+          type: array
+          title: Drafts
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - drafts
+      - total
+      title: EmailDraftListResponse
     EmailDraftResponse:
       properties:
         draft_id:
@@ -219,94 +298,15 @@ components:
       - created_at
       - updated_at
       title: EmailDraftResponse
-    EmailDraftPatchRequest:
+    HTTPValidationError:
       properties:
-        to:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: To
-        cc:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Cc
-        bcc:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Bcc
-        subject:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject
-        body:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Body
-        attachments:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Attachments
-      type: object
-      title: EmailDraftPatchRequest
-      description: 'Partial patch — every field is optional. Only the keys present in
-
-        the request body are written; missing keys are left as-is so the
-
-        user can change just the subject without re-sending the body.'
-    ValidationError:
-      properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EmailDraftListResponse:
-      properties:
-        drafts:
-          items:
-            $ref: '#/components/schemas/EmailDraftResponse'
-          type: array
-          title: Drafts
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - drafts
-      - total
-      title: EmailDraftListResponse
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

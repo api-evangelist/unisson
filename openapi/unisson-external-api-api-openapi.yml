@@ -220,182 +220,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ExternalRunResumeRequest:
-      properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Answer
-          description: Answer to clarifying question (if any)
-      type: object
-      title: ExternalRunResumeRequest
-      description: Request to resume a paused run.
-    ExternalWebhookConfigResponse:
-      properties:
-        webhook_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Url
-        webhook_events:
-          items:
-            type: string
-          type: array
-          title: Webhook Events
-        webhook_secret:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Secret
-          description: Webhook signing secret. Only returned when a webhook URL is set for the first time.
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - webhook_url
-      - webhook_events
-      title: ExternalWebhookConfigResponse
-      description: Response after updating webhook configuration.
-    ExternalWebhookConfigRequest:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 500
-          title: Webhook Url
-          description: URL to receive webhook events. Set to empty string to remove.
-        webhook_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Webhook Events
-          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
-      type: object
-      required:
-      - webhook_url
-      title: ExternalWebhookConfigRequest
-      description: Request to update webhook configuration via API key.
-    ExternalRunDetailResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        status:
-          type: string
-          title: Status
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        task_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Type
-        external_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Reference Id
-        liveview_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Liveview Url
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        auth_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Auth Message
-        question:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Question
-        response_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response Text
-        structured_output:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Structured Output
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-      type: object
-      required:
-      - id
-      - status
-      - created_at
-      title: ExternalRunDetailResponse
-      description: Detailed run response with results.
-    ExternalStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        key_prefix:
-          type: string
-          title: Key Prefix
-        scopes:
-          items:
-            type: string
-          type: array
-          title: Scopes
-        is_sandbox:
-          type: boolean
-          title: Is Sandbox
-        webhook_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Url
-        webhook_events:
-          items:
-            type: string
-          type: array
-          title: Webhook Events
-      type: object
-      required:
-      - status
-      - key_prefix
-      - scopes
-      - is_sandbox
-      - webhook_url
-      - webhook_events
-      title: ExternalStatusResponse
-      description: Response for the status endpoint.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ExternalRunResponse:
       properties:
         id:
@@ -431,32 +281,26 @@ components:
       - created_at
       title: ExternalRunResponse
       description: Basic run response.
-    ValidationError:
+    ExternalWebhookConfigRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        webhook_url:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          maxLength: 500
+          title: Webhook Url
+          description: URL to receive webhook events. Set to empty string to remove.
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: 'List of events to subscribe to. Valid events: run.authentication_required, run.input_required, run.completed, run.failed. If omitted on first-time setup, defaults to all events.'
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - webhook_url
+      title: ExternalWebhookConfigRequest
+      description: Request to update webhook configuration via API key.
     ExternalRunCreateRequest:
       properties:
         task:
@@ -590,6 +434,162 @@ components:
       type: object
       title: ExternalRunCreateRequest
       description: Request to create an external run.
+    ExternalRunResumeRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
+          description: Answer to clarifying question (if any)
+      type: object
+      title: ExternalRunResumeRequest
+      description: Request to resume a paused run.
+    ExternalRunDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+        external_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Reference Id
+        liveview_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Liveview Url
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        auth_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Auth Message
+        question:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Question
+        response_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Text
+        structured_output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Structured Output
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+      type: object
+      required:
+      - id
+      - status
+      - created_at
+      title: ExternalRunDetailResponse
+      description: Detailed run response with results.
+    ExternalWebhookConfigResponse:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_events:
+          items:
+            type: string
+          type: array
+          title: Webhook Events
+        webhook_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Secret
+          description: Webhook signing secret. Only returned when a webhook URL is set for the first time.
+      type: object
+      required:
+      - webhook_url
+      - webhook_events
+      title: ExternalWebhookConfigResponse
+      description: Response after updating webhook configuration.
+    ExternalStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        key_prefix:
+          type: string
+          title: Key Prefix
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        is_sandbox:
+          type: boolean
+          title: Is Sandbox
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_events:
+          items:
+            type: string
+          type: array
+          title: Webhook Events
+      type: object
+      required:
+      - status
+      - key_prefix
+      - scopes
+      - is_sandbox
+      - webhook_url
+      - webhook_events
+      title: ExternalStatusResponse
+      description: Response for the status endpoint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -133,28 +133,66 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    FinalizeRequest:
+    ConnectionStatusResponse:
       properties:
-        outcome:
+        status:
           type: string
-          enum:
-          - success
-          - error
-          title: Outcome
+          title: Status
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        flow_step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Step
+        flow_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Status
         error_code:
           anyOf:
           - type: string
           - type: 'null'
           title: Error Code
-        error_message:
+        live_view_url:
           anyOf:
           - type: string
           - type: 'null'
-          title: Error Message
+          title: Live View Url
       type: object
       required:
-      - outcome
-      title: FinalizeRequest
+      - status
+      title: ConnectionStatusResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     BootstrapResponse:
       properties:
         connection_id:
@@ -210,15 +248,6 @@ components:
       - on_error_url
       - expires_at
       title: BootstrapResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     FinalizeResponse:
       properties:
         redirect_url:
@@ -228,66 +257,37 @@ components:
       required:
       - redirect_url
       title: FinalizeResponse
-    ValidationError:
+    FinalizeRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        outcome:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ConnectionStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Domain
-        flow_step:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Flow Step
-        flow_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Flow Status
+          enum:
+          - success
+          - error
+          title: Outcome
         error_code:
           anyOf:
           - type: string
           - type: 'null'
           title: Error Code
-        live_view_url:
+        error_message:
           anyOf:
           - type: string
           - type: 'null'
-          title: Live View Url
+          title: Error Message
       type: object
       required:
-      - status
-      title: ConnectionStatusResponse
+      - outcome
+      title: FinalizeRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

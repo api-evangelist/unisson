@@ -331,15 +331,62 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SkillUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 100000
+          - type: 'null'
+          title: Instructions
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+      type: object
+      title: SkillUpdate
+      description: Direct edit (PUT). name/description/instructions are versioned; icon isn't.
     SkillRenameRequest:
       properties:
         slug:
@@ -360,6 +407,42 @@ components:
       - slug
       title: SkillRenameRequest
       description: Rename a custom skill's slug (and optionally its display name).
+    SkillCreate:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          title: Slug
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 100000
+          - type: 'null'
+          title: Instructions
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+      type: object
+      required:
+      - slug
+      - name
+      title: SkillCreate
     SkillResponse:
       properties:
         id:
@@ -480,42 +563,6 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
-    SkillCreate:
-      properties:
-        slug:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
-          title: Slug
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        description:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 100000
-          - type: 'null'
-          title: Instructions
-        icon:
-          anyOf:
-          - type: string
-            maxLength: 1048576
-          - type: 'null'
-          title: Icon
-      type: object
-      required:
-      - slug
-      - name
-      title: SkillCreate
     SkillInstructionVersionResponse:
       properties:
         id:
@@ -577,62 +624,15 @@ components:
       - created_at
       title: SkillInstructionVersionResponse
       description: One immutable snapshot in a skill's instruction history.
-    SkillUpdate:
+    HTTPValidationError:
       properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 100000
-          - type: 'null'
-          title: Instructions
-        icon:
-          anyOf:
-          - type: string
-            maxLength: 1048576
-          - type: 'null'
-          title: Icon
-      type: object
-      title: SkillUpdate
-      description: Direct edit (PUT). name/description/instructions are versioned; icon isn't.
-    ValidationError:
-      properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
     UsedAgent:
       properties:
         id:

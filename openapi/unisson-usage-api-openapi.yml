@@ -84,36 +84,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UsageStatsResponse:
-      properties:
-        total_duration_seconds:
-          type: integer
-          title: Total Duration Seconds
-        user_usage:
-          items:
-            $ref: '#/components/schemas/UserUsageStats'
-          type: array
-          title: User Usage
-        daily_usage:
-          items:
-            $ref: '#/components/schemas/DailyUsage'
-          type: array
-          title: Daily Usage
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - total_duration_seconds
-      - user_usage
-      - daily_usage
-      title: UsageStatsResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
     UserUsageStats:
       properties:
         user_id:
@@ -152,32 +148,36 @@ components:
       - date
       - duration_seconds
       title: DailyUsage
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsageStatsResponse:
+      properties:
+        total_duration_seconds:
+          type: integer
+          title: Total Duration Seconds
+        user_usage:
+          items:
+            $ref: '#/components/schemas/UserUsageStats'
+          type: array
+          title: User Usage
+        daily_usage:
+          items:
+            $ref: '#/components/schemas/DailyUsage'
+          type: array
+          title: Daily Usage
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - total_duration_seconds
+      - user_usage
+      - daily_usage
+      title: UsageStatsResponse
   securitySchemes:
     HTTPBearer:
       type: http

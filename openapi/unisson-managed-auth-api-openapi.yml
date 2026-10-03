@@ -95,15 +95,40 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    ConnectionStatusResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        status:
+          type: string
+          title: Status
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+        flow_step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Step
+        flow_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Flow Status
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        live_view_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live View Url
       type: object
-      title: HTTPValidationError
+      required:
+      - status
+      title: ConnectionStatusResponse
     ValidationError:
       properties:
         loc:
@@ -147,40 +172,6 @@ components:
       - hosted_url
       - domain
       title: ConnectResponse
-    ConnectionStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Domain
-        flow_step:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Flow Step
-        flow_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Flow Status
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Code
-        live_view_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live View Url
-      type: object
-      required:
-      - status
-      title: ConnectionStatusResponse
     ConnectRequest:
       properties:
         domain:
@@ -195,6 +186,15 @@ components:
       required:
       - domain
       title: ConnectRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

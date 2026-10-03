@@ -196,15 +196,47 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    BuildOpportunityResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        skipped_automations:
+          type: integer
+          title: Skipped Automations
+          default: 0
       type: object
-      title: HTTPValidationError
+      required:
+      - agent_id
+      title: BuildOpportunityResponse
+      description: Result of "Build this" — the draft agent to open in the Agent Builder.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DiscoveryOpportunityResponse:
       properties:
         id:
@@ -311,33 +343,6 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
     DiscoverySourceUpsert:
       properties:
         source_type:
@@ -358,47 +363,6 @@ components:
       - source_type
       title: DiscoverySourceUpsert
       description: Connect / update a Discovery source (one per source_type per org).
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    BuildOpportunityResponse:
-      properties:
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        skipped_automations:
-          type: integer
-          title: Skipped Automations
-          default: 0
-      type: object
-      required:
-      - agent_id
-      title: BuildOpportunityResponse
-      description: Result of "Build this" — the draft agent to open in the Agent Builder.
     DiscoverySourceResponse:
       properties:
         id:
@@ -434,6 +398,42 @@ components:
       - config
       - status
       title: DiscoverySourceResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
   securitySchemes:
     HTTPBearer:
       type: http

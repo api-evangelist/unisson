@@ -345,172 +345,32 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MeetingListItem:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        title:
-          type: string
-          title: Title
-        provider:
-          type: string
-          title: Provider
-        recorded_by_bot:
-          type: boolean
-          title: Recorded By Bot
-          default: false
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        ended_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Ended At
-        duration_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration Seconds
-        participants:
-          items:
-            type: string
-          type: array
-          title: Participants
-          default: []
-        attendee_emails:
-          items:
-            type: string
-          type: array
-          title: Attendee Emails
-          default: []
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        status:
-          type: string
-          title: Status
-        synced_by_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Synced By Name
-        tasks_count:
-          type: integer
-          title: Tasks Count
-          default: 0
-        has_transcript:
-          type: boolean
-          title: Has Transcript
-          default: false
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - organization_id
-      - title
-      - provider
-      - status
-      - created_at
-      title: MeetingListItem
-      description: Lightweight meeting for list view (no transcript_text).
-    TranscriptSegment:
-      properties:
-        speaker:
-          type: string
-          title: Speaker
-        start:
-          type: number
-          title: Start
-        end:
-          type: number
-          title: End
-        text:
-          type: string
-          title: Text
-      type: object
-      required:
-      - speaker
-      - start
-      - end
-      - text
-      title: TranscriptSegment
-      description: 'One speaker utterance with timing, for the click-to-seek transcript +
-
-        speaker timeline. ``start``/``end`` are seconds from the recording start.'
-    MeetingSyncResponse:
-      properties:
-        new_meetings:
-          type: integer
-          title: New Meetings
-        message:
+          title: Location
+        msg:
           type: string
           title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - new_meetings
-      - message
-      title: MeetingSyncResponse
-      description: Response after syncing meetings from a provider.
-    Body_import_meeting_transcript_api_v1_meetings_import_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_import_meeting_transcript_api_v1_meetings_import_post
-    MeetingTaskSummary:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-      type: object
-      required:
-      - id
-      - title
-      - status
-      title: MeetingTaskSummary
-      description: Lightweight task info for meeting responses.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     MeetingResponse:
       properties:
         id:
@@ -621,56 +481,59 @@ components:
       - created_at
       title: MeetingResponse
       description: Schema for meeting response.
-    ValidationError:
+    Body_import_meeting_transcript_api_v1_meetings_import_post:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        file:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          contentMediaType: application/octet-stream
+          title: File
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MeetingListResponse:
+      - file
+      title: Body_import_meeting_transcript_api_v1_meetings_import_post
+    MeetingTaskSummary:
       properties:
-        meetings:
-          items:
-            $ref: '#/components/schemas/MeetingListItem'
-          type: array
-          title: Meetings
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
       type: object
       required:
-      - meetings
-      - total
-      - page
-      - page_size
-      title: MeetingListResponse
-      description: Paginated list of meetings.
+      - id
+      - title
+      - status
+      title: MeetingTaskSummary
+      description: Lightweight task info for meeting responses.
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+        start:
+          type: number
+          title: Start
+        end:
+          type: number
+          title: End
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - speaker
+      - start
+      - end
+      - text
+      title: TranscriptSegment
+      description: 'One speaker utterance with timing, for the click-to-seek transcript +
+
+        speaker timeline. ``start``/``end`` are seconds from the recording start.'
     Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post:
       properties:
         file:
@@ -705,6 +568,143 @@ components:
         structured transcript — a fallback for rows ingested before segments were
 
         persisted; callers prefer the meeting''s stored ``transcript_segments``.'
+    MeetingSyncResponse:
+      properties:
+        new_meetings:
+          type: integer
+          title: New Meetings
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - new_meetings
+      - message
+      title: MeetingSyncResponse
+      description: Response after syncing meetings from a provider.
+    MeetingListResponse:
+      properties:
+        meetings:
+          items:
+            $ref: '#/components/schemas/MeetingListItem'
+          type: array
+          title: Meetings
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - meetings
+      - total
+      - page
+      - page_size
+      title: MeetingListResponse
+      description: Paginated list of meetings.
+    MeetingListItem:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        title:
+          type: string
+          title: Title
+        provider:
+          type: string
+          title: Provider
+        recorded_by_bot:
+          type: boolean
+          title: Recorded By Bot
+          default: false
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        ended_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Ended At
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        participants:
+          items:
+            type: string
+          type: array
+          title: Participants
+          default: []
+        attendee_emails:
+          items:
+            type: string
+          type: array
+          title: Attendee Emails
+          default: []
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        status:
+          type: string
+          title: Status
+        synced_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Synced By Name
+        tasks_count:
+          type: integer
+          title: Tasks Count
+          default: 0
+        has_transcript:
+          type: boolean
+          title: Has Transcript
+          default: false
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+      type: object
+      required:
+      - id
+      - organization_id
+      - title
+      - provider
+      - status
+      - created_at
+      title: MeetingListItem
+      description: Lightweight meeting for list view (no transcript_text).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

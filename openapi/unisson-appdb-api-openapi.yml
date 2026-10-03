@@ -227,15 +227,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     AppDbTablesResponse:
       properties:
         scope:
@@ -251,6 +242,57 @@ components:
       - scope
       - tables
       title: AppDbTablesResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppDbTable:
+      properties:
+        name:
+          type: string
+          title: Name
+        columns:
+          items:
+            $ref: '#/components/schemas/AppDbColumn'
+          type: array
+          title: Columns
+        primary_key:
+          items:
+            type: string
+          type: array
+          title: Primary Key
+        approx_rows:
+          type: integer
+          title: Approx Rows
+      type: object
+      required:
+      - name
+      - columns
+      - primary_key
+      - approx_rows
+      title: AppDbTable
     AppDbStatementRequest:
       properties:
         sql:
@@ -273,6 +315,27 @@ components:
       required:
       - sql
       title: AppDbStatementRequest
+    AppDbExecuteResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        statements:
+          type: integer
+          title: Statements
+        rows:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rows
+      type: object
+      required:
+      - status
+      - statements
+      title: AppDbExecuteResponse
     AppDbColumn:
       properties:
         name:
@@ -321,78 +384,15 @@ components:
       - row_count
       - truncated
       title: AppDbQueryResponse
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AppDbExecuteResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        statements:
-          type: integer
-          title: Statements
-        rows:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Rows
-      type: object
-      required:
-      - status
-      - statements
-      title: AppDbExecuteResponse
-    AppDbTable:
-      properties:
-        name:
-          type: string
-          title: Name
-        columns:
-          items:
-            $ref: '#/components/schemas/AppDbColumn'
-          type: array
-          title: Columns
-        primary_key:
-          items:
-            type: string
-          type: array
-          title: Primary Key
-        approx_rows:
-          type: integer
-          title: Approx Rows
-      type: object
-      required:
-      - name
-      - columns
-      - primary_key
-      - approx_rows
-      title: AppDbTable
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

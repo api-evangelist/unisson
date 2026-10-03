@@ -256,86 +256,46 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TaskApproveResponse:
+    TaskCreate:
       properties:
-        conversation_id:
+        title:
           type: string
-          format: uuid
-          title: Conversation Id
-        status:
+          maxLength: 500
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        severity:
           type: string
-          title: Status
-        message:
-          type: string
-          title: Message
+          pattern: ^(critical|high|medium|low)$
+          title: Severity
+          default: medium
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+        target_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Target Date
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
       type: object
       required:
-      - conversation_id
-      - status
-      - message
-      title: TaskApproveResponse
-      description: Response after approving a task — links to the executing conversation.
-    TaskAnalyticsMonthlyCount:
-      properties:
-        month:
-          type: string
-          title: Month
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - month
-      - count
-      title: TaskAnalyticsMonthlyCount
-      description: Count of tasks created in a month.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    TaskAnalyticsStatusCount:
-      properties:
-        status:
-          type: string
-          title: Status
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - status
-      - count
-      title: TaskAnalyticsStatusCount
-      description: Count of tasks by status.
-    TaskListResponse:
-      properties:
-        tasks:
-          items:
-            $ref: '#/components/schemas/TaskResponse'
-          type: array
-          title: Tasks
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - tasks
-      - total
-      - page
-      - page_size
-      title: TaskListResponse
-      description: Paginated list of tasks.
+      - title
+      title: TaskCreate
+      description: Schema for creating a task. LLM will determine can_resolve + suggested_task.
     ValidationError:
       properties:
         loc:
@@ -362,6 +322,64 @@ components:
       - msg
       - type
       title: ValidationError
+    TaskAnalyticsResponse:
+      properties:
+        total_tasks:
+          type: integer
+          title: Total Tasks
+        open_tasks:
+          type: integer
+          title: Open Tasks
+        resolved_tasks:
+          type: integer
+          title: Resolved Tasks
+        resolved_by_agents:
+          type: integer
+          title: Resolved By Agents
+        resolution_rate:
+          type: number
+          title: Resolution Rate
+        by_status:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsStatusCount'
+          type: array
+          title: By Status
+        by_severity:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsSeverityCount'
+          type: array
+          title: By Severity
+        monthly_trend:
+          items:
+            $ref: '#/components/schemas/TaskAnalyticsMonthlyCount'
+          type: array
+          title: Monthly Trend
+      type: object
+      required:
+      - total_tasks
+      - open_tasks
+      - resolved_tasks
+      - resolved_by_agents
+      - resolution_rate
+      - by_status
+      - by_severity
+      - monthly_trend
+      title: TaskAnalyticsResponse
+      description: Analytics data for tasks.
+    TaskAnalyticsStatusCount:
+      properties:
+        status:
+          type: string
+          title: Status
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - status
+      - count
+      title: TaskAnalyticsStatusCount
+      description: Count of tasks by status.
     TaskResponse:
       properties:
         id:
@@ -499,6 +517,81 @@ components:
       - created_at
       title: TaskResponse
       description: Schema for task response.
+    TaskApproveResponse:
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        status:
+          type: string
+          title: Status
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - conversation_id
+      - status
+      - message
+      title: TaskApproveResponse
+      description: Response after approving a task — links to the executing conversation.
+    TaskAnalyticsSeverityCount:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - severity
+      - count
+      title: TaskAnalyticsSeverityCount
+      description: Count of tasks by severity.
+    TaskAnalyticsMonthlyCount:
+      properties:
+        month:
+          type: string
+          title: Month
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - month
+      - count
+      title: TaskAnalyticsMonthlyCount
+      description: Count of tasks created in a month.
+    PlanStep:
+      properties:
+        id:
+          type: string
+          title: Id
+        label:
+          type: string
+          title: Label
+        status:
+          type: string
+          title: Status
+          default: pending
+        agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+        run_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Run Id
+      type: object
+      required:
+      - id
+      - label
+      title: PlanStep
+      description: A single step in a task's execution plan (shown on the Kanban card).
     TaskUpdate:
       properties:
         title:
@@ -540,46 +633,39 @@ components:
       type: object
       title: TaskUpdate
       description: Schema for updating a task. All fields optional for PATCH semantics.
-    TaskCreate:
+    TaskListResponse:
       properties:
-        title:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        severity:
-          type: string
-          pattern: ^(critical|high|medium|low)$
-          title: Severity
-          default: medium
-        assignee_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Assignee Id
-        target_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: Target Date
-        customer_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Customer Id
+        tasks:
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+          type: array
+          title: Tasks
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
       type: object
       required:
-      - title
-      title: TaskCreate
-      description: Schema for creating a task. LLM will determine can_resolve + suggested_task.
+      - tasks
+      - total
+      - page
+      - page_size
+      title: TaskListResponse
+      description: Paginated list of tasks.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     TaskAgentRef:
       properties:
         id:
@@ -605,92 +691,6 @@ components:
       - name
       title: TaskAgentRef
       description: Lightweight agent reference for rendering avatars on a task card.
-    TaskAnalyticsSeverityCount:
-      properties:
-        severity:
-          type: string
-          title: Severity
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - severity
-      - count
-      title: TaskAnalyticsSeverityCount
-      description: Count of tasks by severity.
-    TaskAnalyticsResponse:
-      properties:
-        total_tasks:
-          type: integer
-          title: Total Tasks
-        open_tasks:
-          type: integer
-          title: Open Tasks
-        resolved_tasks:
-          type: integer
-          title: Resolved Tasks
-        resolved_by_agents:
-          type: integer
-          title: Resolved By Agents
-        resolution_rate:
-          type: number
-          title: Resolution Rate
-        by_status:
-          items:
-            $ref: '#/components/schemas/TaskAnalyticsStatusCount'
-          type: array
-          title: By Status
-        by_severity:
-          items:
-            $ref: '#/components/schemas/TaskAnalyticsSeverityCount'
-          type: array
-          title: By Severity
-        monthly_trend:
-          items:
-            $ref: '#/components/schemas/TaskAnalyticsMonthlyCount'
-          type: array
-          title: Monthly Trend
-      type: object
-      required:
-      - total_tasks
-      - open_tasks
-      - resolved_tasks
-      - resolved_by_agents
-      - resolution_rate
-      - by_status
-      - by_severity
-      - monthly_trend
-      title: TaskAnalyticsResponse
-      description: Analytics data for tasks.
-    PlanStep:
-      properties:
-        id:
-          type: string
-          title: Id
-        label:
-          type: string
-          title: Label
-        status:
-          type: string
-          title: Status
-          default: pending
-        agent_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Id
-        run_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Run Id
-      type: object
-      required:
-      - id
-      - label
-      title: PlanStep
-      description: A single step in a task's execution plan (shown on the Kanban card).
   securitySchemes:
     HTTPBearer:
       type: http

@@ -271,52 +271,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MiniAppReadmeResponse:
-      properties:
-        readme:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Readme
-      type: object
-      title: MiniAppReadmeResponse
-      description: 'Just the app''s markdown README — a light endpoint so the "View README"
-
-        modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
-    MiniAppUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        guest_access:
-          anyOf:
-          - type: string
-            pattern: ^(none|view|interact)$
-          - type: 'null'
-          title: Guest Access
-      type: object
-      title: MiniAppUpdate
-      description: 'PATCH semantics — only provided fields change. (App html is updated
-
-        by the agent via update_app, not over this API.)'
     MiniAppResponse:
       properties:
         id:
@@ -393,6 +347,31 @@ components:
       - msg
       - type
       title: ValidationError
+    MiniAppUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        guest_access:
+          anyOf:
+          - type: string
+            pattern: ^(none|view|interact)$
+          - type: 'null'
+          title: Guest Access
+      type: object
+      title: MiniAppUpdate
+      description: 'PATCH semantics — only provided fields change. (App html is updated
+
+        by the agent via update_app, not over this API.)'
     MiniAppListResponse:
       properties:
         apps:
@@ -429,6 +408,17 @@ components:
       - description
       - prompt
       title: AppTemplateResponse
+    MiniAppVersionListResponse:
+      properties:
+        versions:
+          items:
+            $ref: '#/components/schemas/MiniAppVersionResponse'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - versions
+      title: MiniAppVersionListResponse
     MiniAppDetailResponse:
       properties:
         id:
@@ -493,17 +483,6 @@ components:
       - guest_access
       - html
       title: MiniAppDetailResponse
-    MiniAppVersionListResponse:
-      properties:
-        versions:
-          items:
-            $ref: '#/components/schemas/MiniAppVersionResponse'
-          type: array
-          title: Versions
-      type: object
-      required:
-      - versions
-      title: MiniAppVersionListResponse
     MiniAppVersionResponse:
       properties:
         version_number:
@@ -533,6 +512,27 @@ components:
         users review instead of raw source diffs. ``html`` is omitted from the list;
 
         fetch a single version''s detail to preview it.'
+    MiniAppReadmeResponse:
+      properties:
+        readme:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readme
+      type: object
+      title: MiniAppReadmeResponse
+      description: 'Just the app''s markdown README — a light endpoint so the "View README"
+
+        modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

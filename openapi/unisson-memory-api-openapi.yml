@@ -278,81 +278,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MemoryFileResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        organization_id:
-          type: string
-          format: uuid
-          title: Organization Id
-        user_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: User Id
-        is_account:
-          type: boolean
-          title: Is Account
-        content:
-          type: string
-          title: Content
-        updated_by:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Updated By
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-        user_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Name
-        user_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: User Email
-      type: object
-      required:
-      - id
-      - organization_id
-      - is_account
-      - content
-      - created_at
-      - updated_at
-      title: MemoryFileResponse
-    MemoryFileUpdate:
-      properties:
-        content:
-          type: string
-          maxLength: 100000
-          title: Content
-      type: object
-      required:
-      - content
-      title: MemoryFileUpdate
-      description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
     ValidationError:
       properties:
         loc:
@@ -425,6 +350,81 @@ components:
       - created_at
       title: MemoryFileVersionResponse
       description: One immutable snapshot in a memory file's content history.
+    MemoryFileUpdate:
+      properties:
+        content:
+          type: string
+          maxLength: 100000
+          title: Content
+      type: object
+      required:
+      - content
+      title: MemoryFileUpdate
+      description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MemoryFileResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        organization_id:
+          type: string
+          format: uuid
+          title: Organization Id
+        user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: User Id
+        is_account:
+          type: boolean
+          title: Is Account
+        content:
+          type: string
+          title: Content
+        updated_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Updated By
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        user_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Name
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+      type: object
+      required:
+      - id
+      - organization_id
+      - is_account
+      - content
+      - created_at
+      - updated_at
+      title: MemoryFileResponse
   securitySchemes:
     HTTPBearer:
       type: http

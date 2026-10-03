@@ -284,26 +284,104 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TestCaseCreate:
+    ValidationError:
       properties:
-        name:
-          type: string
-          maxLength: 255
-          title: Name
-        input_message:
-          type: string
-          title: Input Message
-        criteria:
+        loc:
           items:
-            $ref: '#/components/schemas/EvalCriterion'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Criteria
-          default: []
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - name
-      - input_message
-      title: TestCaseCreate
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EvalRunResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        instruction_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Instruction Version Id
+        trigger_source:
+          type: string
+          title: Trigger Source
+        execution_mode:
+          type: string
+          title: Execution Mode
+        status:
+          type: string
+          title: Status
+        summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+      type: object
+      required:
+      - id
+      - agent_id
+      - trigger_source
+      - execution_mode
+      - status
+      - created_at
+      title: EvalRunResponse
+    EvalCriterion:
+      properties:
+        id:
+          type: string
+          title: Id
+        kind:
+          type: string
+          title: Kind
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - id
+      - kind
+      - text
+      title: EvalCriterion
     EvalRunDetailResponse:
       properties:
         id:
@@ -365,117 +443,26 @@ components:
       - status
       - created_at
       title: EvalRunDetailResponse
-    HTTPValidationError:
+    TestCaseCreate:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EvalRunResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        instruction_version_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Instruction Version Id
-        trigger_source:
-          type: string
-          title: Trigger Source
-        execution_mode:
-          type: string
-          title: Execution Mode
-        status:
-          type: string
-          title: Status
-        summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Summary
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-      type: object
-      required:
-      - id
-      - agent_id
-      - trigger_source
-      - execution_mode
-      - status
-      - created_at
-      title: EvalRunResponse
-    CreateEvalRunRequest:
-      properties:
-        execution_mode:
-          type: string
-          title: Execution Mode
-          default: sandboxed
-      type: object
-      title: CreateEvalRunRequest
-    TestCaseResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
         name:
           type: string
+          maxLength: 255
           title: Name
         input_message:
           type: string
           title: Input Message
         criteria:
           items:
-            additionalProperties: true
-            type: object
+            $ref: '#/components/schemas/EvalCriterion'
           type: array
           title: Criteria
           default: []
-        is_enabled:
-          type: boolean
-          title: Is Enabled
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
       type: object
       required:
-      - id
-      - agent_id
       - name
       - input_message
-      - is_enabled
-      - created_at
-      title: TestCaseResponse
+      title: TestCaseCreate
     TestCaseUpdate:
       properties:
         name:
@@ -503,49 +490,6 @@ components:
           title: Is Enabled
       type: object
       title: TestCaseUpdate
-    EvalCriterion:
-      properties:
-        id:
-          type: string
-          title: Id
-        kind:
-          type: string
-          title: Kind
-        text:
-          type: string
-          title: Text
-      type: object
-      required:
-      - id
-      - kind
-      - text
-      title: EvalCriterion
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     EvalCaseResultResponse:
       properties:
         id:
@@ -616,6 +560,62 @@ components:
       - input_message
       - status
       title: EvalCaseResultResponse
+    CreateEvalRunRequest:
+      properties:
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: sandboxed
+      type: object
+      title: CreateEvalRunRequest
+    TestCaseResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        name:
+          type: string
+          title: Name
+        input_message:
+          type: string
+          title: Input Message
+        criteria:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Criteria
+          default: []
+        is_enabled:
+          type: boolean
+          title: Is Enabled
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - id
+      - agent_id
+      - name
+      - input_message
+      - is_enabled
+      - created_at
+      title: TestCaseResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

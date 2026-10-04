@@ -171,6 +171,15 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     PipedreamWebhookPayload:
       properties:
         event:
@@ -199,6 +208,15 @@ components:
       - app_slug
       title: PipedreamWebhookPayload
       description: Payload from Pipedream when a user connects/disconnects an app.
+    app__api__v1__agent_integrations__ConnectResponse:
+      properties:
+        connect_url:
+          type: string
+          title: Connect Url
+      type: object
+      required:
+      - connect_url
+      title: ConnectResponse
     ValidationError:
       properties:
         loc:
@@ -237,15 +255,6 @@ components:
       - org_scoped_slugs
       title: ScopesResponse
       description: Hybrid-scoping registry, exposed for the frontend.
-    app__api__v1__agent_integrations__ConnectResponse:
-      properties:
-        connect_url:
-          type: string
-          title: Connect Url
-      type: object
-      required:
-      - connect_url
-      title: ConnectResponse
     AppInfo:
       properties:
         slug:
@@ -282,15 +291,6 @@ components:
       - slug
       - name
       title: AppInfo
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ConnectionInfo:
       properties:
         id:

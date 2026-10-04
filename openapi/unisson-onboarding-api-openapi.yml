@@ -51,6 +51,48 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    OnboardingStatusResponse:
+      properties:
+        completed:
+          type: boolean
+          title: Completed
+      type: object
+      required:
+      - completed
+      title: OnboardingStatusResponse
+    CompleteOnboardingResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+      type: object
+      required:
+      - success
+      title: CompleteOnboardingResponse
+    CompleteOnboardingRequest:
+      properties:
+        start_url:
+          type: string
+          title: Start Url
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+      type: object
+      required:
+      - start_url
+      - allowed_domains
+      title: CompleteOnboardingRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -77,48 +119,6 @@ components:
       - msg
       - type
       title: ValidationError
-    CompleteOnboardingResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-      type: object
-      required:
-      - success
-      title: CompleteOnboardingResponse
-    CompleteOnboardingRequest:
-      properties:
-        start_url:
-          type: string
-          title: Start Url
-        allowed_domains:
-          items:
-            type: string
-          type: array
-          title: Allowed Domains
-      type: object
-      required:
-      - start_url
-      - allowed_domains
-      title: CompleteOnboardingRequest
-    OnboardingStatusResponse:
-      properties:
-        completed:
-          type: boolean
-          title: Completed
-      type: object
-      required:
-      - completed
-      title: OnboardingStatusResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

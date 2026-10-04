@@ -181,6 +181,50 @@ components:
       - is_read
       - created_at
       title: NotificationResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    NotificationListResponse:
+      properties:
+        notifications:
+          items:
+            $ref: '#/components/schemas/NotificationResponse'
+          type: array
+          title: Notifications
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+        unread_count:
+          type: integer
+          title: Unread Count
+      type: object
+      required:
+      - notifications
+      - total
+      - page
+      - page_size
+      - unread_count
+      title: NotificationListResponse
+    MarkReadRequest:
+      properties:
+        is_read:
+          type: boolean
+          title: Is Read
+          default: true
+      type: object
+      title: MarkReadRequest
     ValidationError:
       properties:
         loc:
@@ -216,50 +260,6 @@ components:
       required:
       - count
       title: UnreadCountResponse
-    MarkReadRequest:
-      properties:
-        is_read:
-          type: boolean
-          title: Is Read
-          default: true
-      type: object
-      title: MarkReadRequest
-    NotificationListResponse:
-      properties:
-        notifications:
-          items:
-            $ref: '#/components/schemas/NotificationResponse'
-          type: array
-          title: Notifications
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-        unread_count:
-          type: integer
-          title: Unread Count
-      type: object
-      required:
-      - notifications
-      - total
-      - page
-      - page_size
-      - unread_count
-      title: NotificationListResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

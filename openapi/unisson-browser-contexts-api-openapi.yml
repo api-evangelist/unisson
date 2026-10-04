@@ -77,44 +77,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    OrgSessionsResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserWithSessionsResponse'
-          type: array
-          title: Users
-      type: object
-      required:
-      - users
-      title: OrgSessionsResponse
-      description: Response containing all users with saved sessions in the organization.
     UserWithSessionsResponse:
       properties:
         user_id:
@@ -158,6 +120,53 @@ components:
       - authenticated_domains
       title: UserWithSessionsResponse
       description: User with their unified context and authenticated domains.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OrgSessionsResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserWithSessionsResponse'
+          type: array
+          title: Users
+      type: object
+      required:
+      - users
+      title: OrgSessionsResponse
+      description: Response containing all users with saved sessions in the organization.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AuthenticatedDomainInfo:
       properties:
         domain:
@@ -176,15 +185,6 @@ components:
       - last_used_at
       title: AuthenticatedDomainInfo
       description: Information about an authenticated domain.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

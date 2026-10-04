@@ -161,6 +161,31 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ScheduledRunListResponse:
+      properties:
+        scheduled_runs:
+          items:
+            $ref: '#/components/schemas/ScheduledRunResponse'
+          type: array
+          title: Scheduled Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - scheduled_runs
+      - total
+      title: ScheduledRunListResponse
+      description: List of scheduled runs
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -321,31 +346,6 @@ components:
       - scheduled_at
       title: ScheduledRunCreate
       description: Request to create a new scheduled run
-    ScheduledRunListResponse:
-      properties:
-        scheduled_runs:
-          items:
-            $ref: '#/components/schemas/ScheduledRunResponse'
-          type: array
-          title: Scheduled Runs
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - scheduled_runs
-      - total
-      title: ScheduledRunListResponse
-      description: List of scheduled runs
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

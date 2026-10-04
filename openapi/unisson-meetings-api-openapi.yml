@@ -345,32 +345,97 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    ValidationError:
+    MeetingSyncResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        new_meetings:
+          type: integer
+          title: New Meetings
+        message:
           type: string
           title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - new_meetings
+      - message
+      title: MeetingSyncResponse
+      description: Response after syncing meetings from a provider.
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+        start:
+          type: number
+          title: Start
+        end:
+          type: number
+          title: End
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - speaker
+      - start
+      - end
+      - text
+      title: TranscriptSegment
+      description: 'One speaker utterance with timing, for the click-to-seek transcript +
+
+        speaker timeline. ``start``/``end`` are seconds from the recording start.'
+    Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Body_import_meeting_transcript_api_v1_meetings_import_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_import_meeting_transcript_api_v1_meetings_import_post
+    MeetingListResponse:
+      properties:
+        meetings:
+          items:
+            $ref: '#/components/schemas/MeetingListItem'
+          type: array
+          title: Meetings
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - meetings
+      - total
+      - page
+      - page_size
+      title: MeetingListResponse
+      description: Paginated list of meetings.
     MeetingResponse:
       properties:
         id:
@@ -481,16 +546,6 @@ components:
       - created_at
       title: MeetingResponse
       description: Schema for meeting response.
-    Body_import_meeting_transcript_api_v1_meetings_import_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_import_meeting_transcript_api_v1_meetings_import_post
     MeetingTaskSummary:
       properties:
         id:
@@ -510,40 +565,6 @@ components:
       - status
       title: MeetingTaskSummary
       description: Lightweight task info for meeting responses.
-    TranscriptSegment:
-      properties:
-        speaker:
-          type: string
-          title: Speaker
-        start:
-          type: number
-          title: Start
-        end:
-          type: number
-          title: End
-        text:
-          type: string
-          title: Text
-      type: object
-      required:
-      - speaker
-      - start
-      - end
-      - text
-      title: TranscriptSegment
-      description: 'One speaker utterance with timing, for the click-to-seek transcript +
-
-        speaker timeline. ``start``/``end`` are seconds from the recording start.'
-    Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_attach_meeting_transcript_api_v1_meetings__meeting_id__transcript_post
     MeetingRecordingResponse:
       properties:
         video_url:
@@ -568,44 +589,32 @@ components:
         structured transcript — a fallback for rows ingested before segments were
 
         persisted; callers prefer the meeting''s stored ``transcript_segments``.'
-    MeetingSyncResponse:
+    ValidationError:
       properties:
-        new_meetings:
-          type: integer
-          title: New Meetings
-        message:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
           title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - new_meetings
-      - message
-      title: MeetingSyncResponse
-      description: Response after syncing meetings from a provider.
-    MeetingListResponse:
-      properties:
-        meetings:
-          items:
-            $ref: '#/components/schemas/MeetingListItem'
-          type: array
-          title: Meetings
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - meetings
-      - total
-      - page
-      - page_size
-      title: MeetingListResponse
-      description: Paginated list of meetings.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     MeetingListItem:
       properties:
         id:
@@ -696,15 +705,6 @@ components:
       - created_at
       title: MeetingListItem
       description: Lightweight meeting for list view (no transcript_text).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -184,74 +184,41 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    ImportedDatabaseListResponse:
       properties:
-        loc:
+        imports:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ImportedDatabaseResponse'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Imports
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SignPartRequest:
+      - imports
+      title: ImportedDatabaseListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CompletedPart:
       properties:
         part_number:
           type: integer
           maximum: 10000.0
           minimum: 1.0
           title: Part Number
+        etag:
+          type: string
+          title: Etag
       type: object
       required:
       - part_number
-      title: SignPartRequest
-    InitiateImportResponse:
-      properties:
-        import_id:
-          type: string
-          format: uuid
-          title: Import Id
-        upload_id:
-          type: string
-          title: Upload Id
-        s3_key:
-          type: string
-          title: S3 Key
-        part_size:
-          type: integer
-          title: Part Size
-      type: object
-      required:
-      - import_id
-      - upload_id
-      - s3_key
-      - part_size
-      title: InitiateImportResponse
-    SignPartResponse:
-      properties:
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - url
-      title: SignPartResponse
+      - etag
+      title: CompletedPart
     ImportedDatabaseResponse:
       properties:
         id:
@@ -328,33 +295,6 @@ components:
       - created_at
       - updated_at
       title: ImportedDatabaseResponse
-    CompleteImportRequest:
-      properties:
-        parts:
-          items:
-            $ref: '#/components/schemas/CompletedPart'
-          type: array
-          minItems: 1
-          title: Parts
-      type: object
-      required:
-      - parts
-      title: CompleteImportRequest
-    CompletedPart:
-      properties:
-        part_number:
-          type: integer
-          maximum: 10000.0
-          minimum: 1.0
-          title: Part Number
-        etag:
-          type: string
-          title: Etag
-      type: object
-      required:
-      - part_number
-      - etag
-      title: CompletedPart
     InitiateImportRequest:
       properties:
         filename:
@@ -376,26 +316,86 @@ components:
       - filename
       - size_bytes
       title: InitiateImportRequest
-    ImportedDatabaseListResponse:
+    SignPartResponse:
       properties:
-        imports:
-          items:
-            $ref: '#/components/schemas/ImportedDatabaseResponse'
-          type: array
-          title: Imports
+        url:
+          type: string
+          title: Url
       type: object
       required:
-      - imports
-      title: ImportedDatabaseListResponse
-    HTTPValidationError:
+      - url
+      title: SignPartResponse
+    SignPartRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        part_number:
+          type: integer
+          maximum: 10000.0
+          minimum: 1.0
+          title: Part Number
       type: object
-      title: HTTPValidationError
+      required:
+      - part_number
+      title: SignPartRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InitiateImportResponse:
+      properties:
+        import_id:
+          type: string
+          format: uuid
+          title: Import Id
+        upload_id:
+          type: string
+          title: Upload Id
+        s3_key:
+          type: string
+          title: S3 Key
+        part_size:
+          type: integer
+          title: Part Size
+      type: object
+      required:
+      - import_id
+      - upload_id
+      - s3_key
+      - part_size
+      title: InitiateImportResponse
+    CompleteImportRequest:
+      properties:
+        parts:
+          items:
+            $ref: '#/components/schemas/CompletedPart'
+          type: array
+          minItems: 1
+          title: Parts
+      type: object
+      required:
+      - parts
+      title: CompleteImportRequest
   securitySchemes:
     HTTPBearer:
       type: http

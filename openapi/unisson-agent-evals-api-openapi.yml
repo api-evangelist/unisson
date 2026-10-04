@@ -284,32 +284,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     EvalRunResponse:
       properties:
         id:
@@ -365,84 +339,14 @@ components:
       - status
       - created_at
       title: EvalRunResponse
-    EvalCriterion:
+    CreateEvalRunRequest:
       properties:
-        id:
-          type: string
-          title: Id
-        kind:
-          type: string
-          title: Kind
-        text:
-          type: string
-          title: Text
-      type: object
-      required:
-      - id
-      - kind
-      - text
-      title: EvalCriterion
-    EvalRunDetailResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        instruction_version_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Instruction Version Id
-        trigger_source:
-          type: string
-          title: Trigger Source
         execution_mode:
           type: string
           title: Execution Mode
-        status:
-          type: string
-          title: Status
-        summary:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Summary
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        results:
-          items:
-            $ref: '#/components/schemas/EvalCaseResultResponse'
-          type: array
-          title: Results
-          default: []
+          default: sandboxed
       type: object
-      required:
-      - id
-      - agent_id
-      - trigger_source
-      - execution_mode
-      - status
-      - created_at
-      title: EvalRunDetailResponse
+      title: CreateEvalRunRequest
     TestCaseCreate:
       properties:
         name:
@@ -463,33 +367,45 @@ components:
       - name
       - input_message
       title: TestCaseCreate
-    TestCaseUpdate:
+    TestCaseResponse:
       properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
         name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
+          type: string
           title: Name
         input_message:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Input Message
         criteria:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/EvalCriterion'
-            type: array
-          - type: 'null'
+          items:
+            additionalProperties: true
+            type: object
+          type: array
           title: Criteria
+          default: []
         is_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
+          type: boolean
           title: Is Enabled
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
       type: object
-      title: TestCaseUpdate
+      required:
+      - id
+      - agent_id
+      - name
+      - input_message
+      - is_enabled
+      - created_at
+      title: TestCaseResponse
     EvalCaseResultResponse:
       properties:
         id:
@@ -560,53 +476,6 @@ components:
       - input_message
       - status
       title: EvalCaseResultResponse
-    CreateEvalRunRequest:
-      properties:
-        execution_mode:
-          type: string
-          title: Execution Mode
-          default: sandboxed
-      type: object
-      title: CreateEvalRunRequest
-    TestCaseResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        name:
-          type: string
-          title: Name
-        input_message:
-          type: string
-          title: Input Message
-        criteria:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Criteria
-          default: []
-        is_enabled:
-          type: boolean
-          title: Is Enabled
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - agent_id
-      - name
-      - input_message
-      - is_enabled
-      - created_at
-      title: TestCaseResponse
     HTTPValidationError:
       properties:
         detail:
@@ -616,6 +485,137 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    EvalRunDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        instruction_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Instruction Version Id
+        trigger_source:
+          type: string
+          title: Trigger Source
+        execution_mode:
+          type: string
+          title: Execution Mode
+        status:
+          type: string
+          title: Status
+        summary:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Summary
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        results:
+          items:
+            $ref: '#/components/schemas/EvalCaseResultResponse'
+          type: array
+          title: Results
+          default: []
+      type: object
+      required:
+      - id
+      - agent_id
+      - trigger_source
+      - execution_mode
+      - status
+      - created_at
+      title: EvalRunDetailResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EvalCriterion:
+      properties:
+        id:
+          type: string
+          title: Id
+        kind:
+          type: string
+          title: Kind
+        text:
+          type: string
+          title: Text
+      type: object
+      required:
+      - id
+      - kind
+      - text
+      title: EvalCriterion
+    TestCaseUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        input_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Input Message
+        criteria:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/EvalCriterion'
+            type: array
+          - type: 'null'
+          title: Criteria
+        is_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Enabled
+      type: object
+      title: TestCaseUpdate
   securitySchemes:
     HTTPBearer:
       type: http

@@ -271,118 +271,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    MiniAppResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        name:
-          type: string
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        customer_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Customer Id
-        customer_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Name
-        guest_access:
-          type: string
-          title: Guest Access
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-        can_write:
-          type: boolean
-          title: Can Write
-          default: true
-      type: object
-      required:
-      - id
-      - name
-      - guest_access
-      title: MiniAppResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MiniAppUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 200
-            minLength: 1
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        guest_access:
-          anyOf:
-          - type: string
-            pattern: ^(none|view|interact)$
-          - type: 'null'
-          title: Guest Access
-      type: object
-      title: MiniAppUpdate
-      description: 'PATCH semantics — only provided fields change. (App html is updated
-
-        by the agent via update_app, not over this API.)'
-    MiniAppListResponse:
-      properties:
-        apps:
-          items:
-            $ref: '#/components/schemas/MiniAppResponse'
-          type: array
-          title: Apps
-      type: object
-      required:
-      - apps
-      title: MiniAppListResponse
     AppTemplateResponse:
       properties:
         id:
@@ -408,17 +296,38 @@ components:
       - description
       - prompt
       title: AppTemplateResponse
-    MiniAppVersionListResponse:
+    HTTPValidationError:
       properties:
-        versions:
+        detail:
           items:
-            $ref: '#/components/schemas/MiniAppVersionResponse'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Versions
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MiniAppListResponse:
+      properties:
+        apps:
+          items:
+            $ref: '#/components/schemas/MiniAppResponse'
+          type: array
+          title: Apps
       type: object
       required:
-      - versions
-      title: MiniAppVersionListResponse
+      - apps
+      title: MiniAppListResponse
+    MiniAppReadmeResponse:
+      properties:
+        readme:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Readme
+      type: object
+      title: MiniAppReadmeResponse
+      description: 'Just the app''s markdown README — a light endpoint so the "View README"
+
+        modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
     MiniAppDetailResponse:
       properties:
         id:
@@ -483,6 +392,118 @@ components:
       - guest_access
       - html
       title: MiniAppDetailResponse
+    MiniAppVersionListResponse:
+      properties:
+        versions:
+          items:
+            $ref: '#/components/schemas/MiniAppVersionResponse'
+          type: array
+          title: Versions
+      type: object
+      required:
+      - versions
+      title: MiniAppVersionListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MiniAppUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        guest_access:
+          anyOf:
+          - type: string
+            pattern: ^(none|view|interact)$
+          - type: 'null'
+          title: Guest Access
+      type: object
+      title: MiniAppUpdate
+      description: 'PATCH semantics — only provided fields change. (App html is updated
+
+        by the agent via update_app, not over this API.)'
+    MiniAppResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        guest_access:
+          type: string
+          title: Guest Access
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+        can_write:
+          type: boolean
+          title: Can Write
+          default: true
+      type: object
+      required:
+      - id
+      - name
+      - guest_access
+      title: MiniAppResponse
     MiniAppVersionResponse:
       properties:
         version_number:
@@ -512,27 +533,6 @@ components:
         users review instead of raw source diffs. ``html`` is omitted from the list;
 
         fetch a single version''s detail to preview it.'
-    MiniAppReadmeResponse:
-      properties:
-        readme:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Readme
-      type: object
-      title: MiniAppReadmeResponse
-      description: 'Just the app''s markdown README — a light endpoint so the "View README"
-
-        modal doesn''t fetch the full (image-inlined, up-to-2MB) app detail.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

@@ -797,6 +797,64 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    RunStepResponse:
+      properties:
+        step_number:
+          type: integer
+          title: Step Number
+        action_type:
+          type: string
+          title: Action Type
+        action_details:
+          additionalProperties: true
+          type: object
+          title: Action Details
+        reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reasoning
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        screenshot_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Screenshot Url
+        status:
+          type: string
+          title: Status
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        executed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Executed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - step_number
+      - action_type
+      - action_details
+      - id
+      - run_id
+      - status
+      - created_at
+      title: RunStepResponse
     ValidationError:
       properties:
         loc:
@@ -823,6 +881,467 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    RunTriggerRequest:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        triggered_from:
+          type: string
+          pattern: ^(web|api|chat|widget|slack|webhook)$
+          title: Triggered From
+          default: web
+        run_type:
+          type: string
+          pattern: ^(task|exploration)$
+          title: Run Type
+          default: task
+      type: object
+      required:
+      - request_text
+      title: RunTriggerRequest
+      description: Request to trigger a new run (with validation)
+    ReportIssueResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        issue_id:
+          type: string
+          title: Issue Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - issue_id
+      - message
+      title: ReportIssueResponse
+      description: Response after reporting an issue
+    RunResponse:
+      properties:
+        request_text:
+          type: string
+          title: Request Text
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        organization_id:
+          type: string
+          format: uuid4
+          title: Organization Id
+        triggered_by:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Triggered By
+        triggered_by_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Name
+        triggered_by_clerk_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Triggered By Clerk Id
+        triggered_from:
+          type: string
+          title: Triggered From
+        run_type:
+          type: string
+          title: Run Type
+          default: task
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        slack_thread_ts:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Thread Ts
+        slack_channel_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slack Channel Id
+        status:
+          type: string
+          title: Status
+        response_text:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Text
+        structured_output:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Structured Output
+        context_metadata:
+          additionalProperties: true
+          type: object
+          title: Context Metadata
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        error_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Category
+        duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Seconds
+        cua_prompt_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Prompt Tokens
+        cua_completion_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Completion Tokens
+        cua_total_tokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cua Total Tokens
+        cua_prompt_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Prompt Cost
+        cua_completion_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Completion Cost
+        cua_total_cost:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Cua Total Cost
+        has_recording:
+          type: boolean
+          title: Has Recording
+          default: false
+        training_data_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Training Data Url
+        child_count:
+          type: integer
+          title: Child Count
+          default: 0
+        exploration_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Exploration Id
+        is_exploration:
+          type: boolean
+          title: Is Exploration
+          default: false
+        agent_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        tagged_agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Tagged Agents
+          default: []
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Customer Id
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        customer_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Icon
+        customer_gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Gradient
+        relevant_features:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Features
+        relevant_company_knowledge:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Company Knowledge
+        relevant_agent_insights:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Relevant Agent Insights
+        created_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Created Workflow
+        updated_workflow:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Updated Workflow
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
+        steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Steps
+          default: []
+        current_step:
+          anyOf:
+          - $ref: '#/components/schemas/RunStepResponse'
+          - type: 'null'
+        last_steps:
+          items:
+            $ref: '#/components/schemas/RunStepResponse'
+          type: array
+          title: Last Steps
+          default: []
+        scout_summary:
+          items:
+            $ref: '#/components/schemas/ScoutSummary'
+          type: array
+          title: Scout Summary
+          default: []
+      type: object
+      required:
+      - request_text
+      - id
+      - organization_id
+      - triggered_by
+      - triggered_from
+      - slack_thread_ts
+      - slack_channel_id
+      - status
+      - response_text
+      - context_metadata
+      - started_at
+      - completed_at
+      - created_at
+      - error_message
+      title: RunResponse
+    RunResumeRequest:
+      properties:
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
+      type: object
+      title: RunResumeRequest
+      description: Request to resume a paused run, optionally with an answer to a clarifying question
+    BrowserTelemetryEventResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        kernel_browser_id:
+          type: string
+          title: Kernel Browser Id
+        sequence:
+          type: integer
+          title: Sequence
+        occurred_at:
+          type: string
+          format: date-time
+          title: Occurred At
+        category:
+          type: string
+          title: Category
+        event_type:
+          type: string
+          title: Event Type
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - id
+      - kernel_browser_id
+      - sequence
+      - occurred_at
+      - category
+      - event_type
+      - payload
+      title: BrowserTelemetryEventResponse
+    ScoutSummary:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        status:
+          type: string
+          title: Status
+        request_text:
+          type: string
+          title: Request Text
+        latest_step_action:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Step Action
+        latest_step_reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Step Reasoning
+        latest_step_number:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Latest Step Number
+      type: object
+      required:
+      - id
+      - status
+      - request_text
+      title: ScoutSummary
+      description: 'Compact per-scout summary used by the Home Live cards to render an
+
+        exploration coordinator''s ticker (one row per scout with its latest activity).'
+    RunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/RunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total
+      - page
+      - page_size
+      title: RunListResponse
+      description: Paginated list of runs
     RunDetailResponse:
       properties:
         request_text:
@@ -1114,465 +1633,6 @@ components:
       - error_message
       title: RunDetailResponse
       description: Full run details including steps
-    RunStepResponse:
-      properties:
-        step_number:
-          type: integer
-          title: Step Number
-        action_type:
-          type: string
-          title: Action Type
-        action_details:
-          additionalProperties: true
-          type: object
-          title: Action Details
-        reasoning:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reasoning
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        run_id:
-          type: string
-          format: uuid4
-          title: Run Id
-        screenshot_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Screenshot Url
-        status:
-          type: string
-          title: Status
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        executed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Executed At
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - step_number
-      - action_type
-      - action_details
-      - id
-      - run_id
-      - status
-      - created_at
-      title: RunStepResponse
-    RunTriggerRequest:
-      properties:
-        request_text:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Request Text
-        triggered_from:
-          type: string
-          pattern: ^(web|api|chat|widget|slack|webhook)$
-          title: Triggered From
-          default: web
-        run_type:
-          type: string
-          pattern: ^(task|exploration)$
-          title: Run Type
-          default: task
-      type: object
-      required:
-      - request_text
-      title: RunTriggerRequest
-      description: Request to trigger a new run (with validation)
-    RunResponse:
-      properties:
-        request_text:
-          type: string
-          title: Request Text
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        organization_id:
-          type: string
-          format: uuid4
-          title: Organization Id
-        triggered_by:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Triggered By
-        triggered_by_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Triggered By Name
-        triggered_by_clerk_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Triggered By Clerk Id
-        triggered_from:
-          type: string
-          title: Triggered From
-        run_type:
-          type: string
-          title: Run Type
-          default: task
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        slack_thread_ts:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slack Thread Ts
-        slack_channel_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slack Channel Id
-        status:
-          type: string
-          title: Status
-        response_text:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response Text
-        structured_output:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Structured Output
-        context_metadata:
-          additionalProperties: true
-          type: object
-          title: Context Metadata
-        started_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Started At
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        error_category:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Category
-        duration_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration Seconds
-        cua_prompt_tokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Cua Prompt Tokens
-        cua_completion_tokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Cua Completion Tokens
-        cua_total_tokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Cua Total Tokens
-        cua_prompt_cost:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Cua Prompt Cost
-        cua_completion_cost:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Cua Completion Cost
-        cua_total_cost:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Cua Total Cost
-        has_recording:
-          type: boolean
-          title: Has Recording
-          default: false
-        training_data_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Training Data Url
-        child_count:
-          type: integer
-          title: Child Count
-          default: 0
-        exploration_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Exploration Id
-        is_exploration:
-          type: boolean
-          title: Is Exploration
-          default: false
-        agent_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Agent Id
-        agent_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Name
-        agent_icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Icon
-        tagged_agents:
-          items:
-            $ref: '#/components/schemas/UsedAgent'
-          type: array
-          title: Tagged Agents
-          default: []
-        customer_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Customer Id
-        customer_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Name
-        customer_icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Icon
-        customer_gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Gradient
-        relevant_features:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Relevant Features
-        relevant_company_knowledge:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Relevant Company Knowledge
-        relevant_agent_insights:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Relevant Agent Insights
-        created_workflow:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Created Workflow
-        updated_workflow:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Updated Workflow
-        auto_debrief_pending_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Auto Debrief Pending Count
-        steps:
-          items:
-            $ref: '#/components/schemas/RunStepResponse'
-          type: array
-          title: Steps
-          default: []
-        current_step:
-          anyOf:
-          - $ref: '#/components/schemas/RunStepResponse'
-          - type: 'null'
-        last_steps:
-          items:
-            $ref: '#/components/schemas/RunStepResponse'
-          type: array
-          title: Last Steps
-          default: []
-        scout_summary:
-          items:
-            $ref: '#/components/schemas/ScoutSummary'
-          type: array
-          title: Scout Summary
-          default: []
-      type: object
-      required:
-      - request_text
-      - id
-      - organization_id
-      - triggered_by
-      - triggered_from
-      - slack_thread_ts
-      - slack_channel_id
-      - status
-      - response_text
-      - context_metadata
-      - started_at
-      - completed_at
-      - created_at
-      - error_message
-      title: RunResponse
-    RunResumeRequest:
-      properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Answer
-      type: object
-      title: RunResumeRequest
-      description: Request to resume a paused run, optionally with an answer to a clarifying question
-    ScoutSummary:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        status:
-          type: string
-          title: Status
-        request_text:
-          type: string
-          title: Request Text
-        latest_step_action:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Step Action
-        latest_step_reasoning:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Step Reasoning
-        latest_step_number:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Latest Step Number
-      type: object
-      required:
-      - id
-      - status
-      - request_text
-      title: ScoutSummary
-      description: 'Compact per-scout summary used by the Home Live cards to render an
-
-        exploration coordinator''s ticker (one row per scout with its latest activity).'
-    ReportIssueResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        issue_id:
-          type: string
-          title: Issue Id
-        message:
-          type: string
-          title: Message
-      type: object
-      required:
-      - success
-      - issue_id
-      - message
-      title: ReportIssueResponse
-      description: Response after reporting an issue
-    BrowserTelemetryEventResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        kernel_browser_id:
-          type: string
-          title: Kernel Browser Id
-        sequence:
-          type: integer
-          title: Sequence
-        occurred_at:
-          type: string
-          format: date-time
-          title: Occurred At
-        category:
-          type: string
-          title: Category
-        event_type:
-          type: string
-          title: Event Type
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-      type: object
-      required:
-      - id
-      - kernel_browser_id
-      - sequence
-      - occurred_at
-      - category
-      - event_type
-      - payload
-      title: BrowserTelemetryEventResponse
     ReportIssueRequest:
       properties:
         reason:
@@ -1591,66 +1651,6 @@ components:
       - reason
       title: ReportIssueRequest
       description: Request to report an issue with a run
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    RunListResponse:
-      properties:
-        runs:
-          items:
-            $ref: '#/components/schemas/RunResponse'
-          type: array
-          title: Runs
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - runs
-      - total
-      - page
-      - page_size
-      title: RunListResponse
-      description: Paginated list of runs
   securitySchemes:
     HTTPBearer:
       type: http

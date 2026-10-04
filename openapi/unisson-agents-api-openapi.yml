@@ -494,6 +494,77 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    GenerateAgentFromDescriptionRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Prompt
+      type: object
+      required:
+      - prompt
+      title: GenerateAgentFromDescriptionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AgentUpdate:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Gradient
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+      type: object
+      title: AgentUpdate
+    ImproveAgentInstructionsResponse:
+      properties:
+        instructions:
+          type: string
+          title: Instructions
+      type: object
+      required:
+      - instructions
+      title: ImproveAgentInstructionsResponse
+    Body_upload_agent_file_api_v1_agents__agent_id__files_post:
+      properties:
+        file:
+          type: string
+          contentMediaType: application/octet-stream
+          title: File
+      type: object
+      required:
+      - file
+      title: Body_upload_agent_file_api_v1_agents__agent_id__files_post
     GenerateAgentFromDescriptionResponse:
       properties:
         name:
@@ -511,56 +582,6 @@ components:
       - description
       - instructions
       title: GenerateAgentFromDescriptionResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AgentFileResponse:
-      properties:
-        key:
-          type: string
-          title: Key
-        filename:
-          type: string
-          title: Filename
-        size:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Size
-        last_modified:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Modified
-      type: object
-      required:
-      - key
-      - filename
-      title: AgentFileResponse
     AgentResponse:
       properties:
         id:
@@ -632,15 +653,84 @@ components:
       - created_at
       - updated_at
       title: AgentResponse
-    ImproveAgentInstructionsResponse:
+    AgentFileResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        filename:
+          type: string
+          title: Filename
+        size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+        last_modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Modified
+      type: object
+      required:
+      - key
+      - filename
+      title: AgentFileResponse
+    ImproveAgentInstructionsRequest:
       properties:
         instructions:
           type: string
+          maxLength: 20000
+          minLength: 1
           title: Instructions
+        refinement:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Refinement
       type: object
       required:
       - instructions
-      title: ImproveAgentInstructionsResponse
+      - refinement
+      title: ImproveAgentInstructionsRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/AgentFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: AgentFileListResponse
     InstructionVersionResponse:
       properties:
         id:
@@ -702,96 +792,6 @@ components:
       - created_at
       title: InstructionVersionResponse
       description: One immutable snapshot in an agent's instruction history.
-    Body_upload_agent_file_api_v1_agents__agent_id__files_post:
-      properties:
-        file:
-          type: string
-          contentMediaType: application/octet-stream
-          title: File
-      type: object
-      required:
-      - file
-      title: Body_upload_agent_file_api_v1_agents__agent_id__files_post
-    AgentFileListResponse:
-      properties:
-        files:
-          items:
-            $ref: '#/components/schemas/AgentFileResponse'
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: AgentFileListResponse
-    GenerateAgentFromDescriptionRequest:
-      properties:
-        prompt:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Prompt
-      type: object
-      required:
-      - prompt
-      title: GenerateAgentFromDescriptionRequest
-    ImproveAgentInstructionsRequest:
-      properties:
-        instructions:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Instructions
-        refinement:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Refinement
-      type: object
-      required:
-      - instructions
-      - refinement
-      title: ImproveAgentInstructionsRequest
-    AgentUpdate:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        icon:
-          anyOf:
-          - type: string
-            maxLength: 1048576
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          title: Gradient
-        instructions:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instructions
-      type: object
-      title: AgentUpdate
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     AgentCreate:
       properties:
         name:

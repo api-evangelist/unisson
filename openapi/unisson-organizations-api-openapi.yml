@@ -921,52 +921,64 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    UpdateLoadGoogleDocsInContextRequest:
+    UpdateResidentialProxyRequest:
       properties:
-        load_google_docs_in_context:
+        residential_proxy_enabled:
           type: boolean
-          title: Load Google Docs In Context
+          title: Residential Proxy Enabled
       type: object
       required:
-      - load_google_docs_in_context
-      title: UpdateLoadGoogleDocsInContextRequest
-    UpdateResidentialProxyGeolocationRequest:
+      - residential_proxy_enabled
+      title: UpdateResidentialProxyRequest
+    ApiKeyUpdateRequest:
       properties:
-        residential_proxy_geolocation:
-          type: boolean
-          title: Residential Proxy Geolocation
-      type: object
-      required:
-      - residential_proxy_geolocation
-      title: UpdateResidentialProxyGeolocationRequest
-    UpdateRequireActionConfirmationRequest:
-      properties:
-        require_action_confirmation:
-          type: boolean
-          title: Require Action Confirmation
-      type: object
-      required:
-      - require_action_confirmation
-      title: UpdateRequireActionConfirmationRequest
-    UpdateExecutionSettingsRequest:
-      properties:
-        kernel_headless_mode:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 1
+          - type: 'null'
+          title: Name
+          description: New name for the key
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Webhook Url
+          description: New webhook URL (empty string to remove webhook)
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: New list of webhook events
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+          description: New permission scopes
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+          description: Widget configuration. Set to {} or null to disable widget.
+        is_sandbox:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Kernel Headless Mode
-          description: Run browsers headless (no LiveView, no replays); also disables agent vision
-        max_concurrent_browsers:
-          anyOf:
-          - type: integer
-            maximum: 2000.0
-            minimum: 1.0
-          - type: 'null'
-          title: Max Concurrent Browsers
-          description: Maximum number of concurrent parallel browser sessions
+          title: Is Sandbox
+          description: Enable or disable sandbox mode.
       type: object
-      title: UpdateExecutionSettingsRequest
-      description: Request model for updating run-execution settings.
+      title: ApiKeyUpdateRequest
+      description: Request to update an API key.
     UpdateAllowedDomainsRequest:
       properties:
         allowed_domains:
@@ -979,29 +991,161 @@ components:
       required:
       - allowed_domains
       title: UpdateAllowedDomainsRequest
-    UpdateResidentialProxyRequest:
+    UpdateDefaultStartUrlRequest:
       properties:
-        residential_proxy_enabled:
-          type: boolean
-          title: Residential Proxy Enabled
+        default_start_url:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Default Start Url
       type: object
       required:
-      - residential_proxy_enabled
-      title: UpdateResidentialProxyRequest
-    ExecutionSettingsResponse:
+      - default_start_url
+      title: UpdateDefaultStartUrlRequest
+    UpdateNetworkRecordingEnabledRequest:
       properties:
-        kernel_headless_mode:
+        network_recording_enabled:
           type: boolean
-          title: Kernel Headless Mode
-        max_concurrent_browsers:
-          type: integer
-          title: Max Concurrent Browsers
+          title: Network Recording Enabled
       type: object
       required:
-      - kernel_headless_mode
-      - max_concurrent_browsers
-      title: ExecutionSettingsResponse
-      description: Response model for run-execution settings.
+      - network_recording_enabled
+      title: UpdateNetworkRecordingEnabledRequest
+    MemberAccessResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        clerk_user_id:
+          type: string
+          title: Clerk User Id
+        role:
+          type: string
+          title: Role
+        is_guest:
+          type: boolean
+          title: Is Guest
+        overrides:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Overrides
+        effective_permissions:
+          items:
+            type: string
+          type: array
+          title: Effective Permissions
+      type: object
+      required:
+      - user_id
+      - clerk_user_id
+      - role
+      - is_guest
+      - overrides
+      - effective_permissions
+      title: MemberAccessResponse
+    UpdateSlackNotificationLevelRequest:
+      properties:
+        slack_notification_level:
+          type: string
+          pattern: ^(essential|detailed)$
+          title: Slack Notification Level
+      type: object
+      required:
+      - slack_notification_level
+      title: UpdateSlackNotificationLevelRequest
+    IdentitySecretResponse:
+      properties:
+        identity_secret:
+          type: string
+          title: Identity Secret
+          description: The identity verification secret - SAVE THIS NOW as it will never be shown again. Use this to compute HMAC-SHA256(secret, user_email) for identity verification.
+      type: object
+      required:
+      - identity_secret
+      title: IdentitySecretResponse
+      description: Response when generating an identity verification secret.
+    MemberInviteRequest:
+      properties:
+        emails:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          minItems: 1
+          title: Emails
+        role:
+          type: string
+          title: Role
+          default: org:member
+      type: object
+      required:
+      - emails
+      title: MemberInviteRequest
+    UpdateResidentialProxyGeolocationRequest:
+      properties:
+        residential_proxy_geolocation:
+          type: boolean
+          title: Residential Proxy Geolocation
+      type: object
+      required:
+      - residential_proxy_geolocation
+      title: UpdateResidentialProxyGeolocationRequest
+    ApiKeyCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+          description: Human-readable name for the key
+        scopes:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Scopes
+          description: Permission scopes (defaults to ['runs:create', 'runs:read'])
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Webhook Url
+          description: URL to send webhook notifications to
+        webhook_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Webhook Events
+          description: Events to send webhooks for (e.g., ['run.authentication_required', 'run.completed', 'run.failed'])
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+          description: Optional expiration date for the key
+        widget_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Widget Config
+          description: Widget configuration (branding, behavior, allowed_origins). Set to enable embeddable widget for this key.
+        is_sandbox:
+          type: boolean
+          title: Is Sandbox
+          description: Enable sandbox mode. Sandbox keys simulate the full run lifecycle with hardcoded data instead of spinning up real browser sessions.
+          default: false
+      type: object
+      required:
+      - name
+      title: ApiKeyCreateRequest
+      description: Request to create an API key.
     UpdateProxySettingsRequest:
       properties:
         proxy_enabled:
@@ -1028,231 +1172,129 @@ components:
       required:
       - proxy_enabled
       title: UpdateProxySettingsRequest
-    ValidationError:
+    UpdateFlashModeRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ApiKeyCreateResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        key_prefix:
-          type: string
-          title: Key Prefix
-          description: First 12 characters of the key for display
-        scopes:
-          items:
-            type: string
-          type: array
-          title: Scopes
-        webhook_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Url
-        webhook_events:
-          items:
-            type: string
-          type: array
-          title: Webhook Events
-          default: []
-        is_active:
-          type: boolean
-          title: Is Active
-        last_used_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Used At
-        request_count:
-          type: integer
-          title: Request Count
-          default: 0
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-        revoked_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Revoked At
-        widget_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Widget Config
-        has_identity_secret:
-          type: boolean
-          title: Has Identity Secret
-          default: false
-        is_sandbox:
-          type: boolean
-          title: Is Sandbox
-          default: false
-        full_key:
-          type: string
-          title: Full Key
-          description: The full API key - SAVE THIS NOW as it will never be shown again
-        webhook_secret:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Secret
-          description: The webhook signing secret - SAVE THIS NOW as it will never be shown again. Use this to verify webhook signatures.
-      type: object
-      required:
-      - id
-      - name
-      - key_prefix
-      - scopes
-      - is_active
-      - created_at
-      - full_key
-      title: ApiKeyCreateResponse
-      description: Response when creating an API key (includes the full key once).
-    OrganizationResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slug
-        browser_context_enabled:
-          type: boolean
-          title: Browser Context Enabled
-          default: true
-        default_start_url:
-          type: string
-          title: Default Start Url
-          default: https://www.google.com
-        allowed_domains:
-          items:
-            type: string
-          type: array
-          title: Allowed Domains
-          default: []
-        slack_notification_level:
-          type: string
-          title: Slack Notification Level
-          default: essential
-        proxy_enabled:
-          type: boolean
-          title: Proxy Enabled
-          default: false
-        proxy_server:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proxy Server
-        proxy_username:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proxy Username
-        proxy_password_set:
-          type: boolean
-          title: Proxy Password Set
-          default: false
-        residential_proxy_enabled:
-          type: boolean
-          title: Residential Proxy Enabled
-          default: false
-        residential_proxy_geolocation:
-          type: boolean
-          title: Residential Proxy Geolocation
-          default: false
         flash_mode:
           type: boolean
           title: Flash Mode
-          default: false
-        network_recording_enabled:
-          type: boolean
-          title: Network Recording Enabled
-          default: false
-        auto_generate_api:
-          type: boolean
-          title: Auto Generate Api
-          default: false
-        require_action_confirmation:
-          type: boolean
-          title: Require Action Confirmation
-          default: false
+      type: object
+      required:
+      - flash_mode
+      title: UpdateFlashModeRequest
+    UpdateLanguageRequest:
+      properties:
+        language:
+          type: string
+          pattern: ^(en|fr)$
+          title: Language
+      type: object
+      required:
+      - language
+      title: UpdateLanguageRequest
+    ExecutionSettingsResponse:
+      properties:
         kernel_headless_mode:
           type: boolean
           title: Kernel Headless Mode
-          default: false
         max_concurrent_browsers:
           type: integer
           title: Max Concurrent Browsers
-          default: 20
+      type: object
+      required:
+      - kernel_headless_mode
+      - max_concurrent_browsers
+      title: ExecutionSettingsResponse
+      description: Response model for run-execution settings.
+    PermissionDefinitionResponse:
+      properties:
+        key:
+          type: string
+          title: Key
+        group:
+          type: string
+          title: Group
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - key
+      - group
+      - label
+      - description
+      title: PermissionDefinitionResponse
+    UpdateRawLiveviewAuthRequest:
+      properties:
         raw_liveview_auth_enabled:
           type: boolean
           title: Raw Liveview Auth Enabled
-          default: false
-        load_google_docs_in_context:
-          type: boolean
-          title: Load Google Docs In Context
-          default: false
-        language:
-          type: string
-          title: Language
-          default: en
-        created_at:
-          type: string
-          title: Created At
-        onboarding_completed:
-          type: boolean
-          title: Onboarding Completed
-          default: false
       type: object
       required:
-      - id
-      - name
-      - created_at
-      title: OrganizationResponse
+      - raw_liveview_auth_enabled
+      title: UpdateRawLiveviewAuthRequest
+    UpdateRequireActionConfirmationRequest:
+      properties:
+        require_action_confirmation:
+          type: boolean
+          title: Require Action Confirmation
+      type: object
+      required:
+      - require_action_confirmation
+      title: UpdateRequireActionConfirmationRequest
+    AccessControlResponse:
+      properties:
+        permissions:
+          items:
+            $ref: '#/components/schemas/PermissionDefinitionResponse'
+          type: array
+          title: Permissions
+        member_defaults:
+          items:
+            type: string
+          type: array
+          title: Member Defaults
+        members:
+          items:
+            $ref: '#/components/schemas/MemberAccessResponse'
+          type: array
+          title: Members
+      type: object
+      required:
+      - permissions
+      - member_defaults
+      - members
+      title: AccessControlResponse
+    UpdateExecutionSettingsRequest:
+      properties:
+        kernel_headless_mode:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kernel Headless Mode
+          description: Run browsers headless (no LiveView, no replays); also disables agent vision
+        max_concurrent_browsers:
+          anyOf:
+          - type: integer
+            maximum: 2000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Max Concurrent Browsers
+          description: Maximum number of concurrent parallel browser sessions
+      type: object
+      title: UpdateExecutionSettingsRequest
+      description: Request model for updating run-execution settings.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     TestProxyResponse:
       properties:
         success:
@@ -1272,16 +1314,55 @@ components:
       - success
       - message
       title: TestProxyResponse
-    UpdateLanguageRequest:
+    MemberInviteResult:
       properties:
-        language:
+        email:
           type: string
-          pattern: ^(en|fr)$
-          title: Language
+          title: Email
+        status:
+          type: string
+          title: Status
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
       type: object
       required:
-      - language
-      title: UpdateLanguageRequest
+      - email
+      - status
+      title: MemberInviteResult
+    TestProxyRequest:
+      properties:
+        proxy_server:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Proxy Server
+        proxy_username:
+          anyOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          title: Proxy Username
+        proxy_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proxy Password
+      type: object
+      required:
+      - proxy_server
+      title: TestProxyRequest
+    UpdateLoadGoogleDocsInContextRequest:
+      properties:
+        load_google_docs_in_context:
+          type: boolean
+          title: Load Google Docs In Context
+      type: object
+      required:
+      - load_google_docs_in_context
+      title: UpdateLoadGoogleDocsInContextRequest
     UpdateMemberDefaultsRequest:
       properties:
         permissions:
@@ -1293,24 +1374,6 @@ components:
       required:
       - permissions
       title: UpdateMemberDefaultsRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UpdateNetworkRecordingEnabledRequest:
-      properties:
-        network_recording_enabled:
-          type: boolean
-          title: Network Recording Enabled
-      type: object
-      required:
-      - network_recording_enabled
-      title: UpdateNetworkRecordingEnabledRequest
     ApiKeyResponse:
       properties:
         id:
@@ -1418,82 +1481,6 @@ components:
       - total
       title: ApiKeyListResponse
       description: Response for listing API keys.
-    ApiKeyCreateRequest:
-      properties:
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-          description: Human-readable name for the key
-        scopes:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Scopes
-          description: Permission scopes (defaults to ['runs:create', 'runs:read'])
-        webhook_url:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Webhook Url
-          description: URL to send webhook notifications to
-        webhook_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Webhook Events
-          description: Events to send webhooks for (e.g., ['run.authentication_required', 'run.completed', 'run.failed'])
-        expires_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Expires At
-          description: Optional expiration date for the key
-        widget_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Widget Config
-          description: Widget configuration (branding, behavior, allowed_origins). Set to enable embeddable widget for this key.
-        is_sandbox:
-          type: boolean
-          title: Is Sandbox
-          description: Enable sandbox mode. Sandbox keys simulate the full run lifecycle with hardcoded data instead of spinning up real browser sessions.
-          default: false
-      type: object
-      required:
-      - name
-      title: ApiKeyCreateRequest
-      description: Request to create an API key.
-    UpdateMemberOverridesRequest:
-      properties:
-        overrides:
-          additionalProperties:
-            type: boolean
-          type: object
-          title: Overrides
-      type: object
-      required:
-      - overrides
-      title: UpdateMemberOverridesRequest
-    UpdateSlackNotificationLevelRequest:
-      properties:
-        slack_notification_level:
-          type: string
-          pattern: ^(essential|detailed)$
-          title: Slack Notification Level
-      type: object
-      required:
-      - slack_notification_level
-      title: UpdateSlackNotificationLevelRequest
     MemberInviteResponse:
       properties:
         results:
@@ -1505,55 +1492,6 @@ components:
       required:
       - results
       title: MemberInviteResponse
-    UpdateFlashModeRequest:
-      properties:
-        flash_mode:
-          type: boolean
-          title: Flash Mode
-      type: object
-      required:
-      - flash_mode
-      title: UpdateFlashModeRequest
-    AccessControlResponse:
-      properties:
-        permissions:
-          items:
-            $ref: '#/components/schemas/PermissionDefinitionResponse'
-          type: array
-          title: Permissions
-        member_defaults:
-          items:
-            type: string
-          type: array
-          title: Member Defaults
-        members:
-          items:
-            $ref: '#/components/schemas/MemberAccessResponse'
-          type: array
-          title: Members
-      type: object
-      required:
-      - permissions
-      - member_defaults
-      - members
-      title: AccessControlResponse
-    MemberInviteRequest:
-      properties:
-        emails:
-          items:
-            type: string
-          type: array
-          maxItems: 50
-          minItems: 1
-          title: Emails
-        role:
-          type: string
-          title: Role
-          default: org:member
-      type: object
-      required:
-      - emails
-      title: MemberInviteRequest
     UpdateBrowserContextSettingsRequest:
       properties:
         browser_context_enabled:
@@ -1563,180 +1501,242 @@ components:
       required:
       - browser_context_enabled
       title: UpdateBrowserContextSettingsRequest
-    MemberInviteResult:
+    OrganizationResponse:
       properties:
-        email:
+        id:
           type: string
-          title: Email
-        status:
+          title: Id
+        name:
           type: string
-          title: Status
-        error:
+          title: Name
+        slug:
           anyOf:
           - type: string
           - type: 'null'
-          title: Error
-      type: object
-      required:
-      - email
-      - status
-      title: MemberInviteResult
-    UpdateRawLiveviewAuthRequest:
-      properties:
-        raw_liveview_auth_enabled:
+          title: Slug
+        browser_context_enabled:
           type: boolean
-          title: Raw Liveview Auth Enabled
-      type: object
-      required:
-      - raw_liveview_auth_enabled
-      title: UpdateRawLiveviewAuthRequest
-    IdentitySecretResponse:
-      properties:
-        identity_secret:
+          title: Browser Context Enabled
+          default: true
+        default_start_url:
           type: string
-          title: Identity Secret
-          description: The identity verification secret - SAVE THIS NOW as it will never be shown again. Use this to compute HMAC-SHA256(secret, user_email) for identity verification.
-      type: object
-      required:
-      - identity_secret
-      title: IdentitySecretResponse
-      description: Response when generating an identity verification secret.
-    TestProxyRequest:
-      properties:
+          title: Default Start Url
+          default: https://www.google.com
+        allowed_domains:
+          items:
+            type: string
+          type: array
+          title: Allowed Domains
+          default: []
+        slack_notification_level:
+          type: string
+          title: Slack Notification Level
+          default: essential
+        proxy_enabled:
+          type: boolean
+          title: Proxy Enabled
+          default: false
         proxy_server:
-          type: string
-          maxLength: 500
-          minLength: 1
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Proxy Server
         proxy_username:
           anyOf:
           - type: string
-            maxLength: 255
           - type: 'null'
           title: Proxy Username
-        proxy_password:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proxy Password
+        proxy_password_set:
+          type: boolean
+          title: Proxy Password Set
+          default: false
+        residential_proxy_enabled:
+          type: boolean
+          title: Residential Proxy Enabled
+          default: false
+        residential_proxy_geolocation:
+          type: boolean
+          title: Residential Proxy Geolocation
+          default: false
+        flash_mode:
+          type: boolean
+          title: Flash Mode
+          default: false
+        network_recording_enabled:
+          type: boolean
+          title: Network Recording Enabled
+          default: false
+        auto_generate_api:
+          type: boolean
+          title: Auto Generate Api
+          default: false
+        require_action_confirmation:
+          type: boolean
+          title: Require Action Confirmation
+          default: false
+        kernel_headless_mode:
+          type: boolean
+          title: Kernel Headless Mode
+          default: false
+        max_concurrent_browsers:
+          type: integer
+          title: Max Concurrent Browsers
+          default: 20
+        raw_liveview_auth_enabled:
+          type: boolean
+          title: Raw Liveview Auth Enabled
+          default: false
+        load_google_docs_in_context:
+          type: boolean
+          title: Load Google Docs In Context
+          default: false
+        language:
+          type: string
+          title: Language
+          default: en
+        created_at:
+          type: string
+          title: Created At
+        onboarding_completed:
+          type: boolean
+          title: Onboarding Completed
+          default: false
       type: object
       required:
-      - proxy_server
-      title: TestProxyRequest
-    MemberAccessResponse:
+      - id
+      - name
+      - created_at
+      title: OrganizationResponse
+    ApiKeyCreateResponse:
       properties:
-        user_id:
+        id:
           type: string
-          title: User Id
-        clerk_user_id:
+          format: uuid4
+          title: Id
+        name:
           type: string
-          title: Clerk User Id
-        role:
+          title: Name
+        key_prefix:
           type: string
-          title: Role
-        is_guest:
-          type: boolean
-          title: Is Guest
-        overrides:
-          additionalProperties:
-            type: boolean
-          type: object
-          title: Overrides
-        effective_permissions:
+          title: Key Prefix
+          description: First 12 characters of the key for display
+        scopes:
           items:
             type: string
           type: array
-          title: Effective Permissions
-      type: object
-      required:
-      - user_id
-      - clerk_user_id
-      - role
-      - is_guest
-      - overrides
-      - effective_permissions
-      title: MemberAccessResponse
-    UpdateDefaultStartUrlRequest:
-      properties:
-        default_start_url:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Default Start Url
-      type: object
-      required:
-      - default_start_url
-      title: UpdateDefaultStartUrlRequest
-    ApiKeyUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 1
-          - type: 'null'
-          title: Name
-          description: New name for the key
+          title: Scopes
         webhook_url:
           anyOf:
           - type: string
-            maxLength: 500
           - type: 'null'
           title: Webhook Url
-          description: New webhook URL (empty string to remove webhook)
         webhook_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
+          items:
+            type: string
+          type: array
           title: Webhook Events
-          description: New list of webhook events
-        scopes:
+          default: []
+        is_active:
+          type: boolean
+          title: Is Active
+        last_used_at:
           anyOf:
-          - items:
-              type: string
-            type: array
+          - type: string
+            format: date-time
           - type: 'null'
-          title: Scopes
-          description: New permission scopes
+          title: Last Used At
+        request_count:
+          type: integer
+          title: Request Count
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        expires_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Expires At
+        revoked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Revoked At
         widget_config:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
           title: Widget Config
-          description: Widget configuration. Set to {} or null to disable widget.
+        has_identity_secret:
+          type: boolean
+          title: Has Identity Secret
+          default: false
         is_sandbox:
-          anyOf:
-          - type: boolean
-          - type: 'null'
+          type: boolean
           title: Is Sandbox
-          description: Enable or disable sandbox mode.
-      type: object
-      title: ApiKeyUpdateRequest
-      description: Request to update an API key.
-    PermissionDefinitionResponse:
-      properties:
-        key:
+          default: false
+        full_key:
           type: string
-          title: Key
-        group:
-          type: string
-          title: Group
-        label:
-          type: string
-          title: Label
-        description:
-          type: string
-          title: Description
+          title: Full Key
+          description: The full API key - SAVE THIS NOW as it will never be shown again
+        webhook_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Secret
+          description: The webhook signing secret - SAVE THIS NOW as it will never be shown again. Use this to verify webhook signatures.
       type: object
       required:
-      - key
-      - group
-      - label
-      - description
-      title: PermissionDefinitionResponse
+      - id
+      - name
+      - key_prefix
+      - scopes
+      - is_active
+      - created_at
+      - full_key
+      title: ApiKeyCreateResponse
+      description: Response when creating an API key (includes the full key once).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UpdateMemberOverridesRequest:
+      properties:
+        overrides:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Overrides
+      type: object
+      required:
+      - overrides
+      title: UpdateMemberOverridesRequest
   securitySchemes:
     HTTPBearer:
       type: http

@@ -227,6 +227,28 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    AppDbColumn:
+      properties:
+        name:
+          type: string
+          title: Name
+        type:
+          type: string
+          title: Type
+        nullable:
+          type: boolean
+          title: Nullable
+        default:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Default
+      type: object
+      required:
+      - name
+      - type
+      - nullable
+      title: AppDbColumn
     AppDbTablesResponse:
       properties:
         scope:
@@ -242,32 +264,27 @@ components:
       - scope
       - tables
       title: AppDbTablesResponse
-    ValidationError:
+    AppDbExecuteResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        status:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Status
+        statements:
+          type: integer
+          title: Statements
+        rows:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Rows
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - status
+      - statements
+      title: AppDbExecuteResponse
     AppDbTable:
       properties:
         name:
@@ -293,71 +310,15 @@ components:
       - primary_key
       - approx_rows
       title: AppDbTable
-    AppDbStatementRequest:
+    HTTPValidationError:
       properties:
-        sql:
-          type: string
-          maxLength: 100000
-          minLength: 1
-          title: Sql
-        params:
-          anyOf:
-          - items: {}
-            type: array
-          - type: 'null'
-          title: Params
-        scope:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Scope
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - sql
-      title: AppDbStatementRequest
-    AppDbExecuteResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        statements:
-          type: integer
-          title: Statements
-        rows:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Rows
-      type: object
-      required:
-      - status
-      - statements
-      title: AppDbExecuteResponse
-    AppDbColumn:
-      properties:
-        name:
-          type: string
-          title: Name
-        type:
-          type: string
-          title: Type
-        nullable:
-          type: boolean
-          title: Nullable
-        default:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Default
-      type: object
-      required:
-      - name
-      - type
-      - nullable
-      title: AppDbColumn
+      title: HTTPValidationError
     AppDbQueryResponse:
       properties:
         columns:
@@ -384,15 +345,54 @@ components:
       - row_count
       - truncated
       title: AppDbQueryResponse
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppDbStatementRequest:
+      properties:
+        sql:
+          type: string
+          maxLength: 100000
+          minLength: 1
+          title: Sql
+        params:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          title: Params
+        scope:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Scope
+      type: object
+      required:
+      - sql
+      title: AppDbStatementRequest
   securitySchemes:
     HTTPBearer:
       type: http

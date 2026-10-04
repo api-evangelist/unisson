@@ -149,6 +149,74 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    DebriefApplyProposalResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
+      type: object
+      required:
+      - success
+      - message
+      title: DebriefApplyProposalResponse
+    DebriefMessageRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+        messages:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Messages
+      type: object
+      required:
+      - content
+      - messages
+      title: DebriefMessageRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DebriefMessageData:
+      properties:
+        id:
+          type: string
+          title: Id
+        role:
+          type: string
+          title: Role
+        content:
+          type: string
+          title: Content
+        proposals:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Proposals
+      type: object
+      required:
+      - id
+      - role
+      - content
+      title: DebriefMessageData
     ValidationError:
       properties:
         loc:
@@ -175,47 +243,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DebriefMessageData:
-      properties:
-        id:
-          type: string
-          title: Id
-        role:
-          type: string
-          title: Role
-        content:
-          type: string
-          title: Content
-        proposals:
-          anyOf:
-          - items:
-              additionalProperties: true
-              type: object
-            type: array
-          - type: 'null'
-          title: Proposals
-      type: object
-      required:
-      - id
-      - role
-      - content
-      title: DebriefMessageData
-    DebriefMessageRequest:
-      properties:
-        content:
-          type: string
-          title: Content
-        messages:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Messages
-      type: object
-      required:
-      - content
-      - messages
-      title: DebriefMessageRequest
     DebriefInitResponse:
       properties:
         step_count:
@@ -274,33 +301,6 @@ components:
       - proposal_data
       - action
       title: DebriefApplyProposalRequest
-    DebriefApplyProposalResponse:
-      properties:
-        success:
-          type: boolean
-          title: Success
-        message:
-          type: string
-          title: Message
-        auto_debrief_pending_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Auto Debrief Pending Count
-      type: object
-      required:
-      - success
-      - message
-      title: DebriefApplyProposalResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

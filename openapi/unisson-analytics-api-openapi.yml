@@ -23,32 +23,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    MonthlyCount:
-      properties:
-        month:
-          type: string
-          title: Month
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - month
-      - count
-      title: MonthlyCount
-    StatusCount:
-      properties:
-        status:
-          type: string
-          title: Status
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - status
-      - count
-      title: StatusCount
     UserKBStats:
       properties:
         user_id:
@@ -86,48 +60,85 @@ components:
       - kb_edits
       - total_contributions
       title: UserKBStats
-    SourceCount:
+    MonthlyCount:
       properties:
-        source:
+        month:
           type: string
-          title: Source
+          title: Month
         count:
           type: integer
           title: Count
       type: object
       required:
-      - source
+      - month
       - count
-      title: SourceCount
-    UserTaskStats:
+      title: MonthlyCount
+    TaskAnalyticsData:
       properties:
-        user_id:
-          type: string
-          title: User Id
-        user_name:
-          type: string
-          title: User Name
-        email:
-          type: string
-          title: Email
-        tasks_completed:
+        total_tasks:
           type: integer
-          title: Tasks Completed
-        hours_saved:
+          title: Total Tasks
+        open_tasks:
+          type: integer
+          title: Open Tasks
+        resolved_tasks:
+          type: integer
+          title: Resolved Tasks
+        resolved_by_agents:
+          type: integer
+          title: Resolved By Agents
+        resolution_rate:
           type: number
-          title: Hours Saved
-        clicks_automated:
-          type: integer
-          title: Clicks Automated
+          title: Resolution Rate
+        avg_resolution_hours:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Avg Resolution Hours
+        by_status:
+          items:
+            $ref: '#/components/schemas/StatusCount'
+          type: array
+          title: By Status
+        by_severity:
+          items:
+            $ref: '#/components/schemas/SeverityCount'
+          type: array
+          title: By Severity
+        monthly_trend:
+          items:
+            $ref: '#/components/schemas/MonthlyCount'
+          type: array
+          title: Monthly Trend
       type: object
       required:
-      - user_id
-      - user_name
-      - email
-      - tasks_completed
-      - hours_saved
-      - clicks_automated
-      title: UserTaskStats
+      - total_tasks
+      - open_tasks
+      - resolved_tasks
+      - resolved_by_agents
+      - resolution_rate
+      - avg_resolution_hours
+      - by_status
+      - by_severity
+      - monthly_trend
+      title: TaskAnalyticsData
+    WorkflowStats:
+      properties:
+        workflow_id:
+          type: string
+          title: Workflow Id
+        name:
+          type: string
+          title: Name
+        run_count:
+          type: integer
+          title: Run Count
+      type: object
+      required:
+      - workflow_id
+      - name
+      - run_count
+      title: WorkflowStats
     AnalyticsOverviewResponse:
       properties:
         total_tasks_completed:
@@ -193,6 +204,62 @@ components:
       - top_workflows
       - kb
       title: AnalyticsOverviewResponse
+    StatusCount:
+      properties:
+        status:
+          type: string
+          title: Status
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - status
+      - count
+      title: StatusCount
+    AgentStats:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        agent_name:
+          type: string
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        runs_completed:
+          type: integer
+          title: Runs Completed
+        runs_failed:
+          type: integer
+          title: Runs Failed
+        success_rate:
+          type: number
+          title: Success Rate
+      type: object
+      required:
+      - agent_id
+      - agent_name
+      - runs_completed
+      - runs_failed
+      - success_rate
+      title: AgentStats
+    SeverityCount:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - severity
+      - count
+      title: SeverityCount
     KBStats:
       properties:
         total_features:
@@ -244,115 +311,48 @@ components:
       - total_kb_updates
       - kb_leaderboard
       title: KBStats
-    TaskAnalyticsData:
+    UserTaskStats:
       properties:
-        total_tasks:
+        user_id:
+          type: string
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        email:
+          type: string
+          title: Email
+        tasks_completed:
           type: integer
-          title: Total Tasks
-        open_tasks:
-          type: integer
-          title: Open Tasks
-        resolved_tasks:
-          type: integer
-          title: Resolved Tasks
-        resolved_by_agents:
-          type: integer
-          title: Resolved By Agents
-        resolution_rate:
+          title: Tasks Completed
+        hours_saved:
           type: number
-          title: Resolution Rate
-        avg_resolution_hours:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Avg Resolution Hours
-        by_status:
-          items:
-            $ref: '#/components/schemas/StatusCount'
-          type: array
-          title: By Status
-        by_severity:
-          items:
-            $ref: '#/components/schemas/SeverityCount'
-          type: array
-          title: By Severity
-        monthly_trend:
-          items:
-            $ref: '#/components/schemas/MonthlyCount'
-          type: array
-          title: Monthly Trend
+          title: Hours Saved
+        clicks_automated:
+          type: integer
+          title: Clicks Automated
       type: object
       required:
-      - total_tasks
-      - open_tasks
-      - resolved_tasks
-      - resolved_by_agents
-      - resolution_rate
-      - avg_resolution_hours
-      - by_status
-      - by_severity
-      - monthly_trend
-      title: TaskAnalyticsData
-    AgentStats:
+      - user_id
+      - user_name
+      - email
+      - tasks_completed
+      - hours_saved
+      - clicks_automated
+      title: UserTaskStats
+    SourceCount:
       properties:
-        agent_id:
+        source:
           type: string
-          title: Agent Id
-        agent_name:
-          type: string
-          title: Agent Name
-        agent_icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Icon
-        runs_completed:
-          type: integer
-          title: Runs Completed
-        runs_failed:
-          type: integer
-          title: Runs Failed
-        success_rate:
-          type: number
-          title: Success Rate
-      type: object
-      required:
-      - agent_id
-      - agent_name
-      - runs_completed
-      - runs_failed
-      - success_rate
-      title: AgentStats
-    SeverityCount:
-      properties:
-        severity:
-          type: string
-          title: Severity
+          title: Source
         count:
           type: integer
           title: Count
       type: object
       required:
-      - severity
+      - source
       - count
-      title: SeverityCount
-    WorkflowStats:
-      properties:
-        workflow_id:
-          type: string
-          title: Workflow Id
-        name:
-          type: string
-          title: Name
-        run_count:
-          type: integer
-          title: Run Count
-      type: object
-      required:
-      - workflow_id
-      - name
-      - run_count
-      title: WorkflowStats
+      title: SourceCount
   securitySchemes:
     HTTPBearer:
       type: http

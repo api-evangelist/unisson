@@ -260,149 +260,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AgentTriggerResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        agent_id:
-          type: string
-          format: uuid
-          title: Agent Id
-        trigger_type:
-          type: string
-          enum:
-          - schedule
-          - webhook
-          - event
-          title: Trigger Type
-        name:
-          type: string
-          title: Name
-        request_text_template:
-          type: string
-          title: Request Text Template
-        webhook_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Url
-        webhook_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Webhook Token
-        scheduled_run_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Scheduled Run Id
-        scheduled_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Scheduled At
-        is_recurring:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Recurring
-        recurrence_type:
-          anyOf:
-          - type: string
-            enum:
-            - hours
-            - days
-            - weeks
-          - type: 'null'
-          title: Recurrence Type
-        recurrence_value:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Recurrence Value
-        next_run_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Next Run At
-        event_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Source
-        event_config:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Event Config
-        is_enabled:
-          type: boolean
-          title: Is Enabled
-        last_triggered_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Triggered At
-        trigger_count:
-          type: integer
-          title: Trigger Count
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - agent_id
-      - trigger_type
-      - name
-      - request_text_template
-      - is_enabled
-      - last_triggered_at
-      - trigger_count
-      - created_at
-      - updated_at
-      title: AgentTriggerResponse
-      description: Schema for agent trigger response.
+      title: HTTPValidationError
     AgentTriggerCreate:
       properties:
         trigger_type:
@@ -522,15 +388,149 @@ components:
         the corresponding column. Use `model_dump(exclude_unset=True)` at the call
 
         site to distinguish "left alone" from "set to None".'
-    HTTPValidationError:
+    AgentTriggerResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        id:
+          type: string
+          format: uuid
+          title: Id
+        agent_id:
+          type: string
+          format: uuid
+          title: Agent Id
+        trigger_type:
+          type: string
+          enum:
+          - schedule
+          - webhook
+          - event
+          title: Trigger Type
+        name:
+          type: string
+          title: Name
+        request_text_template:
+          type: string
+          title: Request Text Template
+        webhook_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Url
+        webhook_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Webhook Token
+        scheduled_run_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Scheduled Run Id
+        scheduled_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Scheduled At
+        is_recurring:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Recurring
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+        recurrence_value:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Recurrence Value
+        next_run_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Next Run At
+        event_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Source
+        event_config:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event Config
+        is_enabled:
+          type: boolean
+          title: Is Enabled
+        last_triggered_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Triggered At
+        trigger_count:
+          type: integer
+          title: Trigger Count
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
       type: object
-      title: HTTPValidationError
+      required:
+      - id
+      - agent_id
+      - trigger_type
+      - name
+      - request_text_template
+      - is_enabled
+      - last_triggered_at
+      - trigger_count
+      - created_at
+      - updated_at
+      title: AgentTriggerResponse
+      description: Schema for agent trigger response.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

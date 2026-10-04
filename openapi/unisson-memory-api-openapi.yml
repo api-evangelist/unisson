@@ -278,32 +278,26 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    MemoryFileUpdate:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        content:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          maxLength: 100000
+          title: Content
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - content
+      title: MemoryFileUpdate
+      description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     MemoryFileVersionResponse:
       properties:
         id:
@@ -350,26 +344,6 @@ components:
       - created_at
       title: MemoryFileVersionResponse
       description: One immutable snapshot in a memory file's content history.
-    MemoryFileUpdate:
-      properties:
-        content:
-          type: string
-          maxLength: 100000
-          title: Content
-      type: object
-      required:
-      - content
-      title: MemoryFileUpdate
-      description: Direct edit (PUT) of a memory file's body. Versioned (source ``manual``).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     MemoryFileResponse:
       properties:
         id:
@@ -425,6 +399,32 @@ components:
       - created_at
       - updated_at
       title: MemoryFileResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http

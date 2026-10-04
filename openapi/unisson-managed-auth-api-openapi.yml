@@ -129,6 +129,46 @@ components:
       required:
       - status
       title: ConnectionStatusResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ConnectRequest:
+      properties:
+        domain:
+          type: string
+          title: Domain
+        login_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Login Url
+      type: object
+      required:
+      - domain
+      title: ConnectRequest
+    app__api__v1__managed_auth__ConnectResponse:
+      properties:
+        connection_id:
+          type: string
+          title: Connection Id
+        hosted_url:
+          type: string
+          title: Hosted Url
+        domain:
+          type: string
+          title: Domain
+      type: object
+      required:
+      - connection_id
+      - hosted_url
+      - domain
+      title: ConnectResponse
     ValidationError:
       properties:
         loc:
@@ -155,46 +195,6 @@ components:
       - msg
       - type
       title: ValidationError
-    app__api__v1__managed_auth__ConnectResponse:
-      properties:
-        connection_id:
-          type: string
-          title: Connection Id
-        hosted_url:
-          type: string
-          title: Hosted Url
-        domain:
-          type: string
-          title: Domain
-      type: object
-      required:
-      - connection_id
-      - hosted_url
-      - domain
-      title: ConnectResponse
-    ConnectRequest:
-      properties:
-        domain:
-          type: string
-          title: Domain
-        login_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Login Url
-      type: object
-      required:
-      - domain
-      title: ConnectRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
   securitySchemes:
     HTTPBearer:
       type: http

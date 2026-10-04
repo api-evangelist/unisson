@@ -3265,164 +3265,24 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    GitHubRepository:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        full_name:
-          type: string
-          title: Full Name
-        private:
-          type: boolean
-          title: Private
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - id
-      - name
-      - full_name
-      - private
-      - description
-      - url
-      title: GitHubRepository
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SlackNotificationConfigBody:
-      properties:
-        channel_id:
-          type: string
-          maxLength: 32
-          minLength: 1
-          title: Channel Id
-        channel_name:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Channel Name
-      type: object
-      required:
-      - channel_id
-      - channel_name
-      title: SlackNotificationConfigBody
-    GranolaCredentialRequest:
-      properties:
-        api_key:
-          type: string
-          maxLength: 4096
-          minLength: 1
-          title: Api Key
-      type: object
-      required:
-      - api_key
-      title: GranolaCredentialRequest
-    GrafanaDashboardListItem:
-      properties:
-        uid:
-          type: string
-          title: Uid
-        title:
-          type: string
-          title: Title
-        url:
-          type: string
-          title: Url
-          default: ''
-      type: object
-      required:
-      - uid
-      - title
-      title: GrafanaDashboardListItem
-    ImportApiKeysRequest:
-      properties:
-        keys:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Keys
-        labels:
-          items:
-            type: string
-          type: array
-          title: Labels
-      type: object
-      required:
-      - keys
-      title: ImportApiKeysRequest
-      description: 'Body for the Samsara/Snyk/Checkout bulk key-import endpoints.
-
-
-        ``keys`` and ``labels`` are positionally aligned (``labels`` may be shorter
-
-        than ``keys``; missing positions default to the provider''s own name).
-
-        Blank ``keys`` entries are dropped downstream, so a list of only blanks is
-
-        accepted here and yields an empty per-key result rather than an error.'
-    PylonConnectRequest:
-      properties:
-        api_token:
-          type: string
-          title: Api Token
-        webhook_secret:
-          type: string
-          title: Webhook Secret
-      type: object
-      required:
-      - api_token
-      - webhook_secret
-      title: PylonConnectRequest
-    AssignUserKeyRequest:
+    MessagingPairRequest:
       properties:
         user_id:
           type: string
-          format: uuid
           title: User Id
-        key_id:
+        channel:
           type: string
-          format: uuid
-          title: Key Id
+          pattern: ^(whatsapp|email)$
+          title: Channel
+        identifier:
+          type: string
+          title: Identifier
       type: object
       required:
       - user_id
-      - key_id
-      title: AssignUserKeyRequest
-      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
+      - channel
+      - identifier
+      title: MessagingPairRequest
     IntegrationStatus:
       properties:
         provider:
@@ -3452,24 +3312,73 @@ components:
       - provider
       - connected
       title: IntegrationStatus
-    MessagingPairRequest:
+    ValidationError:
       properties:
-        user_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: User Id
-        channel:
+          title: Message
+        type:
           type: string
-          pattern: ^(whatsapp|email)$
-          title: Channel
-        identifier:
-          type: string
-          title: Identifier
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - user_id
-      - channel
-      - identifier
-      title: MessagingPairRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GranolaCredentialRequest:
+      properties:
+        api_key:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Api Key
+      type: object
+      required:
+      - api_key
+      title: GranolaCredentialRequest
+    PylonConnectRequest:
+      properties:
+        api_token:
+          type: string
+          title: Api Token
+        webhook_secret:
+          type: string
+          title: Webhook Secret
+      type: object
+      required:
+      - api_token
+      - webhook_secret
+      title: PylonConnectRequest
+    SlackNotificationConfigBody:
+      properties:
+        channel_id:
+          type: string
+          maxLength: 32
+          minLength: 1
+          title: Channel Id
+        channel_name:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Channel Name
+      type: object
+      required:
+      - channel_id
+      - channel_name
+      title: SlackNotificationConfigBody
     HTTPValidationError:
       properties:
         detail:
@@ -3479,6 +3388,27 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ImportRazorpayKeysRequest:
+      properties:
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ImportRazorpayKeysRequest
+      description: 'Body for the Razorpay bulk key-pair import endpoint.
+
+
+        Each item is ``{key_id, key_secret, display_name, label?}``. Items are
+
+        validated per-row downstream so one malformed row surfaces as a per-item
+
+        failure instead of rejecting the whole batch — hence the permissive element
+
+        type; only the non-empty envelope is enforced here.'
     DriveFile:
       properties:
         id:
@@ -3520,6 +3450,49 @@ components:
       - modified_time
       - created_time
       title: DriveFile
+    AssignUserKeyRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        key_id:
+          type: string
+          format: uuid
+          title: Key Id
+      type: object
+      required:
+      - user_id
+      - key_id
+      title: AssignUserKeyRequest
+      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
+    ImportApiKeysRequest:
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Keys
+        labels:
+          items:
+            type: string
+          type: array
+          title: Labels
+      type: object
+      required:
+      - keys
+      title: ImportApiKeysRequest
+      description: 'Body for the Samsara/Snyk/Checkout bulk key-import endpoints.
+
+
+        ``keys`` and ``labels`` are positionally aligned (``labels`` may be shorter
+
+        than ``keys``; missing positions default to the provider''s own name).
+
+        Blank ``keys`` entries are dropped downstream, so a list of only blanks is
+
+        accepted here and yields an empty per-key result rather than an error.'
     ImportMiraklKeysRequest:
       properties:
         items:
@@ -3543,27 +3516,54 @@ components:
         downstream so one malformed row surfaces as a per-item failure instead of
 
         rejecting the whole batch — hence the permissive element type.'
-    ImportRazorpayKeysRequest:
+    GrafanaDashboardListItem:
       properties:
-        items:
-          items: {}
-          type: array
-          minItems: 1
-          title: Items
+        uid:
+          type: string
+          title: Uid
+        title:
+          type: string
+          title: Title
+        url:
+          type: string
+          title: Url
+          default: ''
       type: object
       required:
-      - items
-      title: ImportRazorpayKeysRequest
-      description: 'Body for the Razorpay bulk key-pair import endpoint.
-
-
-        Each item is ``{key_id, key_secret, display_name, label?}``. Items are
-
-        validated per-row downstream so one malformed row surfaces as a per-item
-
-        failure instead of rejecting the whole batch — hence the permissive element
-
-        type; only the non-empty envelope is enforced here.'
+      - uid
+      - title
+      title: GrafanaDashboardListItem
+    GitHubRepository:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        full_name:
+          type: string
+          title: Full Name
+        private:
+          type: boolean
+          title: Private
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          type: string
+          title: Url
+      type: object
+      required:
+      - id
+      - name
+      - full_name
+      - private
+      - description
+      - url
+      title: GitHubRepository
   securitySchemes:
     HTTPBearer:
       type: http

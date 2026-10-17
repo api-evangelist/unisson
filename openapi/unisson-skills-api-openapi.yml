@@ -331,42 +331,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SkillCreate:
-      properties:
-        slug:
-          type: string
-          maxLength: 64
-          minLength: 1
-          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
-          title: Slug
-        name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Name
-        description:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-            maxLength: 100000
-          - type: 'null'
-          title: Instructions
-        icon:
-          anyOf:
-          - type: string
-            maxLength: 1048576
-          - type: 'null'
-          title: Icon
-      type: object
-      required:
-      - slug
-      - name
-      title: SkillCreate
     SkillRenameRequest:
       properties:
         slug:
@@ -417,103 +381,32 @@ components:
       type: object
       title: SkillUpdate
       description: Direct edit (PUT). name/description/instructions are versioned; icon isn't.
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UsedAgent:
-      properties:
-        id:
+          title: Location
+        msg:
           type: string
-          format: uuid4
-          title: Id
-        name:
+          title: Message
+        type:
           type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    SkillInstructionVersionResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        skill_id:
-          type: string
-          format: uuid
-          title: Skill Id
-        version_number:
-          type: integer
-          title: Version Number
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        instructions:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Instructions
-        source:
-          type: string
-          title: Source
-        created_by:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Created By
-        parent_version_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Parent Version Id
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - id
-      - skill_id
-      - version_number
-      - source
-      - created_at
-      title: SkillInstructionVersionResponse
-      description: One immutable snapshot in a skill's instruction history.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ChatConversationResponse:
       properties:
         id:
@@ -567,6 +460,78 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    SkillCreate:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 1
+          pattern: ^[a-z0-9]+(?:-[a-z0-9]+)*$
+          title: Slug
+        name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+            maxLength: 100000
+          - type: 'null'
+          title: Instructions
+        icon:
+          anyOf:
+          - type: string
+            maxLength: 1048576
+          - type: 'null'
+          title: Icon
+      type: object
+      required:
+      - slug
+      - name
+      title: SkillCreate
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SkillResponse:
       properties:
         id:
@@ -634,32 +599,67 @@ components:
       - created_at
       - updated_at
       title: SkillResponse
-    ValidationError:
+    SkillInstructionVersionResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        id:
           type: string
-          title: Message
-        type:
+          format: uuid
+          title: Id
+        skill_id:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          format: uuid
+          title: Skill Id
+        version_number:
+          type: integer
+          title: Version Number
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        instructions:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Instructions
+        source:
+          type: string
+          title: Source
+        created_by:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Created By
+        parent_version_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Parent Version Id
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - id
+      - skill_id
+      - version_number
+      - source
+      - created_at
+      title: SkillInstructionVersionResponse
+      description: One immutable snapshot in a skill's instruction history.
   securitySchemes:
     HTTPBearer:
       type: http

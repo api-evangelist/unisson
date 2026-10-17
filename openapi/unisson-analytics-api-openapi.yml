@@ -23,6 +23,32 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
+    SeverityCount:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - severity
+      - count
+      title: SeverityCount
+    MonthlyCount:
+      properties:
+        month:
+          type: string
+          title: Month
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - month
+      - count
+      title: MonthlyCount
     UserKBStats:
       properties:
         user_id:
@@ -60,19 +86,95 @@ components:
       - kb_edits
       - total_contributions
       title: UserKBStats
-    MonthlyCount:
+    UserTaskStats:
       properties:
-        month:
+        user_id:
           type: string
-          title: Month
+          title: User Id
+        user_name:
+          type: string
+          title: User Name
+        email:
+          type: string
+          title: Email
+        tasks_completed:
+          type: integer
+          title: Tasks Completed
+        hours_saved:
+          type: number
+          title: Hours Saved
+        clicks_automated:
+          type: integer
+          title: Clicks Automated
+      type: object
+      required:
+      - user_id
+      - user_name
+      - email
+      - tasks_completed
+      - hours_saved
+      - clicks_automated
+      title: UserTaskStats
+    AgentStats:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        agent_name:
+          type: string
+          title: Agent Name
+        agent_icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Icon
+        runs_completed:
+          type: integer
+          title: Runs Completed
+        runs_failed:
+          type: integer
+          title: Runs Failed
+        success_rate:
+          type: number
+          title: Success Rate
+      type: object
+      required:
+      - agent_id
+      - agent_name
+      - runs_completed
+      - runs_failed
+      - success_rate
+      title: AgentStats
+    SourceCount:
+      properties:
+        source:
+          type: string
+          title: Source
         count:
           type: integer
           title: Count
       type: object
       required:
-      - month
+      - source
       - count
-      title: MonthlyCount
+      title: SourceCount
+    WorkflowStats:
+      properties:
+        workflow_id:
+          type: string
+          title: Workflow Id
+        name:
+          type: string
+          title: Name
+        run_count:
+          type: integer
+          title: Run Count
+      type: object
+      required:
+      - workflow_id
+      - name
+      - run_count
+      title: WorkflowStats
     TaskAnalyticsData:
       properties:
         total_tasks:
@@ -122,23 +224,19 @@ components:
       - by_severity
       - monthly_trend
       title: TaskAnalyticsData
-    WorkflowStats:
+    StatusCount:
       properties:
-        workflow_id:
+        status:
           type: string
-          title: Workflow Id
-        name:
-          type: string
-          title: Name
-        run_count:
+          title: Status
+        count:
           type: integer
-          title: Run Count
+          title: Count
       type: object
       required:
-      - workflow_id
-      - name
-      - run_count
-      title: WorkflowStats
+      - status
+      - count
+      title: StatusCount
     AnalyticsOverviewResponse:
       properties:
         total_tasks_completed:
@@ -204,62 +302,6 @@ components:
       - top_workflows
       - kb
       title: AnalyticsOverviewResponse
-    StatusCount:
-      properties:
-        status:
-          type: string
-          title: Status
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - status
-      - count
-      title: StatusCount
-    AgentStats:
-      properties:
-        agent_id:
-          type: string
-          title: Agent Id
-        agent_name:
-          type: string
-          title: Agent Name
-        agent_icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Icon
-        runs_completed:
-          type: integer
-          title: Runs Completed
-        runs_failed:
-          type: integer
-          title: Runs Failed
-        success_rate:
-          type: number
-          title: Success Rate
-      type: object
-      required:
-      - agent_id
-      - agent_name
-      - runs_completed
-      - runs_failed
-      - success_rate
-      title: AgentStats
-    SeverityCount:
-      properties:
-        severity:
-          type: string
-          title: Severity
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - severity
-      - count
-      title: SeverityCount
     KBStats:
       properties:
         total_features:
@@ -311,48 +353,6 @@ components:
       - total_kb_updates
       - kb_leaderboard
       title: KBStats
-    UserTaskStats:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        user_name:
-          type: string
-          title: User Name
-        email:
-          type: string
-          title: Email
-        tasks_completed:
-          type: integer
-          title: Tasks Completed
-        hours_saved:
-          type: number
-          title: Hours Saved
-        clicks_automated:
-          type: integer
-          title: Clicks Automated
-      type: object
-      required:
-      - user_id
-      - user_name
-      - email
-      - tasks_completed
-      - hours_saved
-      - clicks_automated
-      title: UserTaskStats
-    SourceCount:
-      properties:
-        source:
-          type: string
-          title: Source
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - source
-      - count
-      title: SourceCount
   securitySchemes:
     HTTPBearer:
       type: http

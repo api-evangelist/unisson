@@ -3283,35 +3283,42 @@ components:
       - channel
       - identifier
       title: MessagingPairRequest
-    IntegrationStatus:
+    PylonConnectRequest:
       properties:
-        provider:
+        api_token:
           type: string
-          title: Provider
-        connected:
-          type: boolean
-          title: Connected
-        needs_reconnect:
-          type: boolean
-          title: Needs Reconnect
-          default: false
-        connected_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Connected At
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
+          title: Api Token
+        webhook_secret:
+          type: string
+          title: Webhook Secret
       type: object
       required:
-      - provider
-      - connected
-      title: IntegrationStatus
+      - api_token
+      - webhook_secret
+      title: PylonConnectRequest
+    ImportMiraklKeysRequest:
+      properties:
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ImportMiraklKeysRequest
+      description: 'Body for the Mirakl bulk key-import endpoint.
+
+
+        Each item is ``{instance_url, persona, api_key, label?}`` — Mirakl is
+
+        self-hosted per customer (so the base URL is part of the credential) and a
+
+        key acts as one persona (operator | seller). Items are validated per-row
+
+        downstream so one malformed row surfaces as a per-item failure instead of
+
+        rejecting the whole batch — hence the permissive element type.'
     ValidationError:
       properties:
         loc:
@@ -3349,19 +3356,74 @@ components:
       required:
       - api_key
       title: GranolaCredentialRequest
-    PylonConnectRequest:
+    GitHubRepository:
       properties:
-        api_token:
+        id:
+          type: integer
+          title: Id
+        name:
           type: string
-          title: Api Token
-        webhook_secret:
+          title: Name
+        full_name:
           type: string
-          title: Webhook Secret
+          title: Full Name
+        private:
+          type: boolean
+          title: Private
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        url:
+          type: string
+          title: Url
       type: object
       required:
-      - api_token
-      - webhook_secret
-      title: PylonConnectRequest
+      - id
+      - name
+      - full_name
+      - private
+      - description
+      - url
+      title: GitHubRepository
+    ImportRazorpayKeysRequest:
+      properties:
+        items:
+          items: {}
+          type: array
+          minItems: 1
+          title: Items
+      type: object
+      required:
+      - items
+      title: ImportRazorpayKeysRequest
+      description: 'Body for the Razorpay bulk key-pair import endpoint.
+
+
+        Each item is ``{key_id, key_secret, display_name, label?}``. Items are
+
+        validated per-row downstream so one malformed row surfaces as a per-item
+
+        failure instead of rejecting the whole batch — hence the permissive element
+
+        type; only the non-empty envelope is enforced here.'
+    AssignUserKeyRequest:
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        key_id:
+          type: string
+          format: uuid
+          title: Key Id
+      type: object
+      required:
+      - user_id
+      - key_id
+      title: AssignUserKeyRequest
+      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
     SlackNotificationConfigBody:
       properties:
         channel_id:
@@ -3388,27 +3450,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ImportRazorpayKeysRequest:
-      properties:
-        items:
-          items: {}
-          type: array
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ImportRazorpayKeysRequest
-      description: 'Body for the Razorpay bulk key-pair import endpoint.
-
-
-        Each item is ``{key_id, key_secret, display_name, label?}``. Items are
-
-        validated per-row downstream so one malformed row surfaces as a per-item
-
-        failure instead of rejecting the whole batch — hence the permissive element
-
-        type; only the non-empty envelope is enforced here.'
     DriveFile:
       properties:
         id:
@@ -3450,22 +3491,23 @@ components:
       - modified_time
       - created_time
       title: DriveFile
-    AssignUserKeyRequest:
+    GrafanaDashboardListItem:
       properties:
-        user_id:
+        uid:
           type: string
-          format: uuid
-          title: User Id
-        key_id:
+          title: Uid
+        title:
           type: string
-          format: uuid
-          title: Key Id
+          title: Title
+        url:
+          type: string
+          title: Url
+          default: ''
       type: object
       required:
-      - user_id
-      - key_id
-      title: AssignUserKeyRequest
-      description: Body for the per-provider ``…/accounts/{id}/assignments`` endpoints.
+      - uid
+      - title
+      title: GrafanaDashboardListItem
     ImportApiKeysRequest:
       properties:
         keys:
@@ -3493,77 +3535,35 @@ components:
         Blank ``keys`` entries are dropped downstream, so a list of only blanks is
 
         accepted here and yields an empty per-key result rather than an error.'
-    ImportMiraklKeysRequest:
+    IntegrationStatus:
       properties:
-        items:
-          items: {}
-          type: array
-          minItems: 1
-          title: Items
-      type: object
-      required:
-      - items
-      title: ImportMiraklKeysRequest
-      description: 'Body for the Mirakl bulk key-import endpoint.
-
-
-        Each item is ``{instance_url, persona, api_key, label?}`` — Mirakl is
-
-        self-hosted per customer (so the base URL is part of the credential) and a
-
-        key acts as one persona (operator | seller). Items are validated per-row
-
-        downstream so one malformed row surfaces as a per-item failure instead of
-
-        rejecting the whole batch — hence the permissive element type.'
-    GrafanaDashboardListItem:
-      properties:
-        uid:
+        provider:
           type: string
-          title: Uid
-        title:
-          type: string
-          title: Title
-        url:
-          type: string
-          title: Url
-          default: ''
-      type: object
-      required:
-      - uid
-      - title
-      title: GrafanaDashboardListItem
-    GitHubRepository:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        full_name:
-          type: string
-          title: Full Name
-        private:
+          title: Provider
+        connected:
           type: boolean
-          title: Private
-        description:
+          title: Connected
+        needs_reconnect:
+          type: boolean
+          title: Needs Reconnect
+          default: false
+        connected_at:
           anyOf:
           - type: string
+            format: date-time
           - type: 'null'
-          title: Description
-        url:
-          type: string
-          title: Url
+          title: Connected At
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
       type: object
       required:
-      - id
-      - name
-      - full_name
-      - private
-      - description
-      - url
-      title: GitHubRepository
+      - provider
+      - connected
+      title: IntegrationStatus
   securitySchemes:
     HTTPBearer:
       type: http

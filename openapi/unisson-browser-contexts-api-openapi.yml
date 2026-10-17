@@ -120,27 +120,6 @@ components:
       - authenticated_domains
       title: UserWithSessionsResponse
       description: User with their unified context and authenticated domains.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    OrgSessionsResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserWithSessionsResponse'
-          type: array
-          title: Users
-      type: object
-      required:
-      - users
-      title: OrgSessionsResponse
-      description: Response containing all users with saved sessions in the organization.
     ValidationError:
       properties:
         loc:
@@ -167,6 +146,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AuthenticatedDomainInfo:
       properties:
         domain:
@@ -185,6 +173,18 @@ components:
       - last_used_at
       title: AuthenticatedDomainInfo
       description: Information about an authenticated domain.
+    OrgSessionsResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserWithSessionsResponse'
+          type: array
+          title: Users
+      type: object
+      required:
+      - users
+      title: OrgSessionsResponse
+      description: Response containing all users with saved sessions in the organization.
   securitySchemes:
     HTTPBearer:
       type: http

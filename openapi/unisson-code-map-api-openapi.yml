@@ -117,6 +117,34 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CodeMapStatusResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        progress:
+          type: integer
+          title: Progress
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        repository_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Repository Name
+        framework_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework Type
+      type: object
+      required:
+      - status
+      - progress
+      title: CodeMapStatusResponse
     CodeMapResponse:
       properties:
         id:
@@ -162,43 +190,6 @@ components:
       - analysis_status
       - analysis_progress
       title: CodeMapResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CodeMapStatusResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        progress:
-          type: integer
-          title: Progress
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        repository_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Repository Name
-        framework_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Framework Type
-      type: object
-      required:
-      - status
-      - progress
-      title: CodeMapStatusResponse
     ValidationError:
       properties:
         loc:
@@ -225,6 +216,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AnalyzeRequest:
       properties:
         repository_full_name:

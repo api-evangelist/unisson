@@ -914,27 +914,44 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ApplyKBEditsRequest:
+    ConversationContextResponse:
       properties:
-        message_id:
-          type: string
-          format: uuid4
-          title: Message Id
-      type: object
-      required:
-      - message_id
-      title: ApplyKBEditsRequest
-    ConversationFileListResponse:
-      properties:
-        files:
+        integrations:
           items:
-            $ref: '#/components/schemas/ConversationFileResponse'
+            $ref: '#/components/schemas/UsedIntegration'
           type: array
-          title: Files
+          title: Integrations
+        customers:
+          items:
+            $ref: '#/components/schemas/UsedCustomer'
+          type: array
+          title: Customers
+        agents:
+          items:
+            $ref: '#/components/schemas/UsedAgent'
+          type: array
+          title: Agents
+        task:
+          anyOf:
+          - $ref: '#/components/schemas/LinkedTaskRef'
+          - type: 'null'
+        tables:
+          items:
+            $ref: '#/components/schemas/UsedDbTable'
+          type: array
+          title: Tables
+          default: []
       type: object
       required:
-      - files
-      title: ConversationFileListResponse
+      - integrations
+      - customers
+      - agents
+      title: ConversationContextResponse
+      description: 'What was actually used in one conversation: the connectors the agent
+
+        invoked and the customers/agents referenced. Powers the right-sidebar
+
+        Context panel (replaces the old org-wide connected-integrations list).'
     ExecuteTaskRequest:
       properties:
         request_text:
@@ -957,65 +974,66 @@ components:
       - request_text
       - message_id
       title: ExecuteTaskRequest
-    UsedAgent:
+    ConversationFileListResponse:
       properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post:
-      properties:
-        content:
-          type: string
-          title: Content
-          default: ''
-        execution_mode:
-          type: string
-          title: Execution Mode
-          default: cloud
-        images:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Images
-          default: []
         files:
           items:
-            type: string
-            contentMediaType: application/octet-stream
+            $ref: '#/components/schemas/ConversationFileResponse'
           type: array
           title: Files
-          default: []
-        file_paths:
-          items:
-            type: string
-          type: array
-          title: File Paths
-          default: []
       type: object
-      title: Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post
+      required:
+      - files
+      title: ConversationFileListResponse
+    AcceptProposalRequest:
+      properties:
+        execution_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Mode
+      type: object
+      title: AcceptProposalRequest
+    ApplyKBEditsResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        applied_count:
+          type: integer
+          title: Applied Count
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - applied_count
+      - message
+      title: ApplyKBEditsResponse
+    ChatConversationListResponse:
+      properties:
+        conversations:
+          items:
+            $ref: '#/components/schemas/ChatConversationResponse'
+          type: array
+          title: Conversations
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - conversations
+      - total
+      - page
+      - page_size
+      title: ChatConversationListResponse
     ChatConversationResponse:
       properties:
         id:
@@ -1069,31 +1087,176 @@ components:
       - organization_id
       - created_at
       title: ChatConversationResponse
-    ConversationFileResponse:
+    UsedCustomer:
       properties:
-        path:
+        id:
           type: string
-          title: Path
-        size:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Size
-        last_modified:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Modified
-        download_url:
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
           anyOf:
           - type: string
           - type: 'null'
-          title: Download Url
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
       type: object
       required:
-      - path
-      title: ConversationFileResponse
+      - id
+      - name
+      title: UsedCustomer
+      description: 'A customer @-mentioned in a conversation (subset of CustomerResponse
+
+        sufficient to render the sidebar''s CustomerAvatar chip).'
+    Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+      type: object
+      title: Body_accept_conversation_turn_api_v1_chat_conversations__conversation_id__turns_post
+    ChatTurnAccepted:
+      properties:
+        conversation:
+          $ref: '#/components/schemas/ChatConversationResponse'
+        user_message:
+          $ref: '#/components/schemas/ChatMessageResponse'
+        turn_id:
+          type: string
+          format: uuid4
+          title: Turn Id
+        sequence:
+          type: integer
+          title: Sequence
+        status:
+          type: string
+          title: Status
+        executor_status:
+          type: string
+          enum:
+          - available
+          - unavailable
+          - unknown
+          title: Executor Status
+          default: unknown
+      type: object
+      required:
+      - conversation
+      - user_message
+      - turn_id
+      - sequence
+      - status
+      title: ChatTurnAccepted
+    LinkedTaskRef:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        title:
+          type: string
+          title: Title
+        status:
+          type: string
+          title: Status
+        customer_id:
+          anyOf:
+          - type: string
+            format: uuid4
+          - type: 'null'
+          title: Customer Id
+      type: object
+      required:
+      - id
+      - title
+      - status
+      title: LinkedTaskRef
+      description: 'The Kanban task this conversation plans/executes (when any) — enough
+
+        for the Context panel to deep-link to the customer board''s task modal.'
+    Body_send_message_api_v1_chat_conversations__conversation_id__messages_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+      type: object
+      title: Body_send_message_api_v1_chat_conversations__conversation_id__messages_post
+    UsedDbTable:
+      properties:
+        name:
+          type: string
+          title: Name
+        scope:
+          type: string
+          title: Scope
+        approx_rows:
+          type: integer
+          title: Approx Rows
+      type: object
+      required:
+      - name
+      - scope
+      - approx_rows
+      title: UsedDbTable
+      description: 'An app-database table visible to the next chat turn (the DATABASE
+
+        prompt block lists the same set). scope is "org" or a customer name.'
     ChatTurnSummary:
       properties:
         id:
@@ -1155,6 +1318,67 @@ components:
       - sequence
       - status
       title: ChatTurnSummary
+    ExecuteTaskResponse:
+      properties:
+        run_id:
+          type: string
+          format: uuid4
+          title: Run Id
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - run_id
+      - message_id
+      title: ExecuteTaskResponse
+    ConversationFileResponse:
+      properties:
+        path:
+          type: string
+          title: Path
+        size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Size
+        last_modified:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Modified
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+      type: object
+      required:
+      - path
+      title: ConversationFileResponse
+    MessageType:
+      type: string
+      enum:
+      - general
+      - system
+      - planning
+      - task_suggestion
+      - task_execution
+      - task_result
+      - tool_call
+      - run_question
+      - user_question
+      - kb_answer
+      - kb_edit_proposal
+      - agent_builder_proposal
+      - agent_created
+      - trigger_created
+      - workflow_created
+      - workflow_updated
+      - plan_update
+      title: MessageType
     ChatMessageResponse:
       properties:
         id:
@@ -1209,23 +1433,79 @@ components:
       - content
       - created_at
       title: ChatMessageResponse
-    ApplyKBEditsResponse:
+    ValidationError:
       properties:
-        success:
-          type: boolean
-          title: Success
-        applied_count:
-          type: integer
-          title: Applied Count
-        message:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
           title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - success
-      - applied_count
-      - message
-      title: ApplyKBEditsResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    Body_transcribe_audio_api_v1_chat_transcribe_post:
+      properties:
+        audio:
+          type: string
+          contentMediaType: application/octet-stream
+          title: Audio
+      type: object
+      required:
+      - audio
+      title: Body_transcribe_audio_api_v1_chat_transcribe_post
+    ApplyKBEditsRequest:
+      properties:
+        message_id:
+          type: string
+          format: uuid4
+          title: Message Id
+      type: object
+      required:
+      - message_id
+      title: ApplyKBEditsRequest
     RefuseProposalRequest:
       properties:
         comment:
@@ -1235,6 +1515,66 @@ components:
           title: Comment
       type: object
       title: RefuseProposalRequest
+    Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post:
+      properties:
+        content:
+          type: string
+          title: Content
+          default: ''
+        execution_mode:
+          type: string
+          title: Execution Mode
+          default: cloud
+        images:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Images
+          default: []
+        files:
+          items:
+            type: string
+            contentMediaType: application/octet-stream
+          type: array
+          title: Files
+          default: []
+        file_paths:
+          items:
+            type: string
+          type: array
+          title: File Paths
+          default: []
+        tagged_agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tagged Agent Id
+      type: object
+      title: Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsedIntegration:
+      properties:
+        app_slug:
+          type: string
+          title: App Slug
+        invocation_count:
+          type: integer
+          title: Invocation Count
+      type: object
+      required:
+      - app_slug
+      - invocation_count
+      title: UsedIntegration
+      description: A connector the chat agent actually invoked in a conversation.
     ChatConversationDetailResponse:
       properties:
         id:
@@ -1329,346 +1669,6 @@ components:
       - organization_id
       - created_at
       title: ChatConversationDetailResponse
-    MessageType:
-      type: string
-      enum:
-      - general
-      - system
-      - planning
-      - task_suggestion
-      - task_execution
-      - task_result
-      - tool_call
-      - run_question
-      - user_question
-      - kb_answer
-      - kb_edit_proposal
-      - agent_builder_proposal
-      - agent_created
-      - trigger_created
-      - workflow_created
-      - workflow_updated
-      - plan_update
-      title: MessageType
-    UsedIntegration:
-      properties:
-        app_slug:
-          type: string
-          title: App Slug
-        invocation_count:
-          type: integer
-          title: Invocation Count
-      type: object
-      required:
-      - app_slug
-      - invocation_count
-      title: UsedIntegration
-      description: A connector the chat agent actually invoked in a conversation.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post:
-      properties:
-        content:
-          type: string
-          title: Content
-          default: ''
-        execution_mode:
-          type: string
-          title: Execution Mode
-          default: cloud
-        images:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Images
-          default: []
-        files:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Files
-          default: []
-        file_paths:
-          items:
-            type: string
-          type: array
-          title: File Paths
-          default: []
-        tagged_agent_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tagged Agent Id
-      type: object
-      title: Body_create_conversation_with_turn_api_v1_chat_conversations_turns_post
-    Body_send_message_api_v1_chat_conversations__conversation_id__messages_post:
-      properties:
-        content:
-          type: string
-          title: Content
-          default: ''
-        execution_mode:
-          type: string
-          title: Execution Mode
-          default: cloud
-        images:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Images
-          default: []
-        files:
-          items:
-            type: string
-            contentMediaType: application/octet-stream
-          type: array
-          title: Files
-          default: []
-        file_paths:
-          items:
-            type: string
-          type: array
-          title: File Paths
-          default: []
-      type: object
-      title: Body_send_message_api_v1_chat_conversations__conversation_id__messages_post
-    UsedCustomer:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedCustomer
-      description: 'A customer @-mentioned in a conversation (subset of CustomerResponse
-
-        sufficient to render the sidebar''s CustomerAvatar chip).'
-    ChatTurnAccepted:
-      properties:
-        conversation:
-          $ref: '#/components/schemas/ChatConversationResponse'
-        user_message:
-          $ref: '#/components/schemas/ChatMessageResponse'
-        turn_id:
-          type: string
-          format: uuid4
-          title: Turn Id
-        sequence:
-          type: integer
-          title: Sequence
-        status:
-          type: string
-          title: Status
-        executor_status:
-          type: string
-          enum:
-          - available
-          - unavailable
-          - unknown
-          title: Executor Status
-          default: unknown
-      type: object
-      required:
-      - conversation
-      - user_message
-      - turn_id
-      - sequence
-      - status
-      title: ChatTurnAccepted
-    Body_transcribe_audio_api_v1_chat_transcribe_post:
-      properties:
-        audio:
-          type: string
-          contentMediaType: application/octet-stream
-          title: Audio
-      type: object
-      required:
-      - audio
-      title: Body_transcribe_audio_api_v1_chat_transcribe_post
-    AcceptProposalRequest:
-      properties:
-        execution_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Execution Mode
-      type: object
-      title: AcceptProposalRequest
-    ExecuteTaskResponse:
-      properties:
-        run_id:
-          type: string
-          format: uuid4
-          title: Run Id
-        message_id:
-          type: string
-          format: uuid4
-          title: Message Id
-      type: object
-      required:
-      - run_id
-      - message_id
-      title: ExecuteTaskResponse
-    ChatConversationListResponse:
-      properties:
-        conversations:
-          items:
-            $ref: '#/components/schemas/ChatConversationResponse'
-          type: array
-          title: Conversations
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - conversations
-      - total
-      - page
-      - page_size
-      title: ChatConversationListResponse
-    LinkedTaskRef:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        title:
-          type: string
-          title: Title
-        status:
-          type: string
-          title: Status
-        customer_id:
-          anyOf:
-          - type: string
-            format: uuid4
-          - type: 'null'
-          title: Customer Id
-      type: object
-      required:
-      - id
-      - title
-      - status
-      title: LinkedTaskRef
-      description: 'The Kanban task this conversation plans/executes (when any) — enough
-
-        for the Context panel to deep-link to the customer board''s task modal.'
-    UsedDbTable:
-      properties:
-        name:
-          type: string
-          title: Name
-        scope:
-          type: string
-          title: Scope
-        approx_rows:
-          type: integer
-          title: Approx Rows
-      type: object
-      required:
-      - name
-      - scope
-      - approx_rows
-      title: UsedDbTable
-      description: 'An app-database table visible to the next chat turn (the DATABASE
-
-        prompt block lists the same set). scope is "org" or a customer name.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ConversationContextResponse:
-      properties:
-        integrations:
-          items:
-            $ref: '#/components/schemas/UsedIntegration'
-          type: array
-          title: Integrations
-        customers:
-          items:
-            $ref: '#/components/schemas/UsedCustomer'
-          type: array
-          title: Customers
-        agents:
-          items:
-            $ref: '#/components/schemas/UsedAgent'
-          type: array
-          title: Agents
-        task:
-          anyOf:
-          - $ref: '#/components/schemas/LinkedTaskRef'
-          - type: 'null'
-        tables:
-          items:
-            $ref: '#/components/schemas/UsedDbTable'
-          type: array
-          title: Tables
-          default: []
-      type: object
-      required:
-      - integrations
-      - customers
-      - agents
-      title: ConversationContextResponse
-      description: 'What was actually used in one conversation: the connectors the agent
-
-        invoked and the customers/agents referenced. Powers the right-sidebar
-
-        Context panel (replaces the old org-wide connected-integrations list).'
   securitySchemes:
     HTTPBearer:
       type: http

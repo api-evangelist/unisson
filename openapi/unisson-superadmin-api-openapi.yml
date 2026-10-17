@@ -150,41 +150,77 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ErrorAnalyticsResponse:
+    ModelCost:
       properties:
-        total_failed_runs:
-          type: integer
-          title: Total Failed Runs
-        total_runs:
-          type: integer
-          title: Total Runs
-        failure_rate:
+        model:
+          type: string
+          title: Model
+        cost:
           type: number
-          title: Failure Rate
-        error_by_category:
-          items:
-            $ref: '#/components/schemas/ErrorCategoryCount'
-          type: array
-          title: Error By Category
-        error_by_org:
-          items:
-            $ref: '#/components/schemas/OrgErrorSummary'
-          type: array
-          title: Error By Org
-        error_time_series:
-          items:
-            $ref: '#/components/schemas/ErrorTimeBucket'
-          type: array
-          title: Error Time Series
+          title: Cost
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+        call_count:
+          type: integer
+          title: Call Count
       type: object
       required:
-      - total_failed_runs
-      - total_runs
-      - failure_rate
-      - error_by_category
-      - error_by_org
-      - error_time_series
-      title: ErrorAnalyticsResponse
+      - model
+      - cost
+      - input_tokens
+      - output_tokens
+      - call_count
+      title: ModelCost
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ConfiguredModel:
+      properties:
+        role:
+          type: string
+          title: Role
+        model:
+          type: string
+          title: Model
+        used_by:
+          type: string
+          title: Used By
+      type: object
+      required:
+      - role
+      - model
+      - used_by
+      title: ConfiguredModel
+      description: 'Which model a product surface is *configured* to run on (from
+
+        settings.*_MODEL) — the intent view, independent of the date filter.'
     SuperadminCostsResponse:
       properties:
         org_summaries:
@@ -252,6 +288,41 @@ components:
       - category_model_breakdown
       - configured_models
       title: SuperadminCostsResponse
+    ErrorAnalyticsResponse:
+      properties:
+        total_failed_runs:
+          type: integer
+          title: Total Failed Runs
+        total_runs:
+          type: integer
+          title: Total Runs
+        failure_rate:
+          type: number
+          title: Failure Rate
+        error_by_category:
+          items:
+            $ref: '#/components/schemas/ErrorCategoryCount'
+          type: array
+          title: Error By Category
+        error_by_org:
+          items:
+            $ref: '#/components/schemas/OrgErrorSummary'
+          type: array
+          title: Error By Org
+        error_time_series:
+          items:
+            $ref: '#/components/schemas/ErrorTimeBucket'
+          type: array
+          title: Error Time Series
+      type: object
+      required:
+      - total_failed_runs
+      - total_runs
+      - failure_rate
+      - error_by_category
+      - error_by_org
+      - error_time_series
+      title: ErrorAnalyticsResponse
     OrgErrorSummary:
       properties:
         org_id:
@@ -275,6 +346,56 @@ components:
       - total_failed
       - error_breakdown
       title: OrgErrorSummary
+    ErrorTimeBucket:
+      properties:
+        period:
+          type: string
+          title: Period
+        category:
+          type: string
+          title: Category
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - period
+      - category
+      - count
+      title: ErrorTimeBucket
+    TimeBucket:
+      properties:
+        period:
+          type: string
+          title: Period
+        org_id:
+          type: string
+          title: Org Id
+        org_name:
+          type: string
+          title: Org Name
+        llm_cost:
+          type: number
+          title: Llm Cost
+        kernel_cost:
+          type: number
+          title: Kernel Cost
+        total_cost:
+          type: number
+          title: Total Cost
+        run_count:
+          type: integer
+          title: Run Count
+      type: object
+      required:
+      - period
+      - org_id
+      - org_name
+      - llm_cost
+      - kernel_cost
+      - total_cost
+      - run_count
+      title: TimeBucket
     HTTPValidationError:
       properties:
         detail:
@@ -284,47 +405,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ConfiguredModel:
-      properties:
-        role:
-          type: string
-          title: Role
-        model:
-          type: string
-          title: Model
-        used_by:
-          type: string
-          title: Used By
-      type: object
-      required:
-      - role
-      - model
-      - used_by
-      title: ConfiguredModel
-      description: 'Which model a product surface is *configured* to run on (from
-
-        settings.*_MODEL) — the intent view, independent of the date filter.'
-    CategoryTimeBucket:
-      properties:
-        period:
-          type: string
-          title: Period
-        category:
-          type: string
-          title: Category
-        cost:
-          type: number
-          title: Cost
-        call_count:
-          type: integer
-          title: Call Count
-      type: object
-      required:
-      - period
-      - category
-      - cost
-      - call_count
-      title: CategoryTimeBucket
     OrgCostSummary:
       properties:
         org_id:
@@ -362,6 +442,65 @@ components:
       - total_cost
       - total_llm_tokens
       title: OrgCostSummary
+    ErrorCategoryCount:
+      properties:
+        category:
+          type: string
+          title: Category
+        count:
+          type: integer
+          title: Count
+        percentage:
+          type: number
+          title: Percentage
+      type: object
+      required:
+      - category
+      - count
+      - percentage
+      title: ErrorCategoryCount
+    CategoryTimeBucket:
+      properties:
+        period:
+          type: string
+          title: Period
+        category:
+          type: string
+          title: Category
+        cost:
+          type: number
+          title: Cost
+        call_count:
+          type: integer
+          title: Call Count
+      type: object
+      required:
+      - period
+      - category
+      - cost
+      - call_count
+      title: CategoryTimeBucket
+    CategoryCost:
+      properties:
+        category:
+          type: string
+          title: Category
+        cost:
+          type: number
+          title: Cost
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+      type: object
+      required:
+      - category
+      - cost
+      - input_tokens
+      - output_tokens
+      title: CategoryCost
     CategoryModelCost:
       properties:
         category:
@@ -394,145 +533,6 @@ components:
       description: 'A (category, model) pair with its real spend — the join between the
 
         cost-by-category and cost-by-model breakdowns.'
-    CategoryCost:
-      properties:
-        category:
-          type: string
-          title: Category
-        cost:
-          type: number
-          title: Cost
-        input_tokens:
-          type: integer
-          title: Input Tokens
-        output_tokens:
-          type: integer
-          title: Output Tokens
-      type: object
-      required:
-      - category
-      - cost
-      - input_tokens
-      - output_tokens
-      title: CategoryCost
-    ErrorCategoryCount:
-      properties:
-        category:
-          type: string
-          title: Category
-        count:
-          type: integer
-          title: Count
-        percentage:
-          type: number
-          title: Percentage
-      type: object
-      required:
-      - category
-      - count
-      - percentage
-      title: ErrorCategoryCount
-    ModelCost:
-      properties:
-        model:
-          type: string
-          title: Model
-        cost:
-          type: number
-          title: Cost
-        input_tokens:
-          type: integer
-          title: Input Tokens
-        output_tokens:
-          type: integer
-          title: Output Tokens
-        call_count:
-          type: integer
-          title: Call Count
-      type: object
-      required:
-      - model
-      - cost
-      - input_tokens
-      - output_tokens
-      - call_count
-      title: ModelCost
-    ErrorTimeBucket:
-      properties:
-        period:
-          type: string
-          title: Period
-        category:
-          type: string
-          title: Category
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - period
-      - category
-      - count
-      title: ErrorTimeBucket
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TimeBucket:
-      properties:
-        period:
-          type: string
-          title: Period
-        org_id:
-          type: string
-          title: Org Id
-        org_name:
-          type: string
-          title: Org Name
-        llm_cost:
-          type: number
-          title: Llm Cost
-        kernel_cost:
-          type: number
-          title: Kernel Cost
-        total_cost:
-          type: number
-          title: Total Cost
-        run_count:
-          type: integer
-          title: Run Count
-      type: object
-      required:
-      - period
-      - org_id
-      - org_name
-      - llm_cost
-      - kernel_cost
-      - total_cost
-      - run_count
-      title: TimeBucket
   securitySchemes:
     HTTPBearer:
       type: http

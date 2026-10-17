@@ -161,31 +161,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ScheduledRunListResponse:
-      properties:
-        scheduled_runs:
-          items:
-            $ref: '#/components/schemas/ScheduledRunResponse'
-          type: array
-          title: Scheduled Runs
-        total:
-          type: integer
-          title: Total
-      type: object
-      required:
-      - scheduled_runs
-      - total
-      title: ScheduledRunListResponse
-      description: List of scheduled runs
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -212,6 +187,78 @@ components:
       - msg
       - type
       title: ValidationError
+    ScheduledRunCreate:
+      properties:
+        request_text:
+          type: string
+          maxLength: 5000
+          minLength: 1
+          title: Request Text
+        run_type:
+          type: string
+          enum:
+          - task
+          - exploration
+          title: Run Type
+          default: task
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+          description: When to execute the run (ISO format with timezone)
+        is_recurring:
+          type: boolean
+          title: Is Recurring
+          default: false
+        recurrence_type:
+          anyOf:
+          - type: string
+            enum:
+            - hours
+            - days
+            - weeks
+          - type: 'null'
+          title: Recurrence Type
+          description: Type of recurrence interval
+        recurrence_value:
+          anyOf:
+          - type: integer
+            maximum: 365.0
+            minimum: 1.0
+          - type: 'null'
+          title: Recurrence Value
+          description: Value for recurrence (e.g., 6 for 'every 6 hours')
+      type: object
+      required:
+      - request_text
+      - scheduled_at
+      title: ScheduledRunCreate
+      description: Request to create a new scheduled run
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ScheduledRunListResponse:
+      properties:
+        scheduled_runs:
+          items:
+            $ref: '#/components/schemas/ScheduledRunResponse'
+          type: array
+          title: Scheduled Runs
+        total:
+          type: integer
+          title: Total
+      type: object
+      required:
+      - scheduled_runs
+      - total
+      title: ScheduledRunListResponse
+      description: List of scheduled runs
     ScheduledRunResponse:
       properties:
         request_text:
@@ -299,53 +346,6 @@ components:
       - created_at
       title: ScheduledRunResponse
       description: Scheduled run response
-    ScheduledRunCreate:
-      properties:
-        request_text:
-          type: string
-          maxLength: 5000
-          minLength: 1
-          title: Request Text
-        run_type:
-          type: string
-          enum:
-          - task
-          - exploration
-          title: Run Type
-          default: task
-        scheduled_at:
-          type: string
-          format: date-time
-          title: Scheduled At
-          description: When to execute the run (ISO format with timezone)
-        is_recurring:
-          type: boolean
-          title: Is Recurring
-          default: false
-        recurrence_type:
-          anyOf:
-          - type: string
-            enum:
-            - hours
-            - days
-            - weeks
-          - type: 'null'
-          title: Recurrence Type
-          description: Type of recurrence interval
-        recurrence_value:
-          anyOf:
-          - type: integer
-            maximum: 365.0
-            minimum: 1.0
-          - type: 'null'
-          title: Recurrence Value
-          description: Value for recurrence (e.g., 6 for 'every 6 hours')
-      type: object
-      required:
-      - request_text
-      - scheduled_at
-      title: ScheduledRunCreate
-      description: Request to create a new scheduled run
   securitySchemes:
     HTTPBearer:
       type: http

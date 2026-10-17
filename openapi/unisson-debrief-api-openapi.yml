@@ -149,49 +149,28 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DebriefApplyProposalResponse:
+    DebriefApplyProposalRequest:
       properties:
-        success:
-          type: boolean
-          title: Success
-        message:
+        proposal_id:
           type: string
-          title: Message
-        auto_debrief_pending_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Auto Debrief Pending Count
+          title: Proposal Id
+        proposal_type:
+          type: string
+          title: Proposal Type
+        proposal_data:
+          additionalProperties: true
+          type: object
+          title: Proposal Data
+        action:
+          type: string
+          title: Action
       type: object
       required:
-      - success
-      - message
-      title: DebriefApplyProposalResponse
-    DebriefMessageRequest:
-      properties:
-        content:
-          type: string
-          title: Content
-        messages:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Messages
-      type: object
-      required:
-      - content
-      - messages
-      title: DebriefMessageRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - proposal_id
+      - proposal_type
+      - proposal_data
+      - action
+      title: DebriefApplyProposalRequest
     DebriefMessageData:
       properties:
         id:
@@ -279,28 +258,49 @@ components:
       - run_status
       - run_result
       title: DebriefInitResponse
-    DebriefApplyProposalRequest:
+    HTTPValidationError:
       properties:
-        proposal_id:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DebriefApplyProposalResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
           type: string
-          title: Proposal Id
-        proposal_type:
-          type: string
-          title: Proposal Type
-        proposal_data:
-          additionalProperties: true
-          type: object
-          title: Proposal Data
-        action:
-          type: string
-          title: Action
+          title: Message
+        auto_debrief_pending_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Auto Debrief Pending Count
       type: object
       required:
-      - proposal_id
-      - proposal_type
-      - proposal_data
-      - action
-      title: DebriefApplyProposalRequest
+      - success
+      - message
+      title: DebriefApplyProposalResponse
+    DebriefMessageRequest:
+      properties:
+        content:
+          type: string
+          title: Content
+        messages:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Messages
+      type: object
+      required:
+      - content
+      - messages
+      title: DebriefMessageRequest
   securitySchemes:
     HTTPBearer:
       type: http

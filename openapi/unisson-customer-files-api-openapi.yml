@@ -140,6 +140,17 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CustomerFileListResponse:
+      properties:
+        files:
+          items:
+            $ref: '#/components/schemas/CustomerFileResponse'
+          type: array
+          title: Files
+      type: object
+      required:
+      - files
+      title: CustomerFileListResponse
     ValidationError:
       properties:
         loc:
@@ -232,17 +243,6 @@ components:
         ``models.workspace_file_customer``). ``id`` is the provenance row''s PK —
 
         used to address the file in the content/delete endpoints.'
-    CustomerFileListResponse:
-      properties:
-        files:
-          items:
-            $ref: '#/components/schemas/CustomerFileResponse'
-          type: array
-          title: Files
-      type: object
-      required:
-      - files
-      title: CustomerFileListResponse
   securitySchemes:
     HTTPBearer:
       type: http

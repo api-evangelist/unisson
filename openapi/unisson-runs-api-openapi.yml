@@ -797,6 +797,74 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ReportIssueResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        issue_id:
+          type: string
+          title: Issue Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - issue_id
+      - message
+      title: ReportIssueResponse
+      description: Response after reporting an issue
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunListResponse:
+      properties:
+        runs:
+          items:
+            $ref: '#/components/schemas/RunResponse'
+          type: array
+          title: Runs
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        page_size:
+          type: integer
+          title: Page Size
+      type: object
+      required:
+      - runs
+      - total
+      - page
+      - page_size
+      title: RunListResponse
+      description: Paginated list of runs
     RunStepResponse:
       properties:
         step_number:
@@ -855,41 +923,6 @@ components:
       - status
       - created_at
       title: RunStepResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     UsedAgent:
       properties:
         id:
@@ -917,6 +950,42 @@ components:
       description: 'An agent tagged into a conversation (subset of AgentResponse
 
         sufficient to render an agent chip/badge).'
+    BrowserTelemetryEventResponse:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        kernel_browser_id:
+          type: string
+          title: Kernel Browser Id
+        sequence:
+          type: integer
+          title: Sequence
+        occurred_at:
+          type: string
+          format: date-time
+          title: Occurred At
+        category:
+          type: string
+          title: Category
+        event_type:
+          type: string
+          title: Event Type
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - id
+      - kernel_browser_id
+      - sequence
+      - occurred_at
+      - category
+      - event_type
+      - payload
+      title: BrowserTelemetryEventResponse
     RunTriggerRequest:
       properties:
         request_text:
@@ -939,24 +1008,17 @@ components:
       - request_text
       title: RunTriggerRequest
       description: Request to trigger a new run (with validation)
-    ReportIssueResponse:
+    RunResumeRequest:
       properties:
-        success:
-          type: boolean
-          title: Success
-        issue_id:
-          type: string
-          title: Issue Id
-        message:
-          type: string
-          title: Message
+        answer:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Answer
       type: object
-      required:
-      - success
-      - issue_id
-      - message
-      title: ReportIssueResponse
-      description: Response after reporting an issue
+      title: RunResumeRequest
+      description: Request to resume a paused run, optionally with an answer to a clarifying question
     RunResponse:
       properties:
         request_text:
@@ -1235,53 +1297,15 @@ components:
       - created_at
       - error_message
       title: RunResponse
-    RunResumeRequest:
+    HTTPValidationError:
       properties:
-        answer:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Answer
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      title: RunResumeRequest
-      description: Request to resume a paused run, optionally with an answer to a clarifying question
-    BrowserTelemetryEventResponse:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        kernel_browser_id:
-          type: string
-          title: Kernel Browser Id
-        sequence:
-          type: integer
-          title: Sequence
-        occurred_at:
-          type: string
-          format: date-time
-          title: Occurred At
-        category:
-          type: string
-          title: Category
-        event_type:
-          type: string
-          title: Event Type
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-      type: object
-      required:
-      - id
-      - kernel_browser_id
-      - sequence
-      - occurred_at
-      - category
-      - event_type
-      - payload
-      title: BrowserTelemetryEventResponse
+      title: HTTPValidationError
     ScoutSummary:
       properties:
         id:
@@ -1318,30 +1342,6 @@ components:
       description: 'Compact per-scout summary used by the Home Live cards to render an
 
         exploration coordinator''s ticker (one row per scout with its latest activity).'
-    RunListResponse:
-      properties:
-        runs:
-          items:
-            $ref: '#/components/schemas/RunResponse'
-          type: array
-          title: Runs
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        page_size:
-          type: integer
-          title: Page Size
-      type: object
-      required:
-      - runs
-      - total
-      - page
-      - page_size
-      title: RunListResponse
-      description: Paginated list of runs
     RunDetailResponse:
       properties:
         request_text:

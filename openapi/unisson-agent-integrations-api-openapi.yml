@@ -171,52 +171,6 @@ paths:
       - HTTPBearer: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PipedreamWebhookPayload:
-      properties:
-        event:
-          type: string
-          title: Event
-        external_user_id:
-          type: string
-          title: External User Id
-        app_slug:
-          type: string
-          title: App Slug
-        app_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: App Name
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-      type: object
-      required:
-      - event
-      - external_user_id
-      - app_slug
-      title: PipedreamWebhookPayload
-      description: Payload from Pipedream when a user connects/disconnects an app.
-    app__api__v1__agent_integrations__ConnectResponse:
-      properties:
-        connect_url:
-          type: string
-          title: Connect Url
-      type: object
-      required:
-      - connect_url
-      title: ConnectResponse
     ValidationError:
       properties:
         loc:
@@ -291,6 +245,43 @@ components:
       - slug
       - name
       title: AppInfo
+    PipedreamWebhookPayload:
+      properties:
+        event:
+          type: string
+          title: Event
+        external_user_id:
+          type: string
+          title: External User Id
+        app_slug:
+          type: string
+          title: App Slug
+        app_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: App Name
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+      type: object
+      required:
+      - event
+      - external_user_id
+      - app_slug
+      title: PipedreamWebhookPayload
+      description: Payload from Pipedream when a user connects/disconnects an app.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ConnectionInfo:
       properties:
         id:
@@ -343,6 +334,15 @@ components:
       - provider
       - status
       title: ConnectionInfo
+    app__api__v1__agent_integrations__ConnectResponse:
+      properties:
+        connect_url:
+          type: string
+          title: Connect Url
+      type: object
+      required:
+      - connect_url
+      title: ConnectResponse
   securitySchemes:
     HTTPBearer:
       type: http

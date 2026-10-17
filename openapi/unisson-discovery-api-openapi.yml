@@ -222,130 +222,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DiscoveryOpportunityResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        conversation_id:
-          type: string
-          format: uuid
-          title: Conversation Id
-        title:
-          type: string
-          title: Title
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        evidence:
-          items: {}
-          type: array
-          title: Evidence
-        impact_estimate:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Impact Estimate
-        proposed_agent_spec:
-          additionalProperties: true
-          type: object
-          title: Proposed Agent Spec
-        built_agent_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Built Agent Id
-        status:
-          type: string
-          title: Status
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - conversation_id
-      - title
-      - status
-      title: DiscoveryOpportunityResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UsedAgent:
-      properties:
-        id:
-          type: string
-          format: uuid4
-          title: Id
-        name:
-          type: string
-          title: Name
-        icon:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon
-        gradient:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gradient
-      type: object
-      required:
-      - id
-      - name
-      title: UsedAgent
-      description: 'An agent tagged into a conversation (subset of AgentResponse
-
-        sufficient to render an agent chip/badge).'
-    DiscoverySourceResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-        source_type:
-          type: string
-          title: Source Type
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-        status:
-          type: string
-          title: Status
-        last_read_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Read At
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - source_type
-      - config
-      - status
-      title: DiscoverySourceResponse
     ChatConversationResponse:
       properties:
         id:
@@ -419,6 +295,95 @@ components:
       - source_type
       title: DiscoverySourceUpsert
       description: Connect / update a Discovery source (one per source_type per org).
+    UsedAgent:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        name:
+          type: string
+          title: Name
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon
+        gradient:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gradient
+      type: object
+      required:
+      - id
+      - name
+      title: UsedAgent
+      description: 'An agent tagged into a conversation (subset of AgentResponse
+
+        sufficient to render an agent chip/badge).'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DiscoveryOpportunityResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        evidence:
+          items: {}
+          type: array
+          title: Evidence
+        impact_estimate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Impact Estimate
+        proposed_agent_spec:
+          additionalProperties: true
+          type: object
+          title: Proposed Agent Spec
+        built_agent_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Built Agent Id
+        status:
+          type: string
+          title: Status
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - conversation_id
+      - title
+      - status
+      title: DiscoveryOpportunityResponse
     BuildOpportunityResponse:
       properties:
         agent_id:
@@ -434,6 +399,41 @@ components:
       - agent_id
       title: BuildOpportunityResponse
       description: Result of "Build this" — the draft agent to open in the Agent Builder.
+    DiscoverySourceResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        source_type:
+          type: string
+          title: Source Type
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+        status:
+          type: string
+          title: Status
+        last_read_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Read At
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+      type: object
+      required:
+      - id
+      - source_type
+      - config
+      - status
+      title: DiscoverySourceResponse
   securitySchemes:
     HTTPBearer:
       type: http

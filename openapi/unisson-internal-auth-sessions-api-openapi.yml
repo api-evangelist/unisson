@@ -133,6 +133,41 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    FinalizeResponse:
+      properties:
+        redirect_url:
+          type: string
+          title: Redirect Url
+      type: object
+      required:
+      - redirect_url
+      title: FinalizeResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ConnectionStatusResponse:
       properties:
         status:
@@ -167,15 +202,28 @@ components:
       required:
       - status
       title: ConnectionStatusResponse
-    FinalizeResponse:
+    FinalizeRequest:
       properties:
-        redirect_url:
+        outcome:
           type: string
-          title: Redirect Url
+          enum:
+          - success
+          - error
+          title: Outcome
+        error_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Code
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
       type: object
       required:
-      - redirect_url
-      title: FinalizeResponse
+      - outcome
+      title: FinalizeRequest
     HTTPValidationError:
       properties:
         detail:
@@ -240,54 +288,6 @@ components:
       - on_error_url
       - expires_at
       title: BootstrapResponse
-    FinalizeRequest:
-      properties:
-        outcome:
-          type: string
-          enum:
-          - success
-          - error
-          title: Outcome
-        error_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Code
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-      type: object
-      required:
-      - outcome
-      title: FinalizeRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   securitySchemes:
     HTTPBearer:
       type: http
